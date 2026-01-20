@@ -1,14 +1,10 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/db'
+import { supabase } from '@/lib/supabase'
 import { generateClientId } from '@/lib/client-id'
 
 /**
  * GET /api/clients
  * Retrieves all clients or searches by clientId/name
- * Query parameters:
- *   - search: Search by clientId or name
- *   - limit: Number of results to return (default: 50)
- *   - offset: Number of results to skip (default: 0)
  */
 export async function GET(request: Request) {
   try {
@@ -17,35 +13,33 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '50')
     const offset = parseInt(searchParams.get('offset') || '0')
 
-    // Build query filter based on search parameter
-    const where = search
-      ? {
-          OR: [
-            { clientId: { contains: search.toUpperCase(), mode: 'insensitive' as const } },
-            { name: { contains: search, mode: 'insensitive' as const } },
-          ],
-        }
-      : {}
+    let query = supabase
+      .from('Client')
+      .select('*', { count: 'exact' })
+      .range(offset, offset + limit - 1)
+      .order('dateOfRegistration', { ascending: false })
 
-    // Fetch clients with pagination
-    const clients = await prisma.client.findMany({
-      where,
-      take: limit,
-      skip: offset,
-      orderBy: { dateOfRegistration: 'desc' },
-    })
+    if (search) {
+      // Basic OR search logic for Supabase (clientId OR name)
+      // Note: Supabase 'or' syntax: .or('clientId.ilike.%SEARCH%,name.ilike.%SEARCH%')
+      query = query.or(`clientId.ilike.%${search}%,name.ilike.%${search}%`)
+    }
 
-    // Get total count for pagination
-    const total = await prisma.client.count({ where })
+    const { data: clients, error, count } = await query
+
+    if (error) {
+      console.error('Supabase fetch error:', error)
+      throw error
+    }
 
     return NextResponse.json({
       success: true,
       data: clients,
       pagination: {
-        total,
+        total: count || 0,
         limit,
         offset,
-        hasMore: offset + limit < total,
+        hasMore: (offset + limit) < (count || 0),
       },
     })
   } catch (error) {
@@ -60,7 +54,6 @@ export async function GET(request: Request) {
 /**
  * POST /api/clients
  * Creates a new client with auto-generated unique ID (LMC-XXXXXX)
- * Request body should contain client information
  */
 export async function POST(request: Request) {
   try {
@@ -80,11 +73,14 @@ export async function POST(request: Request) {
     let attempts = 0
     const maxAttempts = 10
 
-    // Ensure the generated ID is unique (retry if collision)
+    // Ensure the generated ID is unique
     while (!isUnique && attempts < maxAttempts) {
-      const existing = await prisma.client.findUnique({
-        where: { clientId },
-      })
+      const { data: existing } = await supabase
+        .from('Client')
+        .select('clientId')
+        .eq('clientId', clientId)
+        .single()
+
       if (!existing) {
         isUnique = true
       } else {
@@ -100,9 +96,12 @@ export async function POST(request: Request) {
       )
     }
 
-    // Create new client in database
-    const client = await prisma.client.create({
-      data: {
+    // Create new client in Supabase
+    // Note: 'dateOfRegistration', 'createdAt', 'updatedAt' can ideally be handled by default now() values in DB,
+    // but passing them here is also fine to maintain parity with previous logic if schema expects it.
+    const { data: client, error } = await supabase
+      .from('Client')
+      .insert({
         clientId,
         name: body.name,
         sex: body.sex,
@@ -111,8 +110,8 @@ export async function POST(request: Request) {
         refDoctor: body.refDoctor || null,
         procedure: body.procedure || null,
         operationTeam: body.operationTeam || [],
-        timeStarted: body.timeStarted ? new Date(body.timeStarted) : null,
-        timeEnded: body.timeEnded ? new Date(body.timeEnded) : null,
+        timeStarted: body.timeStarted ? new Date(body.timeStarted).toISOString() : null,
+        timeEnded: body.timeEnded ? new Date(body.timeEnded).toISOString() : null,
         medicationGiven: body.medicationGiven || null,
         instrumentsUsed: body.instrumentsUsed || [],
         clinicalSummary: body.clinicalSummary || null,
@@ -121,8 +120,15 @@ export async function POST(request: Request) {
         impression: body.impression || null,
         comments: body.comments || null,
         medication: body.medication || null,
-      },
-    })
+        dateOfRegistration: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      })
+      .select()
+      .single()
+
+    if (error) {
+      throw error
+    }
 
     return NextResponse.json(
       {

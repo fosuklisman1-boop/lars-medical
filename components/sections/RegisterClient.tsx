@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
-import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
 
@@ -20,14 +19,6 @@ export function RegisterClient() {
     sex: '',
     age: '',
     address: '',
-    refDoctor: '',
-    procedure: '',
-    clinicalSummary: '',
-    findings: '',
-    hutTestResult: '',
-    impression: '',
-    comments: '',
-    medication: '',
   })
 
   /**
@@ -87,21 +78,13 @@ export function RegisterClient() {
 
       // Success: Show client ID and reset form
       toast.success(`Client registered successfully! ID: ${result.data.clientId}`)
-      
+
       // Reset form to initial state
       setFormData({
         name: '',
         sex: '',
         age: '',
         address: '',
-        refDoctor: '',
-        procedure: '',
-        clinicalSummary: '',
-        findings: '',
-        hutTestResult: '',
-        impression: '',
-        comments: '',
-        medication: '',
       })
     } catch (error) {
       console.error('Error registering client:', error)
@@ -120,7 +103,6 @@ export function RegisterClient() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information Section */}
           <div className="border-t pt-6">
-            <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Name Field - Required */}
               <div>
@@ -185,126 +167,6 @@ export function RegisterClient() {
             </div>
           </div>
 
-          {/* Medical Information Section */}
-          <div className="border-t pt-6">
-            <h2 className="text-xl font-semibold mb-4">Medical Information</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Referring Doctor */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Referring Doctor</label>
-                <Input
-                  type="text"
-                  name="refDoctor"
-                  value={formData.refDoctor}
-                  onChange={handleInputChange}
-                  placeholder="Doctor name"
-                />
-              </div>
-
-              {/* Procedure Type */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Procedure Type</label>
-                <Input
-                  type="text"
-                  name="procedure"
-                  value={formData.procedure}
-                  onChange={handleInputChange}
-                  placeholder="e.g., Upper Endoscopy"
-                />
-              </div>
-
-              {/* HUT Test Result */}
-              <div>
-                <label className="block text-sm font-medium mb-2">HUT Test Result</label>
-                <Input
-                  type="text"
-                  name="hutTestResult"
-                  value={formData.hutTestResult}
-                  onChange={handleInputChange}
-                  placeholder="e.g., POSITIVE, NEGATIVE"
-                />
-              </div>
-
-              {/* Impression/Diagnosis */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Impression/Diagnosis</label>
-                <Input
-                  type="text"
-                  name="impression"
-                  value={formData.impression}
-                  onChange={handleInputChange}
-                  placeholder="Medical impression"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Clinical Details Section */}
-          <div className="border-t pt-6">
-            <h2 className="text-xl font-semibold mb-4">Clinical Details</h2>
-            <div className="space-y-4">
-              {/* Clinical Summary */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Clinical Summary</label>
-                <Textarea
-                  name="clinicalSummary"
-                  value={formData.clinicalSummary}
-                  onChange={handleInputChange}
-                  placeholder="Summary of clinical findings"
-                  rows={3}
-                />
-              </div>
-
-              {/* Findings */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Findings</label>
-                <Textarea
-                  name="findings"
-                  value={formData.findings}
-                  onChange={handleInputChange}
-                  placeholder="Detailed findings from procedure"
-                  rows={3}
-                />
-              </div>
-
-              {/* Medication Given */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Medication Given</label>
-                <Textarea
-                  name="medicationGiven"
-                  value={formData.medicationGiven}
-                  onChange={handleInputChange}
-                  placeholder="Medications administered during procedure"
-                  rows={2}
-                />
-              </div>
-
-              {/* Prescribed Medication */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Prescribed Medication</label>
-                <Textarea
-                  name="medication"
-                  value={formData.medication}
-                  onChange={handleInputChange}
-                  placeholder="Post-procedure medication recommendations"
-                  rows={2}
-                />
-              </div>
-
-              {/* Comments */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Doctor's Comments</label>
-                <Textarea
-                  name="comments"
-                  value={formData.comments}
-                  onChange={handleInputChange}
-                  placeholder="Additional comments or notes"
-                  rows={2}
-                />
-              </div>
-            </div>
-          </div>
-
           {/* Submit Button */}
           <div className="border-t pt-6 flex gap-4">
             <Button
@@ -323,14 +185,6 @@ export function RegisterClient() {
                   sex: '',
                   age: '',
                   address: '',
-                  refDoctor: '',
-                  procedure: '',
-                  clinicalSummary: '',
-                  findings: '',
-                  hutTestResult: '',
-                  impression: '',
-                  comments: '',
-                  medication: '',
                 })
               }}
             >
