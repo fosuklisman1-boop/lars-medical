@@ -72,8 +72,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <Stethoscope className="w-6 h-6 text-white" />
+              <div className="bg-white rounded-lg overflow-hidden w-10 h-10 border border-slate-200 shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo.jpg" alt="LMC Logo" className="w-full h-full object-cover" />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900 leading-none">Lars Medical Centre</h1>
@@ -111,8 +112,8 @@ export default function Home() {
             <button
               onClick={() => setActiveTab('register')}
               className={`px-6 py-4 font-bold text-sm uppercase tracking-wide border-b-2 transition-all ${activeTab === 'register'
-                  ? 'border-blue-600 text-blue-600 bg-blue-50/50'
-                  : 'border-transparent text-slate-500 hover:text-slate-900'
+                ? 'border-blue-600 text-blue-600 bg-blue-50/50'
+                : 'border-transparent text-slate-500 hover:text-slate-900'
                 }`}
             >
               <Plus className="w-4 h-4 inline mr-2" />
@@ -123,8 +124,8 @@ export default function Home() {
             <button
               onClick={() => setActiveTab('search')}
               className={`px-6 py-4 font-bold text-sm uppercase tracking-wide border-b-2 transition-all ${activeTab === 'search'
-                  ? 'border-blue-600 text-blue-600 bg-blue-50/50'
-                  : 'border-transparent text-slate-500 hover:text-slate-900'
+                ? 'border-blue-600 text-blue-600 bg-blue-50/50'
+                : 'border-transparent text-slate-500 hover:text-slate-900'
                 }`}
             >
               <Search className="w-4 h-4 inline mr-2" />

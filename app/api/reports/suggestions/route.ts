@@ -25,11 +25,15 @@ export async function GET(request: Request) {
             'stomachContent',
             'instrumentsUsed',
             'clinicalSummary',
+            'biopsySite',
             'oesophagusGE',
+            'geJunction',
             'fundus',
             'body',
             'antrum',
             'pylorus',
+            'd1',
+            'd2',
             'duodenum',
             'findings',
             'hutTestResult',
@@ -46,18 +50,26 @@ export async function GET(request: Request) {
         }
 
         // Fetch distinct values for the specified field
+        // If field is d1 or d2, also fetch legacy 'duodenum' for suggestions
+        const fieldsToSelect = (field === 'd1' || field === 'd2') ? `${field}, duodenum` : field
+
         const { data, error } = await supabase
             .from('MedicalReport')
-            .select(field)
-            .not(field, 'is', null)
+            .select(fieldsToSelect)
             .limit(100)
 
         if (error) throw error
 
         // Extract unique non-empty values
+        const rawValues: string[] = []
+        data.forEach((row: any) => {
+            if (row[field]) rawValues.push(row[field])
+            // Add legacy suggestions for d1/d2
+            if ((field === 'd1' || field === 'd2') && row.duodenum) rawValues.push(row.duodenum)
+        })
+
         const uniqueValues = [...new Set(
-            data
-                .map((row: any) => row[field])
+            rawValues
                 .filter((val: any) => val && typeof val === 'string' && val.trim() !== '')
         )].slice(0, 50) // Limit to 50 suggestions
 

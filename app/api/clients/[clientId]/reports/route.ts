@@ -60,18 +60,25 @@ export async function POST(
                 stomachContent: body.stomachContent || null,
                 instrumentsUsed: body.instrumentsUsed || [],
                 clinicalSummary: body.clinicalSummary || null,
+                biopsy: body.biopsy || null,
+                biopsySite: body.biopsySite || null,
                 // Anatomical Findings
                 oesophagusGE: body.oesophagusGE || null,
+                geJunction: body.geJunction || null,
                 fundus: body.fundus || null,
                 body: body.body || null,
                 antrum: body.antrum || null,
                 pylorus: body.pylorus || null,
-                duodenum: body.duodenum || null,
+                d1: body.d1 || null,
+                d2: body.d2 || null,
+                // duodenum: body.duodenum || null, 
                 findings: body.findings || null,
                 hutTestResult: body.hutTestResult || null,
                 impression: body.impression || null,
                 comments: body.comments || null,
                 medication: body.medication || null,
+                testType: body.testType || null,
+                testResult: body.testResult || null,
                 date: new Date().toISOString()
             })
             .select()

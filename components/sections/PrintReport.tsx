@@ -33,45 +33,40 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 }}
             >
                 {/* Header with Logo */}
-                <div className="text-center mb-4">
-                    {/* Logo Circle */}
-                    <div className="flex justify-center mb-2">
-                        <div
-                            className="w-16 h-16 rounded-full border-2 border-cyan-600 flex items-center justify-center"
-                            style={{ borderColor: '#0891b2' }}
-                        >
-                            <span className="text-cyan-600 font-black text-sm" style={{ color: '#0891b2' }}>LMC</span>
+                {/* Header matching image layout */}
+                <div className="mb-6 font-sans">
+                    {/* Top Row: Logo Left, Title Center/Right */}
+                    <div className="flex items-center justify-center gap-6 mb-3 relative">
+                        {/* Logo Box - Absolute leftish or just flex */}
+                        <div className="w-20 h-20 border-2 border-cyan-800 flex items-center justify-center p-0.5 shrink-0">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src="/logo.jpg" alt="LMC Logo" className="w-full h-full object-contain" />
+                        </div>
+
+                        {/* Title Block */}
+                        <div className="text-center">
+                            <h1 className="text-3xl font-extrabold tracking-wider leading-none mb-1">
+                                <span style={{ color: '#DC2626' }}>LARS</span> <span style={{ color: '#0891b2' }}>MEDICAL CENTRE</span>
+                            </h1>
+                            <p className="text-sm font-bold tracking-widest" style={{ color: 'black' }}>
+                                ENDOSCOPY UNIT
+                            </p>
                         </div>
                     </div>
 
-                    {/* Title */}
-                    <h1
-                        className="text-2xl font-bold tracking-wide"
-                        style={{ color: '#0891b2', letterSpacing: '0.1em' }}
-                    >
-                        LARS MEDICAL CENTRE
-                    </h1>
-
-                    {/* Subtitle */}
-                    <p className="text-sm font-bold mt-1" style={{ color: '#0891b2' }}>
-                        ENDOSCOPY UNIT
-                    </p>
-
-                    {/* Address Line 1 */}
-                    <p className="text-[9px] mt-2 text-gray-700">
-                        <span className="mr-1">◇</span>OPPOSITE VICTORY HARDWARE, SUNYANI-ABESIM ROAD, NEAR TYCO CITY HOTEL, SUNYANI
-                    </p>
-
-                    {/* Address Line 2 */}
-                    <p className="text-[9px] text-gray-700">
-                        P.O.BOX SY 524, SUNYANI, B/R &nbsp;&nbsp; TEL: 0200-638-932 / 0352196970. &nbsp;&nbsp; WORKING HOURS: 24/7
-                    </p>
-
-                    {/* Email and GPS */}
-                    <p className="text-[9px] text-gray-700">
-                        <span className="font-bold">EMAIL:</span> larsmedicalcentre@yahoo.com &nbsp;&nbsp;&nbsp;&nbsp;
-                        <span className="font-bold">GPS ADDRESS:</span> BS-0174-2635
-                    </p>
+                    {/* Address Lines - Compact & Centered */}
+                    <div className="text-center text-[10px] font-bold text-cyan-900 leading-tight space-y-1">
+                        <p>
+                            OPPOSITE VICTORY HARDWARE, SUNYANI-ABESIM ROAD, NEAR TYCO CITY HOTEL, SUNYANI
+                        </p>
+                        <p>
+                            P.O.BOX SY 524, SUNYANI, B/R &nbsp;&nbsp; TEL: 0200-638-932 / 0352196970. &nbsp;&nbsp; WORKING HOURS: 24/7
+                        </p>
+                        <p>
+                            <span className="text-cyan-800">EMAIL:</span> larsmedicalcentre@yahoo.com &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span className="text-cyan-800">GPS ADDRESS:</span> BS-0174-2635
+                        </p>
+                    </div>
                 </div>
 
                 {/* Procedure Title */}
@@ -81,29 +76,34 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     </p>
                 </div>
 
-                {/* Patient Info Row 1 */}
-                <div className="flex gap-4 mb-1 text-[11px]">
-                    <div className="flex-1">
-                        <span className="font-bold">NAME:</span> <span className="uppercase">{client.name}</span>
+                {/* Patient Info Grid - Aligned perfectly like the image */}
+                <div className="grid grid-cols-12 gap-y-1 text-[12px] mb-2 uppercase tracking-tight">
+                    {/* Row 1 */}
+                    <div className="col-span-6 flex">
+                        <span className="font-bold w-[50px] shrink-0">NAME:</span>
+                        <span className="font-bold">{client.name}</span>
                     </div>
-                    <div>
-                        <span className="font-bold">SEX:</span> {client.sex?.toUpperCase()}
+                    <div className="col-span-3 flex">
+                        <span className="font-bold w-[40px] shrink-0">SEX:</span>
+                        <span>{client.sex}</span>
                     </div>
-                    <div>
-                        <span className="font-bold">AGE:</span> {client.age} YEARS
+                    <div className="col-span-3 flex">
+                        <span className="font-bold w-[40px] shrink-0">AGE:</span>
+                        <span>{client.age} YEARS</span>
                     </div>
-                </div>
 
-                {/* Patient Info Row 2 */}
-                <div className="flex gap-4 mb-2 text-[11px]">
-                    <div className="flex-1">
-                        <span className="font-bold">REQ. DOC.:</span> {report.refDoctor || 'N/A'}
+                    {/* Row 2 */}
+                    <div className="col-span-6 flex">
+                        <span className="font-bold w-[70px] shrink-0">REQ. DOC.:</span>
+                        <span>{report.refDoctor || 'N/A'}</span>
                     </div>
-                    <div>
-                        <span className="font-bold">ADDRESS:</span> LMC
+                    <div className="col-span-3 flex">
+                        <span className="font-bold w-[65px] shrink-0">ADDRESS:</span>
+                        <span>LMC</span>
                     </div>
-                    <div>
-                        <span className="font-bold">DATE:</span> {formatDate(report.date || report.createdAt)}
+                    <div className="col-span-3 flex">
+                        <span className="font-bold w-[40px] shrink-0">DATE:</span>
+                        <span>{formatDate(report.date || report.createdAt)}</span>
                     </div>
                 </div>
 
@@ -140,7 +140,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
 
                 {/* Content */}
                 <div className="mb-1 text-[11px]">
-                    <span className="font-bold">CONTENT:</span> <span className="italic">{report.stomachContent || 'EMPTY'}</span>
+                    <span className="font-bold">STOMACH CONTENT:</span> <span className="italic">{report.stomachContent || 'EMPTY'}</span>
                 </div>
 
                 {/* Instruments Used Row */}
@@ -171,7 +171,10 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 {/* Anatomical Findings */}
                 <div className="mb-4 text-[11px] space-y-1">
                     {report.oesophagusGE && (
-                        <p><span className="font-bold">Oesophagus AND G.E junction:</span> {report.oesophagusGE}</p>
+                        <p><span className="font-bold">Oesophagus:</span> {report.oesophagusGE}</p>
+                    )}
+                    {report.geJunction && (
+                        <p><span className="font-bold">G.E Junction:</span> {report.geJunction}</p>
                     )}
                     {report.fundus && (
                         <p><span className="font-bold">Fundus:</span> {report.fundus}</p>
@@ -185,10 +188,15 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     {report.pylorus && (
                         <p><span className="font-bold">Pylorus:</span> {report.pylorus}</p>
                     )}
-                    {report.duodenum && (
+                    {(report.d1 || report.d2 || report.duodenum) && (
                         <>
                             <p className="font-bold mt-2">DUODENUM:</p>
-                            <p><span className="font-bold">1st & 2nd Position:</span> {report.duodenum}</p>
+                            {report.d1 && <p><span className="font-bold">1st Position:</span> {report.d1}</p>}
+                            {report.d2 && <p><span className="font-bold">2nd Position:</span> {report.d2}</p>}
+                            {/* Fallback for legacy data */}
+                            {!report.d1 && !report.d2 && report.duodenum && (
+                                <p><span className="font-bold">1st & 2nd Position:</span> {report.duodenum}</p>
+                            )}
                         </>
                     )}
                     {report.findings && (
@@ -196,9 +204,15 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     )}
                 </div>
 
-                {/* HUT Test */}
+                {/* HUT / Antigen Test */}
                 <div className="mb-2 text-[11px]">
-                    <span className="font-bold">(HUT – TEST)</span> Test: <span className="font-bold">{report.hutTestResult || 'N/A'}</span>
+                    {report.testType && report.testResult ? (
+                        <p>
+                            <span className="font-bold">{report.testType === 'Stool Antigen Test' ? 'H.pylori / Antigen (stool) Test' : 'H.pylori / Antigen (HUT) Test'}:</span> <span className="font-bold uppercase">{report.testResult}</span>
+                        </p>
+                    ) : (
+                        <p><span className="font-bold">H.pylori / Antigen (HUT) Test:</span> <span className="font-bold uppercase">{report.hutTestResult ? String(report.hutTestResult).replace(/\(HUT - TEST\) Test:/i, '').replace(/\(STOOL ANTIGEN\) Test:/i, '').trim() : 'PENDING'}</span></p>
+                    )}
                 </div>
 
                 {/* Impression */}
@@ -206,9 +220,14 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     <span className="font-bold">IMPRESSION:</span> <span className="font-bold">{report.impression || 'N/A'}</span>
                 </div>
 
-                {/* Comments / Prescription */}
-                <div className="mb-8 text-[11px]">
-                    <span className="font-bold">COMMENTS:</span> {report.comments || report.medication || 'N/A'}
+                {/* Comments */}
+                <div className="mb-4 text-[11px]">
+                    <span className="font-bold">COMMENTS:</span> <span className="uppercase">{report.comments || 'N/A'}</span>
+                </div>
+
+                {/* Medication - Explicitly separate */}
+                <div className="mb-4 text-[11px]">
+                    <span className="font-bold">MEDICATION:</span> <span className="uppercase">{report.medication || ''}</span>
                 </div>
 
                 {/* Doctor Signature */}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
@@ -13,6 +14,7 @@ import { toast } from 'sonner'
  * Automatically generates unique client ID (LMC-XXXXXX) upon registration
  */
 export function RegisterClient() {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
@@ -44,10 +46,6 @@ export function RegisterClient() {
     }))
   }
 
-  /**
-   * Handles form submission
-   * Sends client data to API and creates new client with unique ID
-   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -76,16 +74,22 @@ export function RegisterClient() {
         return
       }
 
-      // Success: Show client ID and reset form
+      // Success: Show client ID and redirect
       toast.success(`Client registered successfully! ID: ${result.data.clientId}`)
 
-      // Reset form to initial state
-      setFormData({
-        name: '',
-        sex: '',
-        age: '',
-        address: '',
-      })
+      // Redirect to the client's report page to create a new report
+      // We assume the route structure /client/[clientId] exists and shows the client details/reports
+      // If the user wants to go directly to creating a report, we might need a specific query param or route
+      // For now, redirecting to the client's main page is the standard flow, where they can click "New Report"
+      // BUT user asked: "redirect to the clients report page to create new report"
+      // Based on the app structure, usually it's /client/[clientId] which has the SearchClient/MedicalReportForm
+      // Let's redirect there.
+
+      // Wait a moment for toast to be visible then redirect
+      setTimeout(() => {
+        router.push(`/client/${result.data.clientId}`)
+      }, 1000)
+
     } catch (error) {
       console.error('Error registering client:', error)
       toast.error('An error occurred while registering the client')
@@ -98,7 +102,7 @@ export function RegisterClient() {
     <div className="w-full max-w-4xl mx-auto p-6">
       <Card className="p-8">
         <h1 className="text-3xl font-bold mb-2">Register New Client</h1>
-        <p className="text-gray-600 mb-6">Fill in the client details below. A unique ID (LMC-XXXXXX) will be automatically generated.</p>
+        <p className="text-gray-600 mb-6">Fill in the client details below. A unique ID (LMC-END-0001...) will be automatically generated.</p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information Section */}

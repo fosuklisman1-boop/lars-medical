@@ -15,9 +15,7 @@ export async function PUT(
         const body = await request.json()
 
         // Prepare update data
-        const updateData: any = {
-            updatedAt: new Date().toISOString()
-        }
+        const updateData: any = {}
 
         // Map fields
         if (body.refDoctor !== undefined) updateData.refDoctor = body.refDoctor
@@ -29,18 +27,26 @@ export async function PUT(
         if (body.stomachContent !== undefined) updateData.stomachContent = body.stomachContent
         if (body.instrumentsUsed) updateData.instrumentsUsed = body.instrumentsUsed
         if (body.clinicalSummary !== undefined) updateData.clinicalSummary = body.clinicalSummary
+        if (body.biopsy !== undefined) updateData.biopsy = body.biopsy
+        if (body.biopsySite !== undefined) updateData.biopsySite = body.biopsySite
         // Anatomical Findings
         if (body.oesophagusGE !== undefined) updateData.oesophagusGE = body.oesophagusGE
+        if (body.geJunction !== undefined) updateData.geJunction = body.geJunction
         if (body.fundus !== undefined) updateData.fundus = body.fundus
         if (body.body !== undefined) updateData.body = body.body
         if (body.antrum !== undefined) updateData.antrum = body.antrum
         if (body.pylorus !== undefined) updateData.pylorus = body.pylorus
-        if (body.duodenum !== undefined) updateData.duodenum = body.duodenum
+        if (body.d1 !== undefined) updateData.d1 = body.d1
+        if (body.d2 !== undefined) updateData.d2 = body.d2
+        // if (body.duodenum !== undefined) updateData.duodenum = body.duodenum
         if (body.findings !== undefined) updateData.findings = body.findings
         if (body.hutTestResult !== undefined) updateData.hutTestResult = body.hutTestResult
         if (body.impression !== undefined) updateData.impression = body.impression
         if (body.comments !== undefined) updateData.comments = body.comments
         if (body.medication !== undefined) updateData.medication = body.medication
+
+        if (body.testType !== undefined) updateData.testType = body.testType
+        if (body.testResult !== undefined) updateData.testResult = body.testResult
 
         const { data: updatedReport, error } = await supabase
             .from('MedicalReport')

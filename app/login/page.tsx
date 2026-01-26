@@ -95,9 +95,10 @@ export default function LoginPage() {
                             initial={{ scale: 0.8 }}
                             animate={{ scale: 1 }}
                             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                            className="inline-flex p-4 rounded-2xl bg-blue-600 shadow-lg shadow-blue-500/20 mb-6"
+                            className="inline-flex rounded-2xl overflow-hidden shadow-lg shadow-blue-500/20 mb-6 w-24 h-24 bg-white"
                         >
-                            <Stethoscope className="w-8 h-8 text-white" />
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src="/logo.jpg" alt="LMC Logo" className="w-full h-full object-cover" />
                         </motion.div>
                         <h1 className="text-3xl font-black text-white tracking-tight mb-2">Admin Portal</h1>
                         <p className="text-slate-400">Please sign in to access client records</p>

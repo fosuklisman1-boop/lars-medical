@@ -10,6 +10,7 @@ interface AutocompleteInputProps {
     placeholder?: string
     field: string // The field name for fetching suggestions
     className?: string
+    disabled?: boolean
 }
 
 export function AutocompleteInput({
@@ -18,7 +19,8 @@ export function AutocompleteInput({
     onChange,
     placeholder,
     field,
-    className
+    className,
+    disabled
 }: AutocompleteInputProps) {
     const [suggestions, setSuggestions] = useState<string[]>([])
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([])
@@ -47,11 +49,11 @@ export function AutocompleteInput({
 
     // Filter suggestions based on current input
     useEffect(() => {
-        if (value.trim() === '') {
+        if ((value || '').trim() === '') {
             setFilteredSuggestions(suggestions.slice(0, 8))
         } else {
             const filtered = suggestions.filter(suggestion =>
-                suggestion.toLowerCase().includes(value.toLowerCase())
+                suggestion.toLowerCase().includes((value || '').toLowerCase())
             ).slice(0, 8)
             setFilteredSuggestions(filtered)
         }
@@ -87,6 +89,7 @@ export function AutocompleteInput({
                 placeholder={placeholder}
                 className={className}
                 autoComplete="off"
+                disabled={disabled}
             />
 
             {showSuggestions && filteredSuggestions.length > 0 && (

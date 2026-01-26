@@ -67,34 +67,50 @@ export async function POST(request: Request) {
       )
     }
 
-    // Generate unique client ID
-    let clientId = generateClientId()
-    let isUnique = false
-    let attempts = 0
-    const maxAttempts = 10
+    // Check for existing client with same Name, Sex and Age
+    // This prevents re-registration of the same person
+    const { data: existingClient } = await supabase
+      .from('Client')
+      .select('*')
+      .ilike('name', body.name.trim()) // Case insensitive name match
+      .eq('sex', body.sex)
+      .eq('age', parseInt(body.age))
+      .maybeSingle() // Use maybeSingle to avoid error if 0 rows, but error if > 1 (though logic handles 1)
 
-    // Ensure the generated ID is unique
-    while (!isUnique && attempts < maxAttempts) {
-      const { data: existing } = await supabase
-        .from('Client')
-        .select('clientId')
-        .eq('clientId', clientId)
-        .single()
+    if (existingClient) {
+      return NextResponse.json(
+        {
+          success: true,
+          message: 'Client already exists. Redirecting to existing record.',
+          data: existingClient,
+          isExisting: true
+        },
+        { status: 200 } // OK status, not Created
+      )
+    }
 
-      if (!existing) {
-        isUnique = true
-      } else {
-        clientId = generateClientId()
-        attempts++
+    // Generate sequential client ID: LMC-END-XXXXXXXX
+    // 1. Fetch the latest client ID
+    const { data: latestClient } = await supabase
+      .from('Client')
+      .select('clientId')
+      .order('dateOfRegistration', { ascending: false })
+      .limit(1)
+      .single()
+
+    let nextIdNumber = 1
+
+    if (latestClient && latestClient.clientId) {
+      // Extract the number part
+      // Format: LMC-END-XXXXXXXX
+      const parts = latestClient.clientId.split('-')
+      if (parts.length === 3 && !isNaN(parseInt(parts[2]))) {
+        nextIdNumber = parseInt(parts[2]) + 1
       }
     }
 
-    if (!isUnique) {
-      return NextResponse.json(
-        { success: false, error: 'Failed to generate unique client ID' },
-        { status: 500 }
-      )
-    }
+    // Format: LMC-END-XXXX (min 4 digits, expands naturally)
+    const clientId = `LMC-END-${String(nextIdNumber).padStart(4, '0')}`
 
     // Create new client in Supabase
     // Note: 'dateOfRegistration', 'createdAt', 'updatedAt' can ideally be handled by default now() values in DB,
