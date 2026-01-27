@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
-import { Printer, X, Loader2, Home as HomeIcon } from 'lucide-react'
+import { Printer, Loader2, Home as HomeIcon } from 'lucide-react'
 import { useReactToPrint } from 'react-to-print'
 
 import { MedicalReportForm } from '@/components/sections/MedicalReportForm'
 import { PrintableReport } from '@/components/sections/PrintReport'
+
+import { Client, MedicalReport } from '@/types'
 
 export default function ClientDetailsPage({ params }: { params: Promise<{ clientId: string }> }) {
     const router = useRouter()
@@ -19,11 +21,11 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
     const { clientId } = use(params)
 
     const [loading, setLoading] = useState(true)
-    const [client, setClient] = useState<any>(null)
-    const [reports, setReports] = useState<any[]>([])
+    const [client, setClient] = useState<Client | null>(null)
+    const [reports, setReports] = useState<MedicalReport[]>([])
     const [isEditingReport, setIsEditingReport] = useState(false)
-    const [editingReport, setEditingReport] = useState<any>(null)
-    const [reportToPrint, setReportToPrint] = useState<any>(null)
+    const [editingReport, setEditingReport] = useState<MedicalReport | null>(null)
+    const [reportToPrint, setReportToPrint] = useState<MedicalReport | null>(null)
 
     // Check auth (simplified, assuming middleware or parent layout checks, but added just in case)
     // Actually, usually headers/layout handle this, but let's be safe.
@@ -34,7 +36,7 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
         documentTitle: `Medical_Report_${client?.name || 'Client'}_${new Date().toLocaleDateString()}`,
     })
 
-    const triggerPrint = (report: any) => {
+    const triggerPrint = (report: MedicalReport | null) => {
         setReportToPrint(report)
         // Small delay to let the print component update its props before printing
         setTimeout(() => {
@@ -77,6 +79,7 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
         if (clientId) {
             fetchClientAndReports()
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [clientId])
 
     if (loading) {
@@ -99,7 +102,7 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
                 {isEditingReport ? (
                     <MedicalReportForm
                         client={client}
-                        report={editingReport}
+                        report={editingReport || undefined}
                         onSave={async (savedReport) => {
                             await fetchClientAndReports() // Reload reports
                             setEditingReport(savedReport)
@@ -181,7 +184,7 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
                                             <div className="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-3xl group-hover:bg-blue-600 transition-colors duration-300" />
                                             <div className="relative">
                                                 <Badge variant="outline" className="mb-2 bg-slate-50 border-none text-slate-500">
-                                                    {new Date(report.date || report.createdAt).toLocaleDateString()}
+                                                    {new Date(report.date || report.createdAt || new Date()).toLocaleDateString()}
                                                 </Badge>
                                                 <h4 className="font-black text-slate-800 group-hover:text-blue-700 transition-colors uppercase truncate">
                                                     {report.procedure || 'Untitled Procedure'}
@@ -218,11 +221,11 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
 
                 {/* Print Container */}
                 <div style={{ position: 'fixed', opacity: 0, pointerEvents: 'none', left: '-9999px' }}>
-                    {client && (
+                    {client && reportToPrint && (
                         <PrintableReport
                             ref={printRef}
                             client={client}
-                            report={reportToPrint || {}}
+                            report={reportToPrint}
                         />
                     )}
                 </div>

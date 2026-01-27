@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
-import { generateClientId } from '@/lib/client-id'
+
 
 /**
  * GET /api/clients

@@ -3,9 +3,11 @@
 import React from 'react'
 // import { Badge } from '@/components/ui/badge' // This import is no longer needed based on the new code
 
+import { Client, MedicalReport } from '@/types'
+
 interface PrintReportProps {
-    client: any
-    report: any
+    client: Client
+    report: MedicalReport
 }
 
 export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps>(
@@ -103,7 +105,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     </div>
                     <div className="col-span-3 flex">
                         <span className="font-bold w-[40px] shrink-0">DATE:</span>
-                        <span>{formatDate(report.date || report.createdAt)}</span>
+                        <span>{formatDate(report.date || report.createdAt || null)}</span>
                     </div>
                 </div>
 
@@ -126,10 +128,10 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 {/* Time Row */}
                 <div className="flex gap-8 mb-1 text-[11px]">
                     <div>
-                        <span className="font-bold">TIME STARTED:</span> {formatTime(report.timeStarted) || 'N/A'}
+                        <span className="font-bold">TIME STARTED:</span> {formatTime(report.timeStarted || null) || 'N/A'}
                     </div>
                     <div>
-                        <span className="font-bold">TIME ENDED:</span> {formatTime(report.timeEnded) || 'N/A'}
+                        <span className="font-bold">TIME ENDED:</span> {formatTime(report.timeEnded || null) || 'N/A'}
                     </div>
                 </div>
 

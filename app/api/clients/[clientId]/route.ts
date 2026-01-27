@@ -77,6 +77,7 @@ export async function PUT(
     }
 
     // Prepare update data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateData: any = {
       updatedAt: new Date().toISOString()
     }
@@ -160,7 +161,7 @@ export async function DELETE(
     }
 
     // Delete the client
-    const { error, count } = await supabase
+    const { error } = await supabase
       .from('Client')
       .delete({ count: 'exact' }) // Request count to know if something was deleted
       .eq('clientId', clientId)

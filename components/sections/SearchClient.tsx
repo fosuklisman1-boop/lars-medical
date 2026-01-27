@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Search, X, Loader2 } from 'lucide-react'
+import { Loader2, X } from 'lucide-react'
+import { Client } from '@/types'
 
 /**
  * SearchClient Component
@@ -17,7 +18,9 @@ export function SearchClient() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const [searching, setSearching] = useState(false)
-  const [searchResults, setSearchResults] = useState<any[]>([])
+
+
+  const [searchResults, setSearchResults] = useState<Client[]>([])
 
   /**
    * Real-time search function
@@ -93,7 +96,7 @@ export function SearchClient() {
           )}
         </div>
         {searchQuery && !searching && searchResults.length === 0 && (
-          <p className="text-sm text-slate-400 mt-3">No clients found matching "{searchQuery}"</p>
+          <p className="text-sm text-slate-400 mt-3">No clients found matching &quot;{searchQuery}&quot;</p>
         )}
       </Card>
 
@@ -126,7 +129,7 @@ export function SearchClient() {
       {/* Empty State */}
       {searchResults.length === 0 && searchQuery && !searching && (
         <Card className="p-8 text-center bg-slate-50 border-dashed border-2">
-          <p className="text-slate-600">No clients found matching <span className="font-bold">"{searchQuery}"</span></p>
+          <p className="text-slate-600">No clients found matching <span className="font-bold">&quot;{searchQuery}&quot;</span></p>
           <p className="text-sm text-slate-400 mt-2">Check the ID or try searching by name</p>
         </Card>
       )}

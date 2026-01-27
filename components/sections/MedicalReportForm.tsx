@@ -10,18 +10,18 @@ import { AutocompleteTextarea } from '@/components/ui/autocomplete-textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
 import { Loader2, Printer } from 'lucide-react'
+import { Client, MedicalReport } from '@/types'
 
 interface MedicalReportFormProps {
-    client: any
-    report?: any // Optional: if provided, we are editing. If not, creating.
-    onSave: (report: any) => void
+    client: Client
+    report?: MedicalReport // Optional: if provided, we are editing. If not, creating.
+    onSave: (report: MedicalReport) => void
     onCancel: () => void
-    onPrint?: (report: any) => void // Optional print callback
+    onPrint?: (report: MedicalReport) => void // Optional print callback
 }
 
 export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }: MedicalReportFormProps) {
     const [loading, setLoading] = useState(false)
-    const [showSavePrompt, setShowSavePrompt] = useState(false)
     const isEditing = !!report
 
     const [formData, setFormData] = useState({
@@ -43,6 +43,8 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
         body: report?.body || '',
         antrum: report?.antrum || '',
         pylorus: report?.pylorus || '',
+        d1: report?.d1 || '',
+        d2: report?.d2 || '',
         duodenum: report?.duodenum || '',
         findings: report?.findings || '',
         hutTestResult: report?.hutTestResult || '',
@@ -76,7 +78,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                 pylorus: report.pylorus || '',
                 d1: report.d1 || '',
                 d2: report.d2 || '',
-                // duodenum: report.duodenum || '',
+                duodenum: report.duodenum || '',
                 findings: report.findings || '',
                 hutTestResult: report.hutTestResult || '',
                 impression: report.impression || '',

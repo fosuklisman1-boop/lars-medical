@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { User } from '@supabase/supabase-js'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+
 import { RegisterClient } from '@/components/sections/RegisterClient'
 import { SearchClient } from '@/components/sections/SearchClient'
-import { Stethoscope, Search, Plus, LogOut, User, Loader2 } from 'lucide-react'
+import { Search, Plus, LogOut, User as UserIcon, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 /**
@@ -18,7 +19,7 @@ import { toast } from 'sonner'
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'register' | 'search'>('register')
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function Home() {
       await supabase.auth.signOut()
       toast.success('Logged out successfully')
       router.push('/login')
-    } catch (error) {
+    } catch {
       toast.error('Error logging out')
     }
   }
@@ -88,7 +89,7 @@ export default function Home() {
                 <p className="text-[10px] text-blue-600 font-black uppercase tracking-tighter bg-blue-50 px-1 rounded">System Administrator</p>
               </div>
               <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden">
-                <User className="w-5 h-5 text-slate-400" />
+                <UserIcon className="w-5 h-5 text-slate-400" />
               </div>
               <Button
                 variant="ghost"

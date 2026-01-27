@@ -62,6 +62,7 @@ export async function GET(request: Request) {
 
         // Extract unique non-empty values
         const rawValues: string[] = []
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         data.forEach((row: any) => {
             if (row[field]) rawValues.push(row[field])
             // Add legacy suggestions for d1/d2
@@ -70,6 +71,7 @@ export async function GET(request: Request) {
 
         const uniqueValues = [...new Set(
             rawValues
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 .filter((val: any) => val && typeof val === 'string' && val.trim() !== '')
         )].slice(0, 50) // Limit to 50 suggestions
 
