@@ -111,7 +111,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
         pylorus: report?.pylorus || '',
         d1: report?.d1 || '',
         d2: report?.d2 || '',
-        // duodenum: report?.duodenum || '',
+        duodenum: report?.duodenum || '',
         findings: report?.findings || '',
         hutTestResult: report?.hutTestResult || '',
         impression: report?.impression || '',
