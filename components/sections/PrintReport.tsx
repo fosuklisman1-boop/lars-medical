@@ -210,7 +210,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 <div className="mb-2 text-[14px]">
                     {report.testType && report.testResult ? (
                         <p>
-                            <span>{report.testType === 'Stool Antigen Test' ? 'H.pylori / Antigen (stool) Test' : 'H.pylori / Antigen (HUT) Test'}:</span> <span className="font-bold italic uppercase">{report.testResult}</span>
+                            <span>{report.testType === 'Stool Antigen Test' ? 'H.pylori Antigen (stool) Test' : 'H.pylori Antigen (HUT) Test'}:</span> <span className="font-bold italic uppercase">{report.testResult}</span>
                         </p>
                     ) : (
                         <p><span>(HUT - TEST) Test:</span> <span className="font-bold italic uppercase">{report.hutTestResult ? String(report.hutTestResult).replace(/\(HUT - TEST\) Test:/i, '').replace(/\(STOOL ANTIGEN\) Test:/i, '').trim() : 'PENDING'}</span></p>
