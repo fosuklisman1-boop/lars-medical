@@ -82,36 +82,36 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 <div className="grid grid-cols-12 gap-y-1 text-[14px] mb-2 uppercase tracking-tight">
                     {/* Row 1 */}
                     <div className="col-span-6 flex">
-                        <span className="font-bold w-[50px] shrink-0">NAME:</span>
+                        <span className="w-[50px] shrink-0">NAME:</span>
                         <span className="font-bold">{client.name}</span>
                     </div>
                     <div className="col-span-3 flex">
-                        <span className="font-bold w-[40px] shrink-0">SEX:</span>
-                        <span>{client.sex}</span>
+                        <span className="w-[40px] shrink-0">SEX:</span>
+                        <span className="font-bold">{client.sex}</span>
                     </div>
                     <div className="col-span-3 flex">
-                        <span className="font-bold w-[40px] shrink-0">AGE:</span>
-                        <span>{client.age} YEARS</span>
+                        <span className="w-[40px] shrink-0">AGE:</span>
+                        <span className="font-bold">{client.age} YEARS</span>
                     </div>
 
                     {/* Row 2 */}
                     <div className="col-span-6 flex">
-                        <span className="font-bold w-[70px] shrink-0">REQ. DOC.:</span>
-                        <span>{report.refDoctor || 'N/A'}</span>
+                        <span className="w-[70px] shrink-0">REQ. DOC.:</span>
+                        <span className="font-bold">{report.refDoctor || 'N/A'}</span>
                     </div>
                     <div className="col-span-3 flex">
-                        <span className="font-bold w-[65px] shrink-0">ADDRESS:</span>
-                        <span>LMC</span>
+                        <span className="w-[65px] shrink-0">ADDRESS:</span>
+                        <span className="font-bold">LMC</span>
                     </div>
                     <div className="col-span-3 flex">
-                        <span className="font-bold w-[40px] shrink-0">DATE:</span>
-                        <span>{formatDate(report.date || report.createdAt || null)}</span>
+                        <span className="w-[40px] shrink-0">DATE:</span>
+                        <span className="font-bold">{formatDate(report.date || report.createdAt || null)}</span>
                     </div>
                 </div>
 
                 {/* Operation Team */}
                 <div className="mb-1 text-[14px]">
-                    <span className="font-bold underline">OPERATION TEAM:</span>
+                    <span className="underline">OPERATION TEAM:</span>
                     <div className="ml-4">
                         {Array.isArray(report.operationTeam) && report.operationTeam.length > 0 ? (
                             report.operationTeam.map((member: string, index: number) => (
@@ -128,44 +128,44 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 {/* Time Row */}
                 <div className="flex gap-8 mb-1 text-[14px]">
                     <div>
-                        <span className="font-bold">TIME STARTED:</span> {formatTime(report.timeStarted || null) || 'N/A'}
+                        <span>TIME STARTED:</span> <span className="font-bold">{formatTime(report.timeStarted || null) || 'N/A'}</span>
                     </div>
                     <div>
-                        <span className="font-bold">TIME ENDED:</span> {formatTime(report.timeEnded || null) || 'N/A'}
+                        <span>TIME ENDED:</span> <span className="font-bold">{formatTime(report.timeEnded || null) || 'N/A'}</span>
                     </div>
                 </div>
 
                 {/* Medication Given */}
                 <div className="mb-1 text-[14px]">
-                    <span className="font-bold">MEDICATION GIVEN:</span> {report.medicationGiven || 'N/A'}
+                    <span>MEDICATION GIVEN:</span> <span className="font-bold">{report.medicationGiven || 'N/A'}</span>
                 </div>
 
                 {/* Content */}
                 <div className="mb-1 text-[14px]">
-                    <span className="font-bold">STOMACH CONTENT:</span> <span className="italic">{report.stomachContent || 'EMPTY'}</span>
+                    <span>STOMACH CONTENT:</span> <span className="font-bold italic">{report.stomachContent || 'EMPTY'}</span>
                 </div>
 
                 {/* Instruments Used Row */}
                 <div className="flex gap-6 mb-1 text-[14px]">
                     <div>
-                        <span className="font-bold">INSTRUMENTS USED:</span> {Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-IT140')}
+                        <span>INSTRUMENTS USED:</span> <span className="italic">{Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-IT140')}</span>
                     </div>
                     <div>
-                        <span className="font-bold">BIOPSY:</span> {report.biopsy || ''}
+                        <span>BIOPSY:</span> {report.biopsy || ''}
                     </div>
                     <div>
-                        <span className="font-bold">SITE OF BIOPSY:</span> {report.biopsySite || ''}
+                        <span>SITE OF BIOPSY:</span> {report.biopsySite || ''}
                     </div>
                 </div>
 
                 {/* Clinical Summary */}
                 <div className="mb-2 text-[14px]">
-                    <span className="font-bold">CLINICAL SUMMARY:</span> <span className="italic">{report.clinicalSummary || ''}</span>
+                    <span>CLINICAL SUMMARY:</span> <span className="font-bold italic">{report.clinicalSummary || ''}</span>
                 </div>
 
                 {/* Findings Header */}
                 <div className="mb-2">
-                    <p className="font-bold underline text-[14px]">
+                    <p className="underline text-[14px]">
                         {(report.procedure || 'UPPER ENDOSCOPY').toUpperCase()} FINDINGS:
                     </p>
                 </div>
@@ -173,36 +173,36 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 {/* Anatomical Findings */}
                 <div className="mb-4 text-[14px] space-y-1">
                     {report.oesophagusGE && (
-                        <p><span className="font-bold">Oesophagus:</span> {report.oesophagusGE}</p>
+                        <p><span>Oesophagus and G.E junction:</span> <span className="font-bold">{report.oesophagusGE}</span></p>
                     )}
-                    {report.geJunction && (
-                        <p><span className="font-bold">G.E Junction:</span> {report.geJunction}</p>
+                    {(report.geJunction && !report.oesophagusGE) && (
+                        <p><span>G.E Junction:</span> <span className="font-bold">{report.geJunction}</span></p>
                     )}
                     {report.fundus && (
-                        <p><span className="font-bold">Fundus:</span> {report.fundus}</p>
+                        <p><span>Fundus:</span> <span className="font-bold">{report.fundus}</span></p>
                     )}
                     {report.body && (
-                        <p><span className="font-bold">Body:</span> {report.body}</p>
+                        <p><span>Body:</span> <span className="font-bold">{report.body}</span></p>
                     )}
                     {report.antrum && (
-                        <p><span className="font-bold">Antrum:</span> {report.antrum}</p>
+                        <p><span>Antrum:</span> <span className="font-bold">{report.antrum}</span></p>
                     )}
                     {report.pylorus && (
-                        <p><span className="font-bold">Pylorus:</span> {report.pylorus}</p>
+                        <p><span>Pylorus:</span> <span className="font-bold">{report.pylorus}</span></p>
                     )}
                     {(report.d1 || report.d2 || report.duodenum) && (
                         <>
-                            <p className="font-bold mt-2">DUODENUM:</p>
-                            {report.d1 && <p><span className="font-bold">1st Position:</span> {report.d1}</p>}
-                            {report.d2 && <p><span className="font-bold">2nd Position:</span> {report.d2}</p>}
+                            <p className="mt-2">DUODENUM:</p>
+                            {report.d1 && <p><span>1st Position:</span> <span className="font-bold">{report.d1}</span></p>}
+                            {report.d2 && <p><span>2nd Position:</span> <span className="font-bold">{report.d2}</span></p>}
                             {/* Fallback for legacy data */}
                             {!report.d1 && !report.d2 && report.duodenum && (
-                                <p><span className="font-bold">1st & 2nd Position:</span> {report.duodenum}</p>
+                                <p><span>1st & 2nd Position:</span> <span className="font-bold">{report.duodenum}</span></p>
                             )}
                         </>
                     )}
                     {report.findings && (
-                        <p className="mt-2 whitespace-pre-wrap">{report.findings}</p>
+                        <p className="mt-2 whitespace-pre-wrap font-bold">{report.findings}</p>
                     )}
                 </div>
 
@@ -210,26 +210,26 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 <div className="mb-2 text-[14px]">
                     {report.testType && report.testResult ? (
                         <p>
-                            <span className="font-bold">{report.testType === 'Stool Antigen Test' ? 'H.pylori / Antigen (stool) Test' : 'H.pylori / Antigen (HUT) Test'}:</span> <span className="font-bold uppercase">{report.testResult}</span>
+                            <span>{report.testType === 'Stool Antigen Test' ? 'H.pylori / Antigen (stool) Test' : 'H.pylori / Antigen (HUT) Test'}:</span> <span className="font-bold italic uppercase">{report.testResult}</span>
                         </p>
                     ) : (
-                        <p><span className="font-bold">H.pylori / Antigen (HUT) Test:</span> <span className="font-bold uppercase">{report.hutTestResult ? String(report.hutTestResult).replace(/\(HUT - TEST\) Test:/i, '').replace(/\(STOOL ANTIGEN\) Test:/i, '').trim() : 'PENDING'}</span></p>
+                        <p><span>(HUT - TEST) Test:</span> <span className="font-bold italic uppercase">{report.hutTestResult ? String(report.hutTestResult).replace(/\(HUT - TEST\) Test:/i, '').replace(/\(STOOL ANTIGEN\) Test:/i, '').trim() : 'PENDING'}</span></p>
                     )}
                 </div>
 
                 {/* Impression */}
                 <div className="mb-3 text-[14px]">
-                    <span className="font-bold">IMPRESSION:</span> <span className="font-bold">{report.impression || 'N/A'}</span>
+                    <span>IMPRESSION:</span> <span className="font-bold italic">{report.impression || 'N/A'}</span>
                 </div>
 
                 {/* Comments */}
                 <div className="mb-4 text-[14px]">
-                    <span className="font-bold">COMMENTS:</span> <span className="uppercase">{report.comments || 'N/A'}</span>
+                    <span>COMMENTS:</span> <span className="font-bold italic uppercase">{report.comments || 'N/A'}</span>
                 </div>
 
                 {/* Medication - Explicitly separate */}
                 <div className="mb-4 text-[14px]">
-                    <span className="font-bold">MEDICATION:</span> <span className="uppercase">{report.medication || ''}</span>
+                    <span>MEDICATION:</span> <span className="uppercase">{report.medication || ''}</span>
                 </div>
 
                 {/* Doctor Signature */}
