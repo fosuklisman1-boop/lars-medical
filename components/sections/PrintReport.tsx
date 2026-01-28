@@ -30,7 +30,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 className="bg-white text-black font-sans p-8 max-w-[210mm] mx-auto print:p-6 print:m-0"
                 style={{
                     fontFamily: 'Arial, sans-serif',
-                    fontSize: '14px',
+                    fontSize: '16px',
                     lineHeight: '1.4'
                 }}
             >
@@ -57,7 +57,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     </div>
 
                     {/* Address Lines - Compact & Centered */}
-                    <div className="text-center text-[14px] font-bold text-cyan-900 leading-tight space-y-1">
+                    <div className="text-center text-[16px] font-bold text-cyan-900 leading-tight space-y-1">
                         <p>
                             OPPOSITE VICTORY HARDWARE, SUNYANI-ABESIM ROAD, NEAR TYCO CITY HOTEL, SUNYANI
                         </p>
@@ -73,13 +73,13 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
 
                 {/* Procedure Title */}
                 <div className="text-center mb-4">
-                    <p className="font-bold underline text-[14px]">
+                    <p className="font-bold underline text-[16px]">
                         {(report.procedure || 'UPPER ENDOSCOPY').toUpperCase()}
                     </p>
                 </div>
 
                 {/* Patient Info Grid - Aligned perfectly like the image */}
-                <div className="grid grid-cols-12 gap-y-1 text-[14px] mb-2 uppercase tracking-tight">
+                <div className="grid grid-cols-12 gap-y-1 text-[16px] mb-2 uppercase tracking-tight">
                     {/* Row 1 */}
                     <div className="col-span-6 flex">
                         <span className="w-[50px] shrink-0">NAME:</span>
@@ -94,7 +94,6 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                         <span className="font-bold">{client.age} YEARS</span>
                     </div>
 
-                    {/* Row 2 */}
                     {/* Row 2 */}
                     <div className="col-span-6 flex items-start">
                         <span className="w-[85px] shrink-0 whitespace-nowrap">REQ. DOC.:</span>
@@ -111,7 +110,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 </div>
 
                 {/* Operation Team */}
-                <div className="mb-1 text-[14px]">
+                <div className="mb-1 text-[16px]">
                     <span className="underline">OPERATION TEAM:</span>
                     <div className="ml-4">
                         {Array.isArray(report.operationTeam) && report.operationTeam.length > 0 ? (
@@ -127,7 +126,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 </div>
 
                 {/* Time Row */}
-                <div className="flex gap-8 mb-1 text-[14px]">
+                <div className="flex gap-8 mb-1 text-[16px]">
                     <div>
                         <span>TIME STARTED:</span> <span className="font-bold">{formatTime(report.timeStarted || null) || 'N/A'}</span>
                     </div>
@@ -137,19 +136,19 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 </div>
 
                 {/* Medication Given */}
-                <div className="mb-1 text-[14px]">
+                <div className="mb-1 text-[16px]">
                     <span>MEDICATION GIVEN:</span> <span className="font-bold">{report.medicationGiven || 'N/A'}</span>
                 </div>
 
                 {/* Content - Hide for Colonoscopy typically, but requested image didn't show it explicitly. However, keeping it consistent or hiding if null */}
                 {(report.procedure !== 'LOWER ENDOSCOPY') && (
-                    <div className="mb-1 text-[14px]">
+                    <div className="mb-1 text-[16px]">
                         <span>STOMACH CONTENT:</span> <span className="font-bold italic">{report.stomachContent || 'EMPTY'}</span>
                     </div>
                 )}
 
                 {/* Instruments Used Row */}
-                <div className="flex gap-6 mb-1 text-[14px]">
+                <div className="flex gap-6 mb-1 text-[16px]">
                     <div>
                         <span>INSTRUMENTS USED:</span> <span>{Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-IT140')}</span>
                     </div>
@@ -162,19 +161,19 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 </div>
 
                 {/* Clinical Summary */}
-                <div className="mb-2 text-[14px]">
+                <div className="mb-2 text-[16px]">
                     <span>CLINICAL SUMMARY:</span> <span className="font-bold italic">{report.clinicalSummary || ''}</span>
                 </div>
 
                 {/* Findings Header */}
                 <div className="mb-2">
-                    <p className="underline text-[14px]">
+                    <p className="underline text-[16px]">
                         {report.procedure === 'LOWER ENDOSCOPY' ? 'COLONOSCOPY FINDINGS:' : ((report.procedure || 'UPPER ENDOSCOPY').toUpperCase() + ' FINDINGS:')}
                     </p>
                 </div>
 
                 {/* Anatomical Findings */}
-                <div className="mb-4 text-[14px] space-y-1">
+                <div className="mb-4 text-[16px] space-y-1">
                     {report.procedure === 'LOWER ENDOSCOPY' ? (
                         <>
                             {/* Lower Endoscopy Fields */}
@@ -254,7 +253,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
 
                 {/* HUT / Antigen Test - Hide for Colonoscopy */}
                 {report.procedure !== 'LOWER ENDOSCOPY' && (
-                    <div className="mb-2 text-[14px]">
+                    <div className="mb-2 text-[16px]">
                         {report.testType && report.testResult ? (
                             <p>
                                 <span>{report.testType === 'Stool Antigen Test' ? 'H.pylori Antigen (stool) Test' : 'H.pylori Antigen (HUT) Test'}:</span> <span className="font-bold italic uppercase">{report.testResult}</span>
@@ -266,22 +265,22 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 )}
 
                 {/* Impression */}
-                <div className="mb-3 text-[14px]">
+                <div className="mb-3 text-[16px]">
                     <span>IMPRESSION:</span> <span className="font-bold italic">{report.impression || 'N/A'}</span>
                 </div>
 
                 {/* Comments */}
-                <div className="mb-4 text-[14px]">
+                <div className="mb-4 text-[16px]">
                     <span>COMMENTS:</span> <span className="font-bold italic uppercase">{report.comments || 'N/A'}</span>
                 </div>
 
                 {/* Medication - Explicitly separate */}
-                <div className="mb-4 text-[14px]">
+                <div className="mb-4 text-[16px]">
                     <span>MEDICATION:</span> <span className="uppercase">{report.medication || ''}</span>
                 </div>
 
                 {/* Doctor Signature */}
-                <div className="text-right mt-12 text-[14px]">
+                <div className="text-right mt-12 text-[16px]">
                     <p className="font-bold">{report.refDoctor || 'DR. M. S. ADAMS'}</p>
                 </div>
             </div>
