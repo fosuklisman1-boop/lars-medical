@@ -350,7 +350,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium mb-1">
-                            {formData.testType === 'Stool Antigen Test' ? 'H.pylori / Antigen (stool) Test' : 'H.pylori / Antigen (HUT) Test'}
+                            {formData.testType === 'Stool Antigen Test' ? 'H.pylori Antigen (stool) Test' : 'H.pylori Antigen (HUT) Test'}
                         </label>
                         <div className="flex gap-2">
                             <div className="flex-1">
