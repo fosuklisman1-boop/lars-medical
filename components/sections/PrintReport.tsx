@@ -82,29 +82,29 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 <div className="grid grid-cols-12 gap-y-1 text-[16px] mb-2 uppercase tracking-tight">
                     {/* Row 1 */}
                     <div className="col-span-6 flex">
-                        <span className="w-[50px] shrink-0">NAME:</span>
+                        <span className="w-[60px] shrink-0">NAME:</span>
                         <span className="font-bold">{client.name}</span>
                     </div>
                     <div className="col-span-3 flex">
-                        <span className="w-[40px] shrink-0">SEX:</span>
+                        <span className="w-[50px] shrink-0">SEX:</span>
                         <span className="font-bold">{client.sex}</span>
                     </div>
                     <div className="col-span-3 flex">
-                        <span className="w-[40px] shrink-0">AGE:</span>
+                        <span className="w-[50px] shrink-0">AGE:</span>
                         <span className="font-bold">{client.age} YEARS</span>
                     </div>
 
                     {/* Row 2 */}
                     <div className="col-span-6 flex items-start">
-                        <span className="w-[85px] shrink-0 whitespace-nowrap">REQ. DOC.:</span>
+                        <span className="w-[100px] shrink-0 whitespace-nowrap">REQ. DOC.:</span>
                         <span className="font-bold">{report.refDoctor || 'N/A'}</span>
                     </div>
                     <div className="col-span-3 flex items-center">
-                        <span className="w-[75px] shrink-0 whitespace-nowrap">ADDRESS:</span>
+                        <span className="w-[90px] shrink-0 whitespace-nowrap">ADDRESS:</span>
                         <span className="font-bold">LMC</span>
                     </div>
                     <div className="col-span-3 flex">
-                        <span className="w-[40px] shrink-0">DATE:</span>
+                        <span className="w-[60px] shrink-0">DATE:</span>
                         <span className="font-bold">{formatDate(report.date || report.createdAt || null)}</span>
                     </div>
                 </div>
