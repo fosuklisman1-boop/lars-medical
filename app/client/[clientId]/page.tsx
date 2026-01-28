@@ -184,7 +184,16 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
                                             <div className="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-3xl group-hover:bg-blue-600 transition-colors duration-300" />
                                             <div className="relative">
                                                 <Badge variant="outline" className="mb-2 bg-slate-50 border-none text-slate-500">
-                                                    {new Date(report.date || report.createdAt || new Date()).toLocaleDateString()}
+                                                    {new Date(report.date || report.createdAt || new Date()).toLocaleDateString(undefined, {
+                                                        year: 'numeric',
+                                                        month: 'short',
+                                                        day: 'numeric',
+                                                    })}
+                                                    <span className="mx-2">•</span>
+                                                    {new Date(report.date || report.createdAt || new Date()).toLocaleTimeString(undefined, {
+                                                        hour: '2-digit',
+                                                        minute: '2-digit'
+                                                    })}
                                                 </Badge>
                                                 <h4 className="font-black text-slate-800 group-hover:text-blue-700 transition-colors uppercase truncate">
                                                     {report.procedure || 'Untitled Procedure'}
