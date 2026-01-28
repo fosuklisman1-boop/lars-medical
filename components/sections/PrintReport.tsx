@@ -95,12 +95,13 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     </div>
 
                     {/* Row 2 */}
-                    <div className="col-span-6 flex">
-                        <span className="w-[70px] shrink-0">REQ. DOC.:</span>
+                    {/* Row 2 */}
+                    <div className="col-span-6 flex items-start">
+                        <span className="w-[85px] shrink-0 whitespace-nowrap">REQ. DOC.:</span>
                         <span className="font-bold">{report.refDoctor || 'N/A'}</span>
                     </div>
-                    <div className="col-span-3 flex">
-                        <span className="w-[65px] shrink-0">ADDRESS:</span>
+                    <div className="col-span-3 flex items-center">
+                        <span className="w-[75px] shrink-0 whitespace-nowrap">ADDRESS:</span>
                         <span className="font-bold">LMC</span>
                     </div>
                     <div className="col-span-3 flex">
