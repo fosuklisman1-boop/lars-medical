@@ -202,7 +202,14 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
                                                     {report.impression || report.clinicalSummary || 'No details added yet'}
                                                 </p>
                                                 <div className="mt-4 flex items-center justify-between">
-                                                    <span className="text-xs font-bold text-slate-400">UID: {report.id.substring(0, 8)}</span>
+                                                    <div className="flex flex-col">
+                                                        <span className="text-xs font-bold text-slate-400">UID: {report.id.substring(0, 8)}</span>
+                                                        {report.updatedAt && (
+                                                            <span className="text-[10px] text-slate-300 mt-1">
+                                                                Updated: {new Date(report.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                         <Button
                                                             variant="outline"
