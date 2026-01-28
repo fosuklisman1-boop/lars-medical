@@ -19,7 +19,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { toast } from 'sonner'
-import { Loader2, Printer } from 'lucide-react'
+import { Loader2, Printer, ArrowLeft } from 'lucide-react'
 import { Client, MedicalReport } from '@/types'
 
 interface MedicalReportFormProps {
@@ -318,8 +318,22 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
 
     return (
         <Card className="p-8 mt-6">
-            <h2 className="text-2xl font-bold mb-6">{isEditing ? 'Edit' : 'New'} Medical Report</h2>
-            <p className="text-sm text-slate-500 mb-6">💡 Fields will show suggestions from previous reports as you type</p>
+            <div className="flex items-start gap-4 mb-6">
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={onCancel}
+                    className="shrink-0 text-slate-400 hover:text-slate-800 hover:bg-slate-100/50"
+                    title="Go Back"
+                >
+                    <ArrowLeft className="w-5 h-5" />
+                </Button>
+                <div>
+                    <h2 className="text-2xl font-bold">{isEditing ? 'Edit' : 'New'} Medical Report</h2>
+                    <p className="text-sm text-slate-500 mt-1">💡 Fields will show suggestions from previous reports as you type</p>
+                </div>
+            </div>
 
             <form id="report-form" onSubmit={handleSubmit} className="space-y-6">
                 {/* Procedure Info */}
