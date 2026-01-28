@@ -591,10 +591,12 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                         <label className="block text-sm font-medium mb-1">Comments (Expandable)</label>
                         <AutocompleteTextarea name="comments" value={formData.comments} onChange={handleInputChange} field="comments" placeholder={isLowerEndoscopy ? "NO SIGNS SUGGESTIVE OF POLYPS, TUMOURS, FISSURE, AND IBD ETC WERE SEEN." : "MAY BENEFIT FROM PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14 + TAB METRONIDAZOLE 400MG BD X 14 + BISMUTH 240MG BD X 14 + REVIEW UPON COMPLETION OF MEDICATION"} rows={3} />
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Prescribed Medication (Expandable)</label>
-                        <AutocompleteTextarea name="medication" value={formData.medication} onChange={handleInputChange} field="medication" placeholder="PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14..." rows={2} />
-                    </div>
+                    {!isLowerEndoscopy && (
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Prescribed Medication (Expandable)</label>
+                            <AutocompleteTextarea name="medication" value={formData.medication} onChange={handleInputChange} field="medication" placeholder="PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14..." rows={2} />
+                        </div>
+                    )}
                 </div>
 
                 {/* Actions */}
