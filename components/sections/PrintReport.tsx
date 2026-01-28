@@ -148,7 +148,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 {/* Instruments Used Row */}
                 <div className="flex gap-6 mb-1 text-[14px]">
                     <div>
-                        <span>INSTRUMENTS USED:</span> <span className="italic">{Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-IT140')}</span>
+                        <span>INSTRUMENTS USED:</span> <span>{Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-IT140')}</span>
                     </div>
                     <div>
                         <span>BIOPSY:</span> {report.biopsy || ''}
@@ -173,36 +173,36 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 {/* Anatomical Findings */}
                 <div className="mb-4 text-[14px] space-y-1">
                     {report.oesophagusGE && (
-                        <p><span>Oesophagus and G.E junction:</span> <span className="font-bold">{report.oesophagusGE}</span></p>
+                        <p><span>Oesophagus and G.E junction:</span> <span>{report.oesophagusGE}</span></p>
                     )}
                     {(report.geJunction && !report.oesophagusGE) && (
-                        <p><span>G.E Junction:</span> <span className="font-bold">{report.geJunction}</span></p>
+                        <p><span>G.E Junction:</span> <span>{report.geJunction}</span></p>
                     )}
                     {report.fundus && (
-                        <p><span>Fundus:</span> <span className="font-bold">{report.fundus}</span></p>
+                        <p><span>Fundus:</span> <span>{report.fundus}</span></p>
                     )}
                     {report.body && (
-                        <p><span>Body:</span> <span className="font-bold">{report.body}</span></p>
+                        <p><span>Body:</span> <span>{report.body}</span></p>
                     )}
                     {report.antrum && (
-                        <p><span>Antrum:</span> <span className="font-bold">{report.antrum}</span></p>
+                        <p><span>Antrum:</span> <span>{report.antrum}</span></p>
                     )}
                     {report.pylorus && (
-                        <p><span>Pylorus:</span> <span className="font-bold">{report.pylorus}</span></p>
+                        <p><span>Pylorus:</span> <span className="font-bold italic">{report.pylorus}</span></p>
                     )}
                     {(report.d1 || report.d2 || report.duodenum) && (
                         <>
                             <p className="mt-2">DUODENUM:</p>
-                            {report.d1 && <p><span>1st Position:</span> <span className="font-bold">{report.d1}</span></p>}
-                            {report.d2 && <p><span>2nd Position:</span> <span className="font-bold">{report.d2}</span></p>}
+                            {report.d1 && <p><span>1st Position:</span> <span>{report.d1}</span></p>}
+                            {report.d2 && <p><span>2nd Position:</span> <span>{report.d2}</span></p>}
                             {/* Fallback for legacy data */}
                             {!report.d1 && !report.d2 && report.duodenum && (
-                                <p><span>1st & 2nd Position:</span> <span className="font-bold">{report.duodenum}</span></p>
+                                <p><span>1st & 2nd Position:</span> <span>{report.duodenum}</span></p>
                             )}
                         </>
                     )}
                     {report.findings && (
-                        <p className="mt-2 whitespace-pre-wrap font-bold">{report.findings}</p>
+                        <p className="mt-2 whitespace-pre-wrap">{report.findings}</p>
                     )}
                 </div>
 
