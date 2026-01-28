@@ -8,6 +8,16 @@ import { Textarea } from '@/components/ui/textarea'
 import { AutocompleteInput } from '@/components/ui/autocomplete-input'
 import { AutocompleteTextarea } from '@/components/ui/autocomplete-textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { toast } from 'sonner'
 import { Loader2, Printer } from 'lucide-react'
 import { Client, MedicalReport } from '@/types'
@@ -175,6 +185,30 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
         setFormData(prev => ({ ...prev, [name]: value }))
     }
 
+    // Procedure Change Warning Logic
+    const [showProcedureWarning, setShowProcedureWarning] = useState(false)
+    const [pendingProcedure, setPendingProcedure] = useState<string | null>(null)
+
+    const handleProcedureChange = (newValue: string) => {
+        // If we are editing an existing report, OR if we have significant data entered?
+        // User request: "when updating a report" -> implies isEditing
+        if (isEditing && newValue !== formData.procedure) {
+            setPendingProcedure(newValue)
+            setShowProcedureWarning(true)
+        } else {
+            // Just change it if creating new or no warning needed
+            setFormData(prev => ({ ...prev, procedure: newValue }))
+        }
+    }
+
+    const confirmProcedureChange = () => {
+        if (pendingProcedure) {
+            setFormData(prev => ({ ...prev, procedure: pendingProcedure }))
+            setPendingProcedure(null)
+        }
+        setShowProcedureWarning(false)
+    }
+
     // Handle print button click
     const handlePrintClick = () => {
         if (!isEditing) {
@@ -298,7 +332,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                         <label className="block text-sm font-medium mb-1">Procedure</label>
                         <Select
                             value={formData.procedure}
-                            onValueChange={(value) => setFormData(prev => ({ ...prev, procedure: value }))}
+                            onValueChange={handleProcedureChange}
                         >
                             <SelectTrigger>
                                 <SelectValue placeholder="Select Procedure" />
@@ -310,6 +344,28 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                         </Select>
                     </div>
                 </div>
+
+                <AlertDialog open={showProcedureWarning} onOpenChange={setShowProcedureWarning}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Change Procedure Type?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Changing the procedure type will switch the form to the new procedure's layout.
+                                <br /><br />
+                                <span className="font-bold text-red-600">Warning:</span> Some data fields specific to the current procedure may be lost or hidden in the new format.
+                                <br />
+                                Are you sure you want to proceed?
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel onClick={() => {
+                                setShowProcedureWarning(false)
+                                setPendingProcedure(null)
+                            }}>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={confirmProcedureChange} className="bg-red-600 hover:bg-red-700">Yes, Change Procedure</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
 
                 {/* Team & Time */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
