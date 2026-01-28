@@ -36,7 +36,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
         clinicalSummary: report?.clinicalSummary || '',
         biopsy: report?.biopsy || 'NO',
         biopsySite: report?.biopsySite || '',
-        // Anatomical Findings
+        // Anatomical Findings (Upper)
         oesophagusGE: report?.oesophagusGE || '',
         geJunction: report?.geJunction || '',
         fundus: report?.fundus || '',
@@ -46,6 +46,19 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
         d1: report?.d1 || '',
         d2: report?.d2 || '',
         duodenum: report?.duodenum || '',
+        // Anatomical Findings (Lower)
+        dre: report?.dre || '',
+        anus: report?.anus || '',
+        rectum: report?.rectum || '',
+        sigmoid: report?.sigmoid || '',
+        descendingColon: report?.descendingColon || '',
+        splenicFlexure: report?.splenicFlexure || '',
+        transverseColon: report?.transverseColon || '',
+        hepaticFlexure: report?.hepaticFlexure || '',
+        ascendingColon: report?.ascendingColon || '',
+        caecum: report?.caecum || '',
+        ileoCaecalValve: report?.ileoCaecalValve || '',
+
         findings: report?.findings || '',
         hutTestResult: report?.hutTestResult || '',
         impression: report?.impression || '',
@@ -70,6 +83,8 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                 clinicalSummary: report.clinicalSummary || '',
                 biopsy: report.biopsy || 'NO',
                 biopsySite: report.biopsySite || '',
+
+                // Upper
                 oesophagusGE: report.oesophagusGE || '',
                 geJunction: report.geJunction || '',
                 fundus: report.fundus || '',
@@ -79,6 +94,20 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                 d1: report.d1 || '',
                 d2: report.d2 || '',
                 duodenum: report.duodenum || '',
+
+                // Lower
+                dre: report.dre || '',
+                anus: report.anus || '',
+                rectum: report.rectum || '',
+                sigmoid: report.sigmoid || '',
+                descendingColon: report.descendingColon || '',
+                splenicFlexure: report.splenicFlexure || '',
+                transverseColon: report.transverseColon || '',
+                hepaticFlexure: report.hepaticFlexure || '',
+                ascendingColon: report.ascendingColon || '',
+                caecum: report.caecum || '',
+                ileoCaecalValve: report.ileoCaecalValve || '',
+
                 findings: report.findings || '',
                 hutTestResult: report.hutTestResult || '',
                 impression: report.impression || '',
@@ -103,6 +132,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
         clinicalSummary: report?.clinicalSummary || '',
         biopsy: report?.biopsy || 'NO',
         biopsySite: report?.biopsySite || '',
+        // Anatomical Findings (Upper)
         oesophagusGE: report?.oesophagusGE || '',
         geJunction: report?.geJunction || '',
         fundus: report?.fundus || '',
@@ -112,6 +142,19 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
         d1: report?.d1 || '',
         d2: report?.d2 || '',
         duodenum: report?.duodenum || '',
+        // Anatomical Findings (Lower)
+        dre: report?.dre || '',
+        anus: report?.anus || '',
+        rectum: report?.rectum || '',
+        sigmoid: report?.sigmoid || '',
+        descendingColon: report?.descendingColon || '',
+        splenicFlexure: report?.splenicFlexure || '',
+        transverseColon: report?.transverseColon || '',
+        hepaticFlexure: report?.hepaticFlexure || '',
+        ascendingColon: report?.ascendingColon || '',
+        caecum: report?.caecum || '',
+        ileoCaecalValve: report?.ileoCaecalValve || '',
+
         findings: report?.findings || '',
         hutTestResult: report?.hutTestResult || '',
         impression: report?.impression || '',
@@ -154,6 +197,8 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
 
         try {
             // Process payload with defaults for empty fields
+            const isLower = formData.procedure === 'LOWER ENDOSCOPY';
+
             const payload = {
                 ...formData,
                 // Use placeholders if empty (trimmed check)
@@ -165,28 +210,41 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                 testResult: formData.testResult || 'PENDING',
                 hutTestResult: `(${formData.testType === 'HUT Test Result' ? 'HUT - TEST' : 'STOOL ANTIGEN'}) Test: ${formData.testResult || 'PENDING'}`, // Keep for backward compatibility/display backup
 
-                // Anatomical defaults
-                oesophagusGE: formData.oesophagusGE?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
-                geJunction: formData.geJunction?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
-                fundus: formData.fundus?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
-                body: formData.body?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
-                antrum: formData.antrum?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
-                pylorus: formData.pylorus?.trim() || 'SCANTY SUPERFICIAL ERYTHEMATOUS LESIONS SEEN',
-                d1: formData.d1?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
-                d2: formData.d2?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
-                // duodenum: formData.duodenum?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+                // Anatomical defaults - Upper
+                oesophagusGE: !isLower ? (formData.oesophagusGE?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                geJunction: !isLower ? (formData.geJunction?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                fundus: !isLower ? (formData.fundus?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                body: !isLower ? (formData.body?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                antrum: !isLower ? (formData.antrum?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                pylorus: !isLower ? (formData.pylorus?.trim() || 'SCANTY SUPERFICIAL ERYTHEMATOUS LESIONS SEEN') : null,
+                d1: !isLower ? (formData.d1?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                d2: !isLower ? (formData.d2?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+
+                // Anatomical defaults - Lower
+                dre: isLower ? (formData.dre?.trim() || 'NO DISCHARGES, NO ULCERS, NO PROLAPSED MUCOSA SEEN. PROSTATE PALPABLE WITHIN NORMAL LIMITS') : null,
+                anus: isLower ? (formData.anus?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                rectum: isLower ? (formData.rectum?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                sigmoid: isLower ? (formData.sigmoid?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                descendingColon: isLower ? (formData.descendingColon?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                splenicFlexure: isLower ? (formData.splenicFlexure?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                transverseColon: isLower ? (formData.transverseColon?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                hepaticFlexure: isLower ? (formData.hepaticFlexure?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                ascendingColon: isLower ? (formData.ascendingColon?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                caecum: isLower ? (formData.caecum?.trim() || 'NOT EXAMINED') : null,
+                ileoCaecalValve: isLower ? (formData.ileoCaecalValve?.trim() || 'NOT EXAMINED') : null,
+
 
                 // Assessment & Plan
-                impression: formData.impression?.trim() || 'H. PYLORI GASTRITIS',
-                comments: formData.comments?.trim() || 'MAY BENEFIT FROM PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14 + TAB METRONIDAZOLE 400MG BD X 14 + BISMUTH 240MG BD X 14 + REVIEW UPON COMPLETION OF MEDICATION',
-                medication: formData.medication?.trim() || 'PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14 + TAB METRONIDAZOLE 400MG BD X 14 + BISMUTH 240MG BD X 14',
+                impression: formData.impression?.trim() || (isLower ? 'NORMAL COLONOSCOPY' : 'H. PYLORI GASTRITIS'),
+                comments: formData.comments?.trim() || (isLower ? 'NO SIGNS SUGGESTIVE OF POLYPS, TUMOURS, FISSURE, AND IBD ETC WERE SEEN.' : 'MAY BENEFIT FROM PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14 + TAB METRONIDAZOLE 400MG BD X 14 + BISMUTH 240MG BD X 14 + REVIEW UPON COMPLETION OF MEDICATION'),
+                medication: formData.medication?.trim() || (isLower ? '' : 'PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14 + TAB METRONIDAZOLE 400MG BD X 14 + BISMUTH 240MG BD X 14'),
 
                 // Procedure Info Defaults
                 refDoctor: formData.refDoctor?.trim() || 'DR. M. S. ADAMS',
-                clinicalSummary: formData.clinicalSummary?.trim() || 'EPIGASTRIC PAIN THAT RADIATE TO THE BACK',
+                clinicalSummary: formData.clinicalSummary?.trim() || (isLower ? 'DIFFICULTY IN PASSING STOOL FOR ALMOST A YEAR' : 'EPIGASTRIC PAIN THAT RADIATE TO THE BACK'),
                 biopsy: formData.biopsy || 'NO',
                 biopsySite: formData.biopsySite?.trim() || '',
-                medicationGiven: formData.medicationGiven?.trim() || 'INJ. DORMICUM, PROPOFOL AND BUSCOPAN',
+                medicationGiven: formData.medicationGiven?.trim() || 'INJ. DORMICUM, PROPOFOL AND BUSCOPAN', // Often similar for both
 
                 operationTeam: (formData.operationTeam?.trim() ? formData.operationTeam : 'DR M. S. ADAMS, DR KWARTENG W., GLADYS ABEDU, ABIGAIL OPPONG').split(',').map((s: string) => s.trim()).filter(Boolean),
                 timeStarted: formData.timeStarted ? new Date(`${new Date().toDateString()} ${formData.timeStarted}`).toISOString() : null,
@@ -222,6 +280,8 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
         }
     }
 
+    const isLowerEndoscopy = formData.procedure === 'LOWER ENDOSCOPY';
+
     return (
         <Card className="p-8 mt-6">
             <h2 className="text-2xl font-bold mb-6">{isEditing ? 'Edit' : 'New'} Medical Report</h2>
@@ -236,7 +296,18 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Procedure</label>
-                        <AutocompleteInput name="procedure" value={formData.procedure} onChange={handleInputChange} field="procedure" placeholder="E.g. Upper Endoscopy" />
+                        <Select
+                            value={formData.procedure}
+                            onValueChange={(value) => setFormData(prev => ({ ...prev, procedure: value }))}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select Procedure" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="UPPER ENDOSCOPY">UPPER ENDOSCOPY</SelectItem>
+                                <SelectItem value="LOWER ENDOSCOPY">LOWER ENDOSCOPY</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
 
@@ -276,7 +347,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Clinical Summary</label>
-                        <AutocompleteInput name="clinicalSummary" value={formData.clinicalSummary} onChange={handleInputChange} field="clinicalSummary" placeholder="EPIGASTRIC PAIN THAT RADIATE TO THE BACK" />
+                        <AutocompleteInput name="clinicalSummary" value={formData.clinicalSummary} onChange={handleInputChange} field="clinicalSummary" placeholder={isLowerEndoscopy ? "DIFFICULTY IN PASSING STOOL FOR ALMOST A YEAR" : "EPIGASTRIC PAIN THAT RADIATE TO THE BACK"} />
                     </div>
                 </div>
 
@@ -305,40 +376,91 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
 
                 {/* Endoscopy Findings by Anatomical Location */}
                 <div className="border-t pt-4">
-                    <h3 className="text-lg font-bold mb-4 text-blue-700">ENDOSCOPY FINDINGS</h3>
+                    <h3 className="text-lg font-bold mb-4 text-blue-700">{isLowerEndoscopy ? 'COLONOSCOPY FINDINGS' : 'UPPER ENDOSCOPY FINDINGS'}</h3>
                     <div className="space-y-3">
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Oesophagus</label>
-                            <AutocompleteInput name="oesophagusGE" value={formData.oesophagusGE} onChange={handleInputChange} field="oesophagusGE" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium mb-1">G.E Junction</label>
-                            <AutocompleteInput name="geJunction" value={formData.geJunction} onChange={handleInputChange} field="geJunction" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Fundus</label>
-                            <AutocompleteInput name="fundus" value={formData.fundus} onChange={handleInputChange} field="fundus" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Body</label>
-                            <AutocompleteInput name="body" value={formData.body} onChange={handleInputChange} field="body" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Antrum</label>
-                            <AutocompleteInput name="antrum" value={formData.antrum} onChange={handleInputChange} field="antrum" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Pylorus</label>
-                            <AutocompleteInput name="pylorus" value={formData.pylorus} onChange={handleInputChange} field="pylorus" placeholder="SCANTY SUPERFICIAL ERYTHEMATOUS LESIONS SEEN" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Duodenum (1st Position)</label>
-                            <AutocompleteInput name="d1" value={formData.d1} onChange={handleInputChange} field="d1" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Duodenum (2nd Position)</label>
-                            <AutocompleteInput name="d2" value={formData.d2} onChange={handleInputChange} field="d2" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
-                        </div>
+                        {isLowerEndoscopy ? (
+                            <>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">INSPECTION AND DIGITO RECTAL EXAMINATION</label>
+                                    <AutocompleteTextarea name="dre" value={formData.dre} onChange={handleInputChange} field="dre" placeholder="NO DISCHARGES, NO ULCERS, NO PROLAPSED MUCOSA SEEN. PROSTATE PALPABLE WITHIN NORMAL LIMITS" rows={2} />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Anus</label>
+                                    <AutocompleteInput name="anus" value={formData.anus} onChange={handleInputChange} field="anus" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Rectum</label>
+                                    <AutocompleteInput name="rectum" value={formData.rectum} onChange={handleInputChange} field="rectum" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Sigmoid</label>
+                                    <AutocompleteInput name="sigmoid" value={formData.sigmoid} onChange={handleInputChange} field="sigmoid" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Descending Colon</label>
+                                    <AutocompleteInput name="descendingColon" value={formData.descendingColon} onChange={handleInputChange} field="descendingColon" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Splenic Flexure</label>
+                                    <AutocompleteInput name="splenicFlexure" value={formData.splenicFlexure} onChange={handleInputChange} field="splenicFlexure" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Transverse Colon</label>
+                                    <AutocompleteInput name="transverseColon" value={formData.transverseColon} onChange={handleInputChange} field="transverseColon" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Hepatic Flexure</label>
+                                    <AutocompleteInput name="hepaticFlexure" value={formData.hepaticFlexure} onChange={handleInputChange} field="hepaticFlexure" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Ascending Colon</label>
+                                    <AutocompleteInput name="ascendingColon" value={formData.ascendingColon} onChange={handleInputChange} field="ascendingColon" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Caecum</label>
+                                    <AutocompleteInput name="caecum" value={formData.caecum} onChange={handleInputChange} field="caecum" placeholder="NOT EXAMINED" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Ileo-caecal valve</label>
+                                    <AutocompleteInput name="ileoCaecalValve" value={formData.ileoCaecalValve} onChange={handleInputChange} field="ileoCaecalValve" placeholder="NOT EXAMINED" />
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Oesophagus</label>
+                                    <AutocompleteInput name="oesophagusGE" value={formData.oesophagusGE} onChange={handleInputChange} field="oesophagusGE" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">G.E Junction</label>
+                                    <AutocompleteInput name="geJunction" value={formData.geJunction} onChange={handleInputChange} field="geJunction" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Fundus</label>
+                                    <AutocompleteInput name="fundus" value={formData.fundus} onChange={handleInputChange} field="fundus" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Body</label>
+                                    <AutocompleteInput name="body" value={formData.body} onChange={handleInputChange} field="body" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Antrum</label>
+                                    <AutocompleteInput name="antrum" value={formData.antrum} onChange={handleInputChange} field="antrum" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Pylorus</label>
+                                    <AutocompleteInput name="pylorus" value={formData.pylorus} onChange={handleInputChange} field="pylorus" placeholder="SCANTY SUPERFICIAL ERYTHEMATOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Duodenum (1st Position)</label>
+                                    <AutocompleteInput name="d1" value={formData.d1} onChange={handleInputChange} field="d1" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Duodenum (2nd Position)</label>
+                                    <AutocompleteInput name="d2" value={formData.d2} onChange={handleInputChange} field="d2" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
+                                </div>
+                            </>
+                        )}
                         <div>
                             <label className="block text-sm font-medium mb-1">Additional Findings (Optional)</label>
                             <Textarea name="findings" value={formData.findings} onChange={handleInputChange} rows={2} placeholder="Any other observations..." />
@@ -346,54 +468,58 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                     </div>
                 </div>
 
-                {/* Results */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-sm font-medium mb-1">
-                            {formData.testType === 'Stool Antigen Test' ? 'H.pylori Antigen (stool) Test' : 'H.pylori Antigen (HUT) Test'}
-                        </label>
-                        <div className="flex gap-2">
-                            <div className="flex-1">
-                                <Select
-                                    value={formData.testType}
-                                    onValueChange={(value) => setFormData(prev => ({ ...prev, testType: value }))}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Test Type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="HUT Test Result">HUT Test Result</SelectItem>
-                                        <SelectItem value="Stool Antigen Test">Stool Antigen Test</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="flex-1">
-                                <Select
-                                    value={formData.testResult}
-                                    onValueChange={(value) => setFormData(prev => ({ ...prev, testResult: value }))}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Result" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="POSITIVE">POSITIVE</SelectItem>
-                                        <SelectItem value="NEGATIVE">NEGATIVE</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                {/* Results - Hide H.Pylori for Lower Endoscopy? Usually not relevant, but keeping layout consistent for now or hiding */}
+                {!isLowerEndoscopy && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium mb-1">
+                                {formData.testType === 'Stool Antigen Test' ? 'H.pylori Antigen (stool) Test' : 'H.pylori Antigen (HUT) Test'}
+                            </label>
+                            <div className="flex gap-2">
+                                <div className="flex-1">
+                                    <Select
+                                        value={formData.testType}
+                                        onValueChange={(value) => setFormData(prev => ({ ...prev, testType: value }))}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Test Type" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="HUT Test Result">HUT Test Result</SelectItem>
+                                            <SelectItem value="Stool Antigen Test">Stool Antigen Test</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="flex-1">
+                                    <Select
+                                        value={formData.testResult}
+                                        onValueChange={(value) => setFormData(prev => ({ ...prev, testResult: value }))}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Result" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="POSITIVE">POSITIVE</SelectItem>
+                                            <SelectItem value="NEGATIVE">NEGATIVE</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Impression</label>
-                        <AutocompleteInput name="impression" value={formData.impression} onChange={handleInputChange} field="impression" placeholder="H. PYLORI GASTRITIS" />
-                    </div>
+                )}
+
+                {/* Impression (Full width if no test info) */}
+                <div>
+                    <label className="block text-sm font-medium mb-1">Impression</label>
+                    <AutocompleteInput name="impression" value={formData.impression} onChange={handleInputChange} field="impression" placeholder={isLowerEndoscopy ? "NORMAL COLONOSCOPY" : "H. PYLORI GASTRITIS"} />
                 </div>
 
                 {/* Final Comments/Meds - Expandable */}
                 <div className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium mb-1">Comments (Expandable)</label>
-                        <AutocompleteTextarea name="comments" value={formData.comments} onChange={handleInputChange} field="comments" placeholder="MAY BENEFIT FROM PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14 + TAB METRONIDAZOLE 400MG BD X 14 + BISMUTH 240MG BD X 14 + REVIEW UPON COMPLETION OF MEDICATION" rows={3} />
+                        <AutocompleteTextarea name="comments" value={formData.comments} onChange={handleInputChange} field="comments" placeholder={isLowerEndoscopy ? "NO SIGNS SUGGESTIVE OF POLYPS, TUMOURS, FISSURE, AND IBD ETC WERE SEEN." : "MAY BENEFIT FROM PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14 + TAB METRONIDAZOLE 400MG BD X 14 + BISMUTH 240MG BD X 14 + REVIEW UPON COMPLETION OF MEDICATION"} rows={3} />
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Prescribed Medication (Expandable)</label>

@@ -140,10 +140,12 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     <span>MEDICATION GIVEN:</span> <span className="font-bold">{report.medicationGiven || 'N/A'}</span>
                 </div>
 
-                {/* Content */}
-                <div className="mb-1 text-[14px]">
-                    <span>STOMACH CONTENT:</span> <span className="font-bold italic">{report.stomachContent || 'EMPTY'}</span>
-                </div>
+                {/* Content - Hide for Colonoscopy typically, but requested image didn't show it explicitly. However, keeping it consistent or hiding if null */}
+                {(report.procedure !== 'LOWER ENDOSCOPY') && (
+                    <div className="mb-1 text-[14px]">
+                        <span>STOMACH CONTENT:</span> <span className="font-bold italic">{report.stomachContent || 'EMPTY'}</span>
+                    </div>
+                )}
 
                 {/* Instruments Used Row */}
                 <div className="flex gap-6 mb-1 text-[14px]">
@@ -166,56 +168,101 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 {/* Findings Header */}
                 <div className="mb-2">
                     <p className="underline text-[14px]">
-                        {(report.procedure || 'UPPER ENDOSCOPY').toUpperCase()} FINDINGS:
+                        {report.procedure === 'LOWER ENDOSCOPY' ? 'COLONOSCOPY FINDINGS:' : ((report.procedure || 'UPPER ENDOSCOPY').toUpperCase() + ' FINDINGS:')}
                     </p>
                 </div>
 
                 {/* Anatomical Findings */}
                 <div className="mb-4 text-[14px] space-y-1">
-                    {report.oesophagusGE && (
-                        <p><span>Oesophagus and G.E junction:</span> <span>{report.oesophagusGE}</span></p>
-                    )}
-                    {(report.geJunction && !report.oesophagusGE) && (
-                        <p><span>G.E Junction:</span> <span>{report.geJunction}</span></p>
-                    )}
-                    {report.fundus && (
-                        <p><span>Fundus:</span> <span>{report.fundus}</span></p>
-                    )}
-                    {report.body && (
-                        <p><span>Body:</span> <span>{report.body}</span></p>
-                    )}
-                    {report.antrum && (
-                        <p><span>Antrum:</span> <span>{report.antrum}</span></p>
-                    )}
-                    {report.pylorus && (
-                        <p><span>Pylorus:</span> <span className="font-bold italic">{report.pylorus}</span></p>
-                    )}
-                    {(report.d1 || report.d2 || report.duodenum) && (
+                    {report.procedure === 'LOWER ENDOSCOPY' ? (
                         <>
-                            <p className="mt-2">DUODENUM:</p>
-                            {report.d1 && <p><span>1st Position:</span> <span>{report.d1}</span></p>}
-                            {report.d2 && <p><span>2nd Position:</span> <span>{report.d2}</span></p>}
-                            {/* Fallback for legacy data */}
-                            {!report.d1 && !report.d2 && report.duodenum && (
-                                <p><span>1st & 2nd Position:</span> <span>{report.duodenum}</span></p>
+                            {/* Lower Endoscopy Fields */}
+                            {report.dre && (
+                                <p className="mb-2"><span className="uppercase">INSPECTION AND DIGITO RECTAL EXAMINATION:</span> <span className="font-bold italic uppercase">{report.dre}</span></p>
+                            )}
+                            {report.anus && (
+                                <p><span>Anus:</span> <span className="uppercase">{report.anus}</span></p>
+                            )}
+                            {report.rectum && (
+                                <p><span>Rectum:</span> <span className="uppercase">{report.rectum}</span></p>
+                            )}
+                            {report.sigmoid && (
+                                <p><span>Sigmoid:</span> <span className="uppercase">{report.sigmoid}</span></p>
+                            )}
+                            {report.descendingColon && (
+                                <p><span>Descending:</span> <span className="uppercase">{report.descendingColon}</span></p>
+                            )}
+                            {report.splenicFlexure && (
+                                <p><span>Splenic flexure:</span> <span className="uppercase">{report.splenicFlexure}</span></p>
+                            )}
+                            {report.transverseColon && (
+                                <p><span>Transverse:</span> <span className="uppercase">{report.transverseColon}</span></p>
+                            )}
+                            {report.hepaticFlexure && (
+                                <p><span>Hepatic flexure:</span> <span className="uppercase">{report.hepaticFlexure}</span></p>
+                            )}
+                            {report.ascendingColon && (
+                                <p><span>Ascending:</span> <span className="uppercase">{report.ascendingColon}</span></p>
+                            )}
+                            {report.caecum && (
+                                <p><span>Caecum:</span> <span className="font-bold italic uppercase">{report.caecum}</span></p>
+                            )}
+                            {report.ileoCaecalValve && (
+                                <p><span>Ileo-caecal valve:</span> <span className="font-bold italic uppercase">{report.ileoCaecalValve}</span></p>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            {/* Upper Endoscopy Fields */}
+                            {report.oesophagusGE && (
+                                <p><span>Oesophagus and G.E junction:</span> <span>{report.oesophagusGE}</span></p>
+                            )}
+                            {(report.geJunction && !report.oesophagusGE) && (
+                                <p><span>G.E Junction:</span> <span>{report.geJunction}</span></p>
+                            )}
+                            {report.fundus && (
+                                <p><span>Fundus:</span> <span>{report.fundus}</span></p>
+                            )}
+                            {report.body && (
+                                <p><span>Body:</span> <span>{report.body}</span></p>
+                            )}
+                            {report.antrum && (
+                                <p><span>Antrum:</span> <span>{report.antrum}</span></p>
+                            )}
+                            {report.pylorus && (
+                                <p><span>Pylorus:</span> <span className="font-bold italic">{report.pylorus}</span></p>
+                            )}
+                            {(report.d1 || report.d2 || report.duodenum) && (
+                                <>
+                                    <p className="mt-2">DUODENUM:</p>
+                                    {report.d1 && <p><span>1st Position:</span> <span>{report.d1}</span></p>}
+                                    {report.d2 && <p><span>2nd Position:</span> <span>{report.d2}</span></p>}
+                                    {/* Fallback for legacy data */}
+                                    {!report.d1 && !report.d2 && report.duodenum && (
+                                        <p><span>1st & 2nd Position:</span> <span>{report.duodenum}</span></p>
+                                    )}
+                                </>
                             )}
                         </>
                     )}
+
                     {report.findings && (
                         <p className="mt-2 whitespace-pre-wrap">{report.findings}</p>
                     )}
                 </div>
 
-                {/* HUT / Antigen Test */}
-                <div className="mb-2 text-[14px]">
-                    {report.testType && report.testResult ? (
-                        <p>
-                            <span>{report.testType === 'Stool Antigen Test' ? 'H.pylori Antigen (stool) Test' : 'H.pylori Antigen (HUT) Test'}:</span> <span className="font-bold italic uppercase">{report.testResult}</span>
-                        </p>
-                    ) : (
-                        <p><span>(HUT - TEST) Test:</span> <span className="font-bold italic uppercase">{report.hutTestResult ? String(report.hutTestResult).replace(/\(HUT - TEST\) Test:/i, '').replace(/\(STOOL ANTIGEN\) Test:/i, '').trim() : 'PENDING'}</span></p>
-                    )}
-                </div>
+                {/* HUT / Antigen Test - Hide for Colonoscopy */}
+                {report.procedure !== 'LOWER ENDOSCOPY' && (
+                    <div className="mb-2 text-[14px]">
+                        {report.testType && report.testResult ? (
+                            <p>
+                                <span>{report.testType === 'Stool Antigen Test' ? 'H.pylori Antigen (stool) Test' : 'H.pylori Antigen (HUT) Test'}:</span> <span className="font-bold italic uppercase">{report.testResult}</span>
+                            </p>
+                        ) : (
+                            <p><span>(HUT - TEST) Test:</span> <span className="font-bold italic uppercase">{report.hutTestResult ? String(report.hutTestResult).replace(/\(HUT - TEST\) Test:/i, '').replace(/\(STOOL ANTIGEN\) Test:/i, '').trim() : 'PENDING'}</span></p>
+                        )}
+                    </div>
+                )}
 
                 {/* Impression */}
                 <div className="mb-3 text-[14px]">

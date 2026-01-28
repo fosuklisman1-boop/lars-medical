@@ -39,6 +39,18 @@ export async function PUT(
         if (body.pylorus !== undefined) updateData.pylorus = body.pylorus
         if (body.d1 !== undefined) updateData.d1 = body.d1
         if (body.d2 !== undefined) updateData.d2 = body.d2
+        // Lower Endoscopy Fields
+        if (body.dre !== undefined) updateData.dre = body.dre
+        if (body.anus !== undefined) updateData.anus = body.anus
+        if (body.rectum !== undefined) updateData.rectum = body.rectum
+        if (body.sigmoid !== undefined) updateData.sigmoid = body.sigmoid
+        if (body.descendingColon !== undefined) updateData.descendingColon = body.descendingColon
+        if (body.splenicFlexure !== undefined) updateData.splenicFlexure = body.splenicFlexure
+        if (body.transverseColon !== undefined) updateData.transverseColon = body.transverseColon
+        if (body.hepaticFlexure !== undefined) updateData.hepaticFlexure = body.hepaticFlexure
+        if (body.ascendingColon !== undefined) updateData.ascendingColon = body.ascendingColon
+        if (body.caecum !== undefined) updateData.caecum = body.caecum
+        if (body.ileoCaecalValve !== undefined) updateData.ileoCaecalValve = body.ileoCaecalValve
         // if (body.duodenum !== undefined) updateData.duodenum = body.duodenum
         if (body.findings !== undefined) updateData.findings = body.findings
         if (body.hutTestResult !== undefined) updateData.hutTestResult = body.hutTestResult

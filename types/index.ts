@@ -46,6 +46,18 @@ export interface MedicalReport {
     d1?: string;
     d2?: string;
     duodenum?: string;
+    // Lower Endoscopy Fields
+    dre?: string;
+    anus?: string;
+    rectum?: string;
+    sigmoid?: string;
+    descendingColon?: string;
+    splenicFlexure?: string;
+    transverseColon?: string;
+    hepaticFlexure?: string;
+    ascendingColon?: string;
+    caecum?: string;
+    ileoCaecalValve?: string;
     findings?: string;
     hutTestResult?: string;
     testType?: string;
