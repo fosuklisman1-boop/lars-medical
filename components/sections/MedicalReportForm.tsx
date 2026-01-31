@@ -73,7 +73,6 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
         hutTestResult: report?.hutTestResult || '',
         impression: report?.impression || '',
         comments: report?.comments || '',
-        medication: report?.medication || '',
         testType: report?.testType || (report?.hutTestResult?.includes('Stool') ? 'Stool Antigen Test' : 'HUT Test Result'),
         testResult: report?.testResult || (report?.hutTestResult?.split(': ')[1] || report?.hutTestResult || ''),
     })
@@ -122,7 +121,6 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                 hutTestResult: report.hutTestResult || '',
                 impression: report.impression || '',
                 comments: report.comments || '',
-                medication: report.medication || '',
                 testType: report.testType || (report.hutTestResult?.includes('Stool') ? 'Stool Antigen Test' : 'HUT Test Result'),
                 testResult: report.testResult || (report.hutTestResult?.split(': ')[1] || report.hutTestResult || ''),
             });
@@ -169,7 +167,6 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
         hutTestResult: report?.hutTestResult || '',
         impression: report?.impression || '',
         comments: report?.comments || '',
-        medication: report?.medication || '',
         testType: report?.testType || (report?.hutTestResult?.includes('Stool') ? 'Stool Antigen Test' : 'HUT Test Result'),
         testResult: report?.testResult || (report?.hutTestResult?.split(': ')[1] || report?.hutTestResult || ''),
     }), [report])
@@ -271,7 +268,6 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                 // Assessment & Plan
                 impression: formData.impression?.trim() || (isLower ? 'NORMAL COLONOSCOPY' : 'H. PYLORI GASTRITIS'),
                 comments: formData.comments?.trim() || (isLower ? 'NO SIGNS SUGGESTIVE OF POLYPS, TUMOURS, FISSURE, AND IBD ETC WERE SEEN.' : 'MAY BENEFIT FROM PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14 + TAB METRONIDAZOLE 400MG BD X 14 + BISMUTH 240MG BD X 14 + REVIEW UPON COMPLETION OF MEDICATION'),
-                medication: formData.medication?.trim() || (isLower ? '' : 'PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14 + TAB METRONIDAZOLE 400MG BD X 14 + BISMUTH 240MG BD X 14'),
 
                 // Procedure Info Defaults
                 refDoctor: formData.refDoctor?.trim() || 'DR. M. S. ADAMS',
@@ -591,13 +587,8 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                         <label className="block text-sm font-medium mb-1">Comments (Expandable)</label>
                         <AutocompleteTextarea name="comments" value={formData.comments} onChange={handleInputChange} field="comments" placeholder={isLowerEndoscopy ? "NO SIGNS SUGGESTIVE OF POLYPS, TUMOURS, FISSURE, AND IBD ETC WERE SEEN." : "MAY BENEFIT FROM PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14 + TAB METRONIDAZOLE 400MG BD X 14 + BISMUTH 240MG BD X 14 + REVIEW UPON COMPLETION OF MEDICATION"} rows={3} />
                     </div>
-                    {!isLowerEndoscopy && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Prescribed Medication (Expandable)</label>
-                            <AutocompleteTextarea name="medication" value={formData.medication} onChange={handleInputChange} field="medication" placeholder="PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14..." rows={2} />
-                        </div>
-                    )}
                 </div>
+
 
                 {/* Actions */}
                 <div className="flex justify-between items-center gap-3 pt-4 border-t">
@@ -619,6 +610,6 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                     </div>
                 </div>
             </form>
-        </Card>
+        </Card >
     )
 }

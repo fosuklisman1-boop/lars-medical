@@ -275,11 +275,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 </div>
 
                 {/* Medication - Explicitly separate - Hide for Lower Endoscopy */}
-                {report.procedure !== 'LOWER ENDOSCOPY' && (
-                    <div className="mb-4 text-[16px]">
-                        <span>MEDICATION:</span> <span className="uppercase">{report.medication || ''}</span>
-                    </div>
-                )}
+
 
                 {/* Doctor Signature */}
                 <div className="text-right mt-12 text-[16px]">
