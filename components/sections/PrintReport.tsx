@@ -27,7 +27,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
         return (
             <div
                 ref={ref}
-                className="bg-white text-black font-sans p-8 max-w-[210mm] mx-auto print:p-6 print:m-0"
+                className="bg-white text-black font-sans p-8 max-w-[210mm] mx-auto print:px-6 print:pb-6 print:pt-16 print:m-0"
                 style={{
                     fontFamily: 'Arial, sans-serif',
                     fontSize: '16px',
