@@ -153,10 +153,10 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                         <span>INSTRUMENTS USED:</span> <span>{Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-IT140')}</span>
                     </div>
                     <div>
-                        <span>BIOPSY:</span> {report.biopsy || ''}
+                        <span>BIOPSY:</span> <span className="font-bold italic">{report.biopsy || ''}</span>
                     </div>
                     <div>
-                        <span>SITE OF BIOPSY:</span> {report.biopsySite || ''}
+                        <span>SITE OF BIOPSY:</span> <span className="font-bold italic">{report.biopsySite || ''}</span>
                     </div>
                 </div>
 
@@ -215,10 +215,10 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                         <>
                             {/* Upper Endoscopy Fields */}
                             {report.oesophagusGE && (
-                                <p><span>Oesophagus and G.E junction:</span> <span>{report.oesophagusGE}</span></p>
+                                <p><span>Oesophagus and G.E junction:</span> <span className="font-bold italic">{report.oesophagusGE}</span></p>
                             )}
                             {(report.geJunction && !report.oesophagusGE) && (
-                                <p><span>G.E Junction:</span> <span>{report.geJunction}</span></p>
+                                <p><span>G.E Junction:</span> <span className="font-bold italic">{report.geJunction}</span></p>
                             )}
                             {report.fundus && (
                                 <p><span>Fundus:</span> <span>{report.fundus}</span></p>
@@ -279,7 +279,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
 
                 {/* Doctor Signature */}
                 <div className="text-right mt-12 text-[16px]">
-                    <p className="font-bold">{report.refDoctor || 'DR. M. S. ADAMS'}</p>
+                    <p className="font-bold">DR. M. S. ADAMS</p>
                 </div>
             </div>
         )
