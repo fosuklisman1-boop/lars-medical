@@ -57,7 +57,8 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     </div>
 
                     {/* Address Lines - Compact & Centered */}
-                    <div className="text-center text-[16px] font-bold text-cyan-900 leading-tight space-y-1">
+                    {/* Address Lines - Compact & Centered */}
+                    <div className="text-center text-[16px] font-bold text-black leading-tight space-y-1">
                         <p>
                             OPPOSITE VICTORY HARDWARE, SUNYANI-ABESIM ROAD, NEAR TYCO CITY HOTEL, SUNYANI
                         </p>
@@ -65,8 +66,8 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                             P.O.BOX SY 524, SUNYANI, B/R &nbsp;&nbsp; TEL: 0200-638-932 / 0352196970. &nbsp;&nbsp; WORKING HOURS: 24/7
                         </p>
                         <p>
-                            <span className="text-cyan-800">EMAIL:</span> larsmedicalcentre@yahoo.com &nbsp;&nbsp;&nbsp;&nbsp;
-                            <span className="text-cyan-800">GPS ADDRESS:</span> BS-0174-2635
+                            <span className="text-blue-900">EMAIL: larsmedicalcentre@yahoo.com</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span className="text-red-600">GPS ADDRESS: BS-0174-2635</span>
                         </p>
                     </div>
                 </div>
@@ -97,11 +98,11 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     {/* Row 2 */}
                     <div className="col-span-6 flex items-start">
                         <span className="w-[100px] shrink-0 whitespace-nowrap">REQ. DOC.:</span>
-                        <span className="font-bold">{report.refDoctor || 'N/A'}</span>
+                        <span className="font-bold">{report.refDoctor || client.refDoctor || 'N/A'}</span>
                     </div>
                     <div className="col-span-3 flex items-center">
                         <span className="w-[90px] shrink-0 whitespace-nowrap">ADDRESS:</span>
-                        <span className="font-bold">LMC</span>
+                        <span className="font-bold">{client.address || 'N/A'}</span>
                     </div>
                     <div className="col-span-3 flex">
                         <span className="w-[60px] shrink-0">DATE:</span>
@@ -113,8 +114,15 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 <div className="mb-1 text-[16px]">
                     <span className="underline">OPERATION TEAM:</span>
                     <div className="ml-4">
+                        {/* Try report first, then client, then default */}
                         {Array.isArray(report.operationTeam) && report.operationTeam.length > 0 ? (
                             report.operationTeam.map((member: string, index: number) => (
+                                <span key={index} className="mr-6">
+                                    {index + 1}. {member}
+                                </span>
+                            ))
+                        ) : Array.isArray(client.operationTeam) && client.operationTeam.length > 0 ? (
+                            client.operationTeam.map((member: string, index: number) => (
                                 <span key={index} className="mr-6">
                                     {index + 1}. {member}
                                 </span>
@@ -162,7 +170,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
 
                 {/* Clinical Summary */}
                 <div className="mb-2 text-[16px]">
-                    <span>CLINICAL SUMMARY:</span> <span className="font-bold italic">{report.clinicalSummary || ''}</span>
+                    <span>CLINICAL SUMMARY:</span> <span className="font-bold italic">{report.clinicalSummary || client.clinicalSummary || ''}</span>
                 </div>
 
                 {/* Findings Header */}

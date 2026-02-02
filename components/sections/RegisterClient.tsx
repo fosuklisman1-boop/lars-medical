@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
@@ -21,6 +22,9 @@ export function RegisterClient() {
     sex: '',
     age: '',
     address: '',
+    clinicalSummary: '',
+    operationTeam: '',
+    refDoctor: '',
   })
 
   /**
@@ -58,13 +62,22 @@ export function RegisterClient() {
     setLoading(true)
 
     try {
+      // Prepare data for API
+      // Split operationTeam string into array if present
+      const submissionData = {
+        ...formData,
+        operationTeam: formData.operationTeam
+          ? formData.operationTeam.split(',').map(item => item.trim()).filter(item => item !== '')
+          : [],
+      }
+
       // Send POST request to create new client
       const response = await fetch('/api/clients', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submissionData),
       })
 
       const result = await response.json()
@@ -79,13 +92,6 @@ export function RegisterClient() {
 
       // Redirect to the client's report page to create a new report
       // We assume the route structure /client/[clientId] exists and shows the client details/reports
-      // If the user wants to go directly to creating a report, we might need a specific query param or route
-      // For now, redirecting to the client's main page is the standard flow, where they can click "New Report"
-      // BUT user asked: "redirect to the clients report page to create new report"
-      // Based on the app structure, usually it's /client/[clientId] which has the SearchClient/MedicalReportForm
-      // Let's redirect there.
-
-      // Wait a moment for toast to be visible then redirect
       setTimeout(() => {
         router.push(`/client/${result.data.clientId}`)
       }, 1000)
@@ -107,6 +113,7 @@ export function RegisterClient() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information Section */}
           <div className="border-t pt-6">
+            <h2 className="text-lg font-semibold mb-4">Personal Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Name Field - Required */}
               <div>
@@ -171,6 +178,48 @@ export function RegisterClient() {
             </div>
           </div>
 
+          {/* Clinical Information Section */}
+          <div className="border-t pt-6">
+            <h2 className="text-lg font-semibold mb-4">Clinical Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Reg. Doc Field */}
+              <div>
+                <label className="block text-sm font-medium mb-2">Reg. Doc (Requesting Doctor)</label>
+                <Input
+                  type="text"
+                  name="refDoctor"
+                  value={formData.refDoctor}
+                  onChange={handleInputChange}
+                  placeholder="Dr. Name"
+                />
+              </div>
+
+              {/* Operation Team */}
+              <div>
+                <label className="block text-sm font-medium mb-2">Operation Team</label>
+                <Input
+                  type="text"
+                  name="operationTeam"
+                  value={formData.operationTeam}
+                  onChange={handleInputChange}
+                  placeholder="Dr. A, Nurse B (comma separated)"
+                />
+              </div>
+
+              {/* Clinical Summary */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium mb-2">Clinical Summary</label>
+                <Textarea
+                  name="clinicalSummary"
+                  value={formData.clinicalSummary}
+                  onChange={handleInputChange}
+                  placeholder="Brief clinical summary..."
+                  rows={3}
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Submit Button */}
           <div className="border-t pt-6 flex gap-4">
             <Button
@@ -189,6 +238,9 @@ export function RegisterClient() {
                   sex: '',
                   age: '',
                   address: '',
+                  clinicalSummary: '',
+                  operationTeam: '',
+                  refDoctor: '',
                 })
               }}
             >

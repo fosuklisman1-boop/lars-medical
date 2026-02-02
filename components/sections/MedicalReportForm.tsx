@@ -35,15 +35,18 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
     const isEditing = !!report
 
     const [formData, setFormData] = useState({
-        refDoctor: report?.refDoctor || '',
+        refDoctor: report?.refDoctor || client.refDoctor || '',
         procedure: report?.procedure || 'UPPER ENDOSCOPY',
-        operationTeam: Array.isArray(report?.operationTeam) ? report.operationTeam.join(', ') : (report?.operationTeam || ''),
+        operationTeam: Array.isArray(report?.operationTeam)
+            ? report.operationTeam.join(', ')
+            : (report?.operationTeam ||
+                (Array.isArray(client.operationTeam) ? client.operationTeam.join(', ') : (client.operationTeam || ''))),
         timeStarted: report?.timeStarted ? new Date(report.timeStarted).toTimeString().substring(0, 5) : '',
         timeEnded: report?.timeEnded ? new Date(report.timeEnded).toTimeString().substring(0, 5) : '',
         medicationGiven: report?.medicationGiven || '',
         stomachContent: report?.stomachContent || 'EMPTY',
         instrumentsUsed: Array.isArray(report?.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report?.instrumentsUsed || 'OLYMPUS GIF-IT140'),
-        clinicalSummary: report?.clinicalSummary || '',
+        clinicalSummary: report?.clinicalSummary || client.clinicalSummary || '',
         biopsy: report?.biopsy || 'NO',
         biopsySite: report?.biopsySite || '',
         // Anatomical Findings (Upper)
@@ -81,15 +84,18 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
     useMemo(() => {
         if (report) {
             setFormData({
-                refDoctor: report.refDoctor || '',
+                refDoctor: report.refDoctor || client.refDoctor || '',
                 procedure: report.procedure || 'UPPER ENDOSCOPY',
-                operationTeam: Array.isArray(report.operationTeam) ? report.operationTeam.join(', ') : (report.operationTeam || ''),
+                operationTeam: Array.isArray(report.operationTeam)
+                    ? report.operationTeam.join(', ')
+                    : (report.operationTeam ||
+                        (Array.isArray(client.operationTeam) ? client.operationTeam.join(', ') : (client.operationTeam || ''))),
                 timeStarted: report.timeStarted ? new Date(report.timeStarted).toTimeString().substring(0, 5) : '',
                 timeEnded: report.timeEnded ? new Date(report.timeEnded).toTimeString().substring(0, 5) : '',
                 medicationGiven: report.medicationGiven || '',
                 stomachContent: report.stomachContent || 'EMPTY',
                 instrumentsUsed: Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-IT140'),
-                clinicalSummary: report.clinicalSummary || '',
+                clinicalSummary: report.clinicalSummary || client.clinicalSummary || '',
                 biopsy: report.biopsy || 'NO',
                 biopsySite: report.biopsySite || '',
 
