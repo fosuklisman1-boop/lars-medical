@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { AutocompleteInput } from '@/components/ui/autocomplete-input'
+import { AutocompleteTextarea } from '@/components/ui/autocomplete-textarea'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
@@ -185,11 +186,11 @@ export function RegisterClient() {
               {/* Reg. Doc Field */}
               <div>
                 <label className="block text-sm font-medium mb-2">Reg. Doc (Requesting Doctor)</label>
-                <Input
-                  type="text"
+                <AutocompleteInput
                   name="refDoctor"
                   value={formData.refDoctor}
                   onChange={handleInputChange}
+                  field="refDoctor"
                   placeholder="Dr. Name"
                 />
               </div>
@@ -197,11 +198,11 @@ export function RegisterClient() {
               {/* Operation Team */}
               <div>
                 <label className="block text-sm font-medium mb-2">Operation Team</label>
-                <Input
-                  type="text"
+                <AutocompleteInput
                   name="operationTeam"
                   value={formData.operationTeam}
                   onChange={handleInputChange}
+                  field="operationTeam"
                   placeholder="Dr. A, Nurse B (comma separated)"
                 />
               </div>
@@ -209,10 +210,11 @@ export function RegisterClient() {
               {/* Clinical Summary */}
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium mb-2">Clinical Summary</label>
-                <Textarea
+                <AutocompleteTextarea
                   name="clinicalSummary"
                   value={formData.clinicalSummary}
                   onChange={handleInputChange}
+                  field="clinicalSummary"
                   placeholder="Brief clinical summary..."
                   rows={3}
                 />

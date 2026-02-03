@@ -387,7 +387,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium mb-1">Operation Team (comma separated)</label>
-                        <Input name="operationTeam" value={formData.operationTeam} onChange={handleInputChange} placeholder="DR M. S. ADAMS, DR KWARTENG W., GLADYS ABEDU, ABIGAIL OPPONG..." />
+                        <AutocompleteInput name="operationTeam" value={formData.operationTeam} onChange={handleInputChange} field="operationTeam" placeholder="DR M. S. ADAMS, DR KWARTENG W., GLADYS ABEDU, ABIGAIL OPPONG..." />
                     </div>
                     <div className="flex gap-2">
                         <div className="flex-1">

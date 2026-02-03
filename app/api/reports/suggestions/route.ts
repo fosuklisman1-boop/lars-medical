@@ -39,7 +39,8 @@ export async function GET(request: Request) {
             'hutTestResult',
             'impression',
             'comments',
-            'medication'
+            'medication',
+            'operationTeam'
         ]
 
         if (!allowedFields.includes(field)) {
@@ -64,7 +65,15 @@ export async function GET(request: Request) {
         const rawValues: string[] = []
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         data.forEach((row: any) => {
-            if (row[field]) rawValues.push(row[field])
+            const val = row[field]
+            if (val) {
+                if (Array.isArray(val)) {
+                    // For arrays (like operationTeam, instrumentsUsed), join them to suggest the full set
+                    if (val.length > 0) rawValues.push(val.join(', '))
+                } else if (typeof val === 'string') {
+                    rawValues.push(val)
+                }
+            }
             // Add legacy suggestions for d1/d2
             if ((field === 'd1' || field === 'd2') && row.duodenum) rawValues.push(row.duodenum)
         })
