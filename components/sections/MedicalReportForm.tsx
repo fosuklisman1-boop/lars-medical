@@ -253,7 +253,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                 fundus: !isLower ? (formData.fundus?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
                 body: !isLower ? (formData.body?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
                 antrum: !isLower ? (formData.antrum?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
-                pylorus: !isLower ? (formData.pylorus?.trim() || 'SCANTY SUPERFICIAL ERYTHEMATOUS LESIONS SEEN') : null,
+                pylorus: !isLower ? (formData.pylorus?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
                 d1: !isLower ? (formData.d1?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
                 d2: !isLower ? (formData.d2?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
 
@@ -521,7 +521,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Pylorus</label>
-                                    <AutocompleteInput name="pylorus" value={formData.pylorus} onChange={handleInputChange} field="pylorus" placeholder="SCANTY SUPERFICIAL ERYTHEMATOUS LESIONS SEEN" />
+                                    <AutocompleteInput name="pylorus" value={formData.pylorus} onChange={handleInputChange} field="pylorus" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Duodenum (1st Position)</label>

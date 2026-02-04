@@ -5,6 +5,32 @@ import React from 'react'
 
 import { Client, MedicalReport } from '@/types'
 
+const DEFAULT_FINDINGS = {
+    // Upper Endoscopy Defaults
+    oesophagusGE: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    geJunction: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    fundus: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    body: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    antrum: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    pylorus: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    d1: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    d2: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    duodenum: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+
+    // Lower Endoscopy Defaults
+    dre: 'NO DISCHARGES, NO ULCERS, NO PROLAPSED MUCOSA SEEN. PROSTATE PALPABLE WITHIN NORMAL LIMITS',
+    anus: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    rectum: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    sigmoid: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    descendingColon: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    splenicFlexure: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    transverseColon: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    hepaticFlexure: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    ascendingColon: 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN',
+    caecum: 'NOT EXAMINED',
+    ileoCaecalValve: 'NOT EXAMINED',
+}
+
 interface PrintReportProps {
     client: Client
     report: MedicalReport
@@ -22,6 +48,19 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
         const formatDate = (dateString: string | null) => {
             if (!dateString) return ''
             return new Date(dateString).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
+        }
+
+        // Check if finding matches default (case insensitive trim)
+        // If it matches default -> Normal text
+        // If it differs -> Bold Italic
+        const getFindingStyle = (value: string | null | undefined, defaultKey: keyof typeof DEFAULT_FINDINGS) => {
+            if (!value) return ''
+            const normalizedValue = value.trim().toUpperCase()
+            const normalizedDefault = DEFAULT_FINDINGS[defaultKey].trim().toUpperCase()
+
+            // If they are equal, return normal style (empty string)
+            // If they differ, return bold italic
+            return normalizedValue === normalizedDefault ? '' : 'font-bold italic'
         }
 
         return (
@@ -151,7 +190,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 {/* Content - Hide for Colonoscopy typically, but requested image didn't show it explicitly. However, keeping it consistent or hiding if null */}
                 {(report.procedure !== 'LOWER ENDOSCOPY') && (
                     <div className="mb-1 text-[16px]">
-                        <span>STOMACH CONTENT:</span> <span className="font-bold italic">{report.stomachContent || 'EMPTY'}</span>
+                        <span>STOMACH CONTENT:</span> <span className={`uppercase ${report.stomachContent?.trim().toUpperCase() === 'EMPTY' ? '' : 'font-bold italic'}`}>{report.stomachContent || 'EMPTY'}</span>
                     </div>
                 )}
 
@@ -186,68 +225,68 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                         <>
                             {/* Lower Endoscopy Fields */}
                             {report.dre && (
-                                <p className="mb-2"><span className="uppercase">INSPECTION AND DIGITO RECTAL EXAMINATION:</span> <span className="font-bold italic uppercase">{report.dre}</span></p>
+                                <p className="mb-2"><span className="uppercase">INSPECTION AND DIGITO RECTAL EXAMINATION:</span> <span className={`uppercase ${getFindingStyle(report.dre, 'dre')}`}>{report.dre}</span></p>
                             )}
                             {report.anus && (
-                                <p><span>Anus:</span> <span className="uppercase">{report.anus}</span></p>
+                                <p><span>Anus:</span> <span className={`uppercase ${getFindingStyle(report.anus, 'anus')}`}>{report.anus}</span></p>
                             )}
                             {report.rectum && (
-                                <p><span>Rectum:</span> <span className="uppercase">{report.rectum}</span></p>
+                                <p><span>Rectum:</span> <span className={`uppercase ${getFindingStyle(report.rectum, 'rectum')}`}>{report.rectum}</span></p>
                             )}
                             {report.sigmoid && (
-                                <p><span>Sigmoid:</span> <span className="uppercase">{report.sigmoid}</span></p>
+                                <p><span>Sigmoid:</span> <span className={`uppercase ${getFindingStyle(report.sigmoid, 'sigmoid')}`}>{report.sigmoid}</span></p>
                             )}
                             {report.descendingColon && (
-                                <p><span>Descending:</span> <span className="uppercase">{report.descendingColon}</span></p>
+                                <p><span>Descending:</span> <span className={`uppercase ${getFindingStyle(report.descendingColon, 'descendingColon')}`}>{report.descendingColon}</span></p>
                             )}
                             {report.splenicFlexure && (
-                                <p><span>Splenic flexure:</span> <span className="uppercase">{report.splenicFlexure}</span></p>
+                                <p><span>Splenic flexure:</span> <span className={`uppercase ${getFindingStyle(report.splenicFlexure, 'splenicFlexure')}`}>{report.splenicFlexure}</span></p>
                             )}
                             {report.transverseColon && (
-                                <p><span>Transverse:</span> <span className="uppercase">{report.transverseColon}</span></p>
+                                <p><span>Transverse:</span> <span className={`uppercase ${getFindingStyle(report.transverseColon, 'transverseColon')}`}>{report.transverseColon}</span></p>
                             )}
                             {report.hepaticFlexure && (
-                                <p><span>Hepatic flexure:</span> <span className="uppercase">{report.hepaticFlexure}</span></p>
+                                <p><span>Hepatic flexure:</span> <span className={`uppercase ${getFindingStyle(report.hepaticFlexure, 'hepaticFlexure')}`}>{report.hepaticFlexure}</span></p>
                             )}
                             {report.ascendingColon && (
-                                <p><span>Ascending:</span> <span className="uppercase">{report.ascendingColon}</span></p>
+                                <p><span>Ascending:</span> <span className={`uppercase ${getFindingStyle(report.ascendingColon, 'ascendingColon')}`}>{report.ascendingColon}</span></p>
                             )}
                             {report.caecum && (
-                                <p><span>Caecum:</span> <span className="font-bold italic uppercase">{report.caecum}</span></p>
+                                <p><span>Caecum:</span> <span className={`uppercase ${getFindingStyle(report.caecum, 'caecum')}`}>{report.caecum}</span></p>
                             )}
                             {report.ileoCaecalValve && (
-                                <p><span>Ileo-caecal valve:</span> <span className="font-bold italic uppercase">{report.ileoCaecalValve}</span></p>
+                                <p><span>Ileo-caecal valve:</span> <span className={`uppercase ${getFindingStyle(report.ileoCaecalValve, 'ileoCaecalValve')}`}>{report.ileoCaecalValve}</span></p>
                             )}
                         </>
                     ) : (
                         <>
                             {/* Upper Endoscopy Fields */}
                             {report.oesophagusGE && (
-                                <p><span>Oesophagus and G.E junction:</span> <span className="font-bold italic">{report.oesophagusGE}</span></p>
+                                <p><span>Oesophagus and G.E junction:</span> <span className={getFindingStyle(report.oesophagusGE, 'oesophagusGE')}>{report.oesophagusGE}</span></p>
                             )}
                             {(report.geJunction && !report.oesophagusGE) && (
-                                <p><span>G.E Junction:</span> <span className="font-bold italic">{report.geJunction}</span></p>
+                                <p><span>G.E Junction:</span> <span className={getFindingStyle(report.geJunction, 'geJunction')}>{report.geJunction}</span></p>
                             )}
                             {report.fundus && (
-                                <p><span>Fundus:</span> <span>{report.fundus}</span></p>
+                                <p><span>Fundus:</span> <span className={getFindingStyle(report.fundus, 'fundus')}>{report.fundus}</span></p>
                             )}
                             {report.body && (
-                                <p><span>Body:</span> <span>{report.body}</span></p>
+                                <p><span>Body:</span> <span className={getFindingStyle(report.body, 'body')}>{report.body}</span></p>
                             )}
                             {report.antrum && (
-                                <p><span>Antrum:</span> <span>{report.antrum}</span></p>
+                                <p><span>Antrum:</span> <span className={getFindingStyle(report.antrum, 'antrum')}>{report.antrum}</span></p>
                             )}
                             {report.pylorus && (
-                                <p><span>Pylorus:</span> <span className="font-bold italic">{report.pylorus}</span></p>
+                                <p><span>Pylorus:</span> <span className={getFindingStyle(report.pylorus, 'pylorus')}>{report.pylorus}</span></p>
                             )}
                             {(report.d1 || report.d2 || report.duodenum) && (
                                 <>
                                     <p className="mt-2">DUODENUM:</p>
-                                    {report.d1 && <p><span>1st Position:</span> <span>{report.d1}</span></p>}
-                                    {report.d2 && <p><span>2nd Position:</span> <span>{report.d2}</span></p>}
+                                    {report.d1 && <p><span>1st Position:</span> <span className={getFindingStyle(report.d1, 'd1')}>{report.d1}</span></p>}
+                                    {report.d2 && <p><span>2nd Position:</span> <span className={getFindingStyle(report.d2, 'd2')}>{report.d2}</span></p>}
                                     {/* Fallback for legacy data */}
                                     {!report.d1 && !report.d2 && report.duodenum && (
-                                        <p><span>1st & 2nd Position:</span> <span>{report.duodenum}</span></p>
+                                        <p><span>1st & 2nd Position:</span> <span className={getFindingStyle(report.duodenum, 'duodenum')}>{report.duodenum}</span></p>
                                     )}
                                 </>
                             )}
