@@ -264,12 +264,47 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     ) : (
                         <>
                             {/* Upper Endoscopy Fields */}
-                            {report.oesophagusGE && (
-                                <p><span>Oesophagus and G.E junction:</span> <span className={getFindingStyle(report.oesophagusGE, 'oesophagusGE')}>{report.oesophagusGE}</span></p>
-                            )}
-                            {(report.geJunction && !report.oesophagusGE) && (
-                                <p><span>G.E Junction:</span> <span className={getFindingStyle(report.geJunction, 'geJunction')}>{report.geJunction}</span></p>
-                            )}
+                            {(() => {
+                                // Determine if we should show Oesophagus and G.E Junction separately
+                                const oesophagusValue = report.oesophagusGE || ''
+                                const geJunctionValue = report.geJunction || ''
+                                const defaultValue = DEFAULT_FINDINGS.oesophagusGE
+
+                                // Normalize for comparison
+                                const normalizedOesophagus = oesophagusValue.trim().toUpperCase()
+                                const normalizedGE = geJunctionValue.trim().toUpperCase()
+                                const normalizedDefault = defaultValue.trim().toUpperCase()
+
+                                // Check if either field differs from default
+                                const oesophagusChanged = normalizedOesophagus !== normalizedDefault
+                                const geJunctionChanged = normalizedGE !== normalizedDefault
+
+                                // Check if they differ from each other
+                                const fieldsDiffer = normalizedOesophagus !== normalizedGE
+
+                                // Show separately if: (either changed from default) AND (they differ from each other)
+                                const showSeparately = (oesophagusChanged || geJunctionChanged) && fieldsDiffer
+
+                                if (showSeparately) {
+                                    // Show as separate fields
+                                    return (
+                                        <>
+                                            {oesophagusValue && (
+                                                <p><span>Oesophagus:</span> <span className={getFindingStyle(report.oesophagusGE, 'oesophagusGE')}>{report.oesophagusGE}</span></p>
+                                            )}
+                                            {geJunctionValue && (
+                                                <p><span>G.E Junction:</span> <span className={getFindingStyle(report.geJunction, 'geJunction')}>{report.geJunction}</span></p>
+                                            )}
+                                        </>
+                                    )
+                                } else if (oesophagusValue) {
+                                    // Show combined (they're the same or both default)
+                                    return (
+                                        <p><span>Oesophagus and G.E junction:</span> <span className={getFindingStyle(report.oesophagusGE, 'oesophagusGE')}>{report.oesophagusGE}</span></p>
+                                    )
+                                }
+                                return null
+                            })()}
                             {report.fundus && (
                                 <p><span>Fundus:</span> <span className={getFindingStyle(report.fundus, 'fundus')}>{report.fundus}</span></p>
                             )}
