@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
 /**
  * GET /api/reports/suggestions
@@ -54,7 +54,7 @@ export async function GET(request: Request) {
         // If field is d1 or d2, also fetch legacy 'duodenum' for suggestions
         const fieldsToSelect = (field === 'd1' || field === 'd2') ? `${field}, duodenum` : field
 
-        const { data, error } = await supabase
+        const { data, error } = await supabaseAdmin
             .from('MedicalReport')
             .select(fieldsToSelect)
             .limit(100)
