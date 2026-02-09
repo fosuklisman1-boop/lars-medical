@@ -63,6 +63,14 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
             return normalizedValue === normalizedDefault ? '' : 'font-bold italic'
         }
 
+        // Determine font size based on text length to prevent wrapping
+        const getValueSize = (value: string | null | undefined) => {
+            const length = value?.length || 0
+            if (length > 50) return 'text-[13px]'
+            if (length > 35) return 'text-[14px]'
+            return '' // Use parent size (16px)
+        }
+
         return (
             <div
                 ref={ref}
@@ -228,37 +236,37 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                         <>
                             {/* Lower Endoscopy Fields */}
                             {report.dre && (
-                                <p className="mb-2"><span className="uppercase">INSPECTION AND DIGITO RECTAL EXAMINATION:</span> <span className={`uppercase ${getFindingStyle(report.dre, 'dre')}`}>{report.dre}</span></p>
+                                <p className="mb-2"><span className="uppercase">INSPECTION AND DIGITO RECTAL EXAMINATION:</span> <span className={`uppercase ${getFindingStyle(report.dre, 'dre')} ${getValueSize(report.dre)}`}>{report.dre}</span></p>
                             )}
                             {report.anus && (
-                                <p><span>Anus:</span> <span className={`uppercase ${getFindingStyle(report.anus, 'anus')}`}>{report.anus}</span></p>
+                                <p><span>Anus:</span> <span className={`uppercase ${getFindingStyle(report.anus, 'anus')} ${getValueSize(report.anus)}`}>{report.anus}</span></p>
                             )}
                             {report.rectum && (
-                                <p><span>Rectum:</span> <span className={`uppercase ${getFindingStyle(report.rectum, 'rectum')}`}>{report.rectum}</span></p>
+                                <p><span>Rectum:</span> <span className={`uppercase ${getFindingStyle(report.rectum, 'rectum')} ${getValueSize(report.rectum)}`}>{report.rectum}</span></p>
                             )}
                             {report.sigmoid && (
-                                <p><span>Sigmoid:</span> <span className={`uppercase ${getFindingStyle(report.sigmoid, 'sigmoid')}`}>{report.sigmoid}</span></p>
+                                <p><span>Sigmoid:</span> <span className={`uppercase ${getFindingStyle(report.sigmoid, 'sigmoid')} ${getValueSize(report.sigmoid)}`}>{report.sigmoid}</span></p>
                             )}
                             {report.descendingColon && (
-                                <p><span>Descending:</span> <span className={`uppercase ${getFindingStyle(report.descendingColon, 'descendingColon')}`}>{report.descendingColon}</span></p>
+                                <p><span>Descending:</span> <span className={`uppercase ${getFindingStyle(report.descendingColon, 'descendingColon')} ${getValueSize(report.descendingColon)}`}>{report.descendingColon}</span></p>
                             )}
                             {report.splenicFlexure && (
-                                <p><span>Splenic flexure:</span> <span className={`uppercase ${getFindingStyle(report.splenicFlexure, 'splenicFlexure')}`}>{report.splenicFlexure}</span></p>
+                                <p><span>Splenic flexure:</span> <span className={`uppercase ${getFindingStyle(report.splenicFlexure, 'splenicFlexure')} ${getValueSize(report.splenicFlexure)}`}>{report.splenicFlexure}</span></p>
                             )}
                             {report.transverseColon && (
-                                <p><span>Transverse:</span> <span className={`uppercase ${getFindingStyle(report.transverseColon, 'transverseColon')}`}>{report.transverseColon}</span></p>
+                                <p><span>Transverse:</span> <span className={`uppercase ${getFindingStyle(report.transverseColon, 'transverseColon')} ${getValueSize(report.transverseColon)}`}>{report.transverseColon}</span></p>
                             )}
                             {report.hepaticFlexure && (
-                                <p><span>Hepatic flexure:</span> <span className={`uppercase ${getFindingStyle(report.hepaticFlexure, 'hepaticFlexure')}`}>{report.hepaticFlexure}</span></p>
+                                <p><span>Hepatic flexure:</span> <span className={`uppercase ${getFindingStyle(report.hepaticFlexure, 'hepaticFlexure')} ${getValueSize(report.hepaticFlexure)}`}>{report.hepaticFlexure}</span></p>
                             )}
                             {report.ascendingColon && (
-                                <p><span>Ascending:</span> <span className={`uppercase ${getFindingStyle(report.ascendingColon, 'ascendingColon')}`}>{report.ascendingColon}</span></p>
+                                <p><span>Ascending:</span> <span className={`uppercase ${getFindingStyle(report.ascendingColon, 'ascendingColon')} ${getValueSize(report.ascendingColon)}`}>{report.ascendingColon}</span></p>
                             )}
                             {report.caecum && (
-                                <p><span>Caecum:</span> <span className={`uppercase ${getFindingStyle(report.caecum, 'caecum')}`}>{report.caecum}</span></p>
+                                <p><span>Caecum:</span> <span className={`uppercase ${getFindingStyle(report.caecum, 'caecum')} ${getValueSize(report.caecum)}`}>{report.caecum}</span></p>
                             )}
                             {report.ileoCaecalValve && (
-                                <p><span>Ileo-caecal valve:</span> <span className={`uppercase ${getFindingStyle(report.ileoCaecalValve, 'ileoCaecalValve')}`}>{report.ileoCaecalValve}</span></p>
+                                <p><span>Ileo-caecal valve:</span> <span className={`uppercase ${getFindingStyle(report.ileoCaecalValve, 'ileoCaecalValve')} ${getValueSize(report.ileoCaecalValve)}`}>{report.ileoCaecalValve}</span></p>
                             )}
                         </>
                     ) : (
@@ -290,41 +298,41 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                                     return (
                                         <>
                                             {oesophagusValue && (
-                                                <p><span>Oesophagus:</span> <span className={getFindingStyle(report.oesophagusGE, 'oesophagusGE')}>{report.oesophagusGE}</span></p>
+                                                <p><span>Oesophagus:</span> <span className={`${getFindingStyle(report.oesophagusGE, 'oesophagusGE')} ${getValueSize(report.oesophagusGE)}`}>{report.oesophagusGE}</span></p>
                                             )}
                                             {geJunctionValue && (
-                                                <p><span>G.E Junction:</span> <span className={getFindingStyle(report.geJunction, 'geJunction')}>{report.geJunction}</span></p>
+                                                <p><span>G.E Junction:</span> <span className={`${getFindingStyle(report.geJunction, 'geJunction')} ${getValueSize(report.geJunction)}`}>{report.geJunction}</span></p>
                                             )}
                                         </>
                                     )
                                 } else if (oesophagusValue) {
                                     // Show combined (they're the same or both default)
                                     return (
-                                        <p><span>Oesophagus and G.E junction:</span> <span className={getFindingStyle(report.oesophagusGE, 'oesophagusGE')}>{report.oesophagusGE}</span></p>
+                                        <p><span>Oesophagus and G.E junction:</span> <span className={`${getFindingStyle(report.oesophagusGE, 'oesophagusGE')} ${getValueSize(report.oesophagusGE)}`}>{report.oesophagusGE}</span></p>
                                     )
                                 }
                                 return null
                             })()}
                             {report.fundus && (
-                                <p><span>Fundus:</span> <span className={getFindingStyle(report.fundus, 'fundus')}>{report.fundus}</span></p>
+                                <p><span>Fundus:</span> <span className={`${getFindingStyle(report.fundus, 'fundus')} ${getValueSize(report.fundus)}`}>{report.fundus}</span></p>
                             )}
                             {report.body && (
-                                <p><span>Body:</span> <span className={getFindingStyle(report.body, 'body')}>{report.body}</span></p>
+                                <p><span>Body:</span> <span className={`${getFindingStyle(report.body, 'body')} ${getValueSize(report.body)}`}>{report.body}</span></p>
                             )}
                             {report.antrum && (
-                                <p><span>Antrum:</span> <span className={getFindingStyle(report.antrum, 'antrum')}>{report.antrum}</span></p>
+                                <p><span>Antrum:</span> <span className={`${getFindingStyle(report.antrum, 'antrum')} ${getValueSize(report.antrum)}`}>{report.antrum}</span></p>
                             )}
                             {report.pylorus && (
-                                <p><span>Pylorus:</span> <span className={getFindingStyle(report.pylorus, 'pylorus')}>{report.pylorus}</span></p>
+                                <p><span>Pylorus:</span> <span className={`${getFindingStyle(report.pylorus, 'pylorus')} ${getValueSize(report.pylorus)}`}>{report.pylorus}</span></p>
                             )}
                             {(report.d1 || report.d2 || report.duodenum) && (
                                 <>
                                     <p className="mt-2">DUODENUM:</p>
-                                    {report.d1 && <p><span>1st Position:</span> <span className={getFindingStyle(report.d1, 'd1')}>{report.d1}</span></p>}
-                                    {report.d2 && <p><span>2nd Position:</span> <span className={getFindingStyle(report.d2, 'd2')}>{report.d2}</span></p>}
+                                    {report.d1 && <p><span>1st Position:</span> <span className={`${getFindingStyle(report.d1, 'd1')} ${getValueSize(report.d1)}`}>{report.d1}</span></p>}
+                                    {report.d2 && <p><span>2nd Position:</span> <span className={`${getFindingStyle(report.d2, 'd2')} ${getValueSize(report.d2)}`}>{report.d2}</span></p>}
                                     {/* Fallback for legacy data */}
                                     {!report.d1 && !report.d2 && report.duodenum && (
-                                        <p><span>1st & 2nd Position:</span> <span className={getFindingStyle(report.duodenum, 'duodenum')}>{report.duodenum}</span></p>
+                                        <p><span>1st & 2nd Position:</span> <span className={`${getFindingStyle(report.duodenum, 'duodenum')} ${getValueSize(report.duodenum)}`}>{report.duodenum}</span></p>
                                     )}
                                 </>
                             )}
@@ -355,7 +363,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 </div>
 
                 {/* Comments */}
-                <div className="mb-4 text-[16px]">
+                <div className="mb-4 text-[16px] print:break-inside-avoid">
                     <span>COMMENTS:</span> <span className="font-bold italic uppercase">{report.comments || 'N/A'}</span>
                 </div>
 
@@ -363,7 +371,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
 
 
                 {/* Doctor Signature */}
-                <div className="text-right mt-12 text-[16px]">
+                <div className="text-right mt-12 text-[16px] print:break-inside-avoid">
                     <p className="font-bold">DR. M. S. ADAMS</p>
                 </div>
             </div>
