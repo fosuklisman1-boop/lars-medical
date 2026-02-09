@@ -408,10 +408,12 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                             <label className="block text-sm font-medium mb-1">Medication Given</label>
                             <AutocompleteInput name="medicationGiven" value={formData.medicationGiven} onChange={handleInputChange} field="medicationGiven" placeholder="INJ. DORMICUM, PROPOFOL AND BUSCOPAN" />
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Stomach Content</label>
-                            <AutocompleteInput name="stomachContent" value={formData.stomachContent} onChange={handleInputChange} field="stomachContent" placeholder="EMPTY" />
-                        </div>
+                        {!isLowerEndoscopy && (
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Stomach Content</label>
+                                <AutocompleteInput name="stomachContent" value={formData.stomachContent} onChange={handleInputChange} field="stomachContent" placeholder="EMPTY" />
+                            </div>
+                        )}
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Instruments Used (comma separated)</label>

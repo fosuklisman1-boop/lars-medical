@@ -195,15 +195,18 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 )}
 
                 {/* Instruments Used Row */}
-                <div className="flex gap-6 mb-1 text-[16px]">
-                    <div>
-                        <span>INSTRUMENTS USED:</span> <span>{Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-IT140')}</span>
+                <div className="mb-1 text-[16px]">
+                    <div className="flex gap-6">
+                        <span>INSTRUMENTS USED:</span>
+                        <div>
+                            <span>BIOPSY:</span> <span className="font-bold italic">{report.biopsy || ''}</span>
+                        </div>
+                        <div>
+                            <span>SITE OF BIOPSY:</span> <span className="font-bold italic">{report.biopsySite || ''}</span>
+                        </div>
                     </div>
-                    <div>
-                        <span>BIOPSY:</span> <span className="font-bold italic">{report.biopsy || ''}</span>
-                    </div>
-                    <div>
-                        <span>SITE OF BIOPSY:</span> <span className="font-bold italic">{report.biopsySite || ''}</span>
+                    <div className="ml-4">
+                        <span>{Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-IT140')}</span>
                     </div>
                 </div>
 
