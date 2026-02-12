@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
-import { Printer, Loader2, Home as HomeIcon } from 'lucide-react'
+import { Printer, Loader2, Home as HomeIcon, Share2 } from 'lucide-react'
 import { useReactToPrint } from 'react-to-print'
 
 import { MedicalReportForm } from '@/components/sections/MedicalReportForm'
@@ -42,6 +42,71 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
         setTimeout(() => {
             handlePrint()
         }, 100)
+    }
+
+    const handleShare = async (report: MedicalReport) => {
+        const toastId = toast.loading('Generating PDF report...')
+
+        try {
+            const jsPDF = (await import('jspdf')).default
+            const html2canvas = (await import('html2canvas')).default
+
+            // Temporary set the report to print so it renders in the hidden container
+            setReportToPrint(report)
+
+            // Small delay to ensure the component is rendered
+            await new Promise(resolve => setTimeout(resolve, 500))
+
+            const printElement = printRef.current
+            if (!printElement) {
+                throw new Error('Print element not found')
+            }
+
+            const canvas = await html2canvas(printElement, {
+                scale: 2, // Higher scale for better quality
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff',
+            })
+
+            const imgData = canvas.toDataURL('image/png')
+            const pdf = new jsPDF({
+                orientation: 'p',
+                unit: 'mm',
+                format: 'a4',
+            })
+
+            const imgProps = pdf.getImageProperties(imgData)
+            const pdfWidth = pdf.internal.pageSize.getWidth()
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width
+
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
+            const pdfBlob = pdf.output('blob')
+
+            const fileName = `Medical_Report_${client?.name || 'Client'}_${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`
+            const file = new File([pdfBlob], fileName, { type: 'application/pdf' })
+
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: 'Medical Report',
+                    text: `Medical report for ${client?.name}`
+                })
+                toast.success('Report shared successfully', { id: toastId })
+            } else {
+                // Fallback to download
+                const url = URL.createObjectURL(pdfBlob)
+                const a = document.createElement('a')
+                a.href = url
+                a.download = fileName
+                a.click()
+                URL.revokeObjectURL(url)
+                toast.success('Sharing not supported. PDF downloaded instead.', { id: toastId })
+            }
+        } catch (error) {
+            console.error('Error sharing report:', error)
+            toast.error('Failed to generate sharing file', { id: toastId })
+        }
     }
 
     const fetchClientAndReports = async () => {
@@ -222,6 +287,18 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
                                                         >
                                                             <Printer className="w-3.5 h-3.5 mr-1" />
                                                             Print
+                                                        </Button>
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            className="h-8 px-2 text-indigo-600 border-indigo-200 hover:bg-indigo-50"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation()
+                                                                handleShare(report)
+                                                            }}
+                                                        >
+                                                            <Share2 className="w-3.5 h-3.5 mr-1" />
+                                                            Share
                                                         </Button>
                                                         <span className="text-blue-600 font-bold text-sm self-center">Open →</span>
                                                     </div>
