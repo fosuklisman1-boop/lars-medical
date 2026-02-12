@@ -19,7 +19,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { toast } from 'sonner'
-import { Loader2, Printer, ArrowLeft } from 'lucide-react'
+import { Loader2, Printer, ArrowLeft, Share2 } from 'lucide-react'
 import { Client, MedicalReport } from '@/types'
 
 interface MedicalReportFormProps {
@@ -28,9 +28,10 @@ interface MedicalReportFormProps {
     onSave: (report: MedicalReport) => void
     onCancel: () => void
     onPrint?: (report: MedicalReport) => void // Optional print callback
+    onShare?: (report: MedicalReport) => void // Optional share callback
 }
 
-export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }: MedicalReportFormProps) {
+export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, onShare }: MedicalReportFormProps) {
     const [loading, setLoading] = useState(false)
     const isEditing = !!report
 
@@ -225,6 +226,21 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
             return
         }
         onPrint?.(report)
+    }
+
+    // Handle share button click
+    const handleShareClick = () => {
+        if (!isEditing) {
+            toast.error('Please save the report first before sharing')
+            return
+        }
+        if (hasChanges) {
+            toast.error('Please save your changes before sharing', {
+                description: 'Changes must be saved to ensure they appear on the shared report.'
+            })
+            return
+        }
+        onShare?.(report)
     }
 
     // Handle form submission
@@ -606,10 +622,19 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint }:
                         )}
                     </div>
                     <div className="flex gap-3">
-                        {isEditing && onPrint && (
-                            <Button type="button" variant="outline" onClick={handlePrintClick} disabled={loading}>
-                                <Printer className="w-4 h-4 mr-2" /> Print Report
-                            </Button>
+                        {isEditing && (
+                            <div className="flex gap-3">
+                                {onShare && (
+                                    <Button type="button" variant="outline" className="text-indigo-600 border-indigo-200 hover:bg-indigo-50" onClick={handleShareClick} disabled={loading}>
+                                        <Share2 className="w-4 h-4 mr-2" /> Share PDF
+                                    </Button>
+                                )}
+                                {onPrint && (
+                                    <Button type="button" variant="outline" onClick={handlePrintClick} disabled={loading}>
+                                        <Printer className="w-4 h-4 mr-2" /> Print Report
+                                    </Button>
+                                )}
+                            </div>
                         )}
                         <Button type="button" variant="outline" onClick={onCancel} disabled={loading}>Cancel</Button>
                         <Button type="submit" className="bg-blue-600 text-white" disabled={loading}>
