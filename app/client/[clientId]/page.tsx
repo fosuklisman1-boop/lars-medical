@@ -49,27 +49,25 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
 
         try {
             const jsPDF = (await import('jspdf')).default
-            const html2canvas = (await import('html2canvas')).default
+            const { toPng } = await import('html-to-image')
 
             // Temporary set the report to print so it renders in the hidden container
             setReportToPrint(report)
 
             // Small delay to ensure the component is rendered
-            await new Promise(resolve => setTimeout(resolve, 500))
+            await new Promise(resolve => setTimeout(resolve, 800))
 
             const printElement = printRef.current
             if (!printElement) {
                 throw new Error('Print element not found')
             }
 
-            const canvas = await html2canvas(printElement, {
-                scale: 2, // Higher scale for better quality
-                useCORS: true,
-                logging: false,
+            const imgData = await toPng(printElement, {
+                pixelRatio: 2,
                 backgroundColor: '#ffffff',
+                cacheBust: true,
             })
 
-            const imgData = canvas.toDataURL('image/png')
             const pdf = new jsPDF({
                 orientation: 'p',
                 unit: 'mm',

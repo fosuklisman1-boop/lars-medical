@@ -87,7 +87,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     {/* Top Row: Logo Left, Title Center/Right */}
                     <div className="flex items-center justify-center gap-6 mb-3 relative">
                         {/* Logo Box - Absolute leftish or just flex */}
-                        <div className="w-20 h-20 border-2 border-cyan-800 flex items-center justify-center p-0.5 shrink-0">
+                        <div className="w-20 h-20 border-2 flex items-center justify-center p-0.5 shrink-0" style={{ borderColor: '#155e75' }}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src="/logo.jpg" alt="LMC Logo" className="w-full h-full object-contain" />
                         </div>
@@ -113,8 +113,8 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                             P.O.BOX SY 524, SUNYANI, B/R &nbsp;&nbsp; TEL: 0200-638-932 / 0352196970. &nbsp;&nbsp; WORKING HOURS: 24/7
                         </p>
                         <p>
-                            <span className="text-blue-900">EMAIL: larsmedicalcentre@yahoo.com</span> &nbsp;&nbsp;&nbsp;&nbsp;
-                            <span className="text-red-600">GPS ADDRESS: BS-0174-2635</span>
+                            <span style={{ color: '#1e3a8a' }}>EMAIL: larsmedicalcentre@yahoo.com</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span style={{ color: '#dc2626' }}>GPS ADDRESS: BS-0174-2635</span>
                         </p>
                     </div>
                 </div>
