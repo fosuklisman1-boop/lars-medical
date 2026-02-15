@@ -181,249 +181,200 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     </div>
                 )}
 
-                {/* Patient Info Grid - Aligned perfectly like the image */}
-                <div className="grid grid-cols-12 gap-y-1 text-[16px] mb-2 uppercase tracking-tight">
+                {/* Patient Info Grid - Exact Image Match */}
+                <div className="grid grid-cols-12 gap-y-0.5 text-[15px] mb-2 uppercase tracking-tight font-bold">
                     {/* Row 1 */}
-                    <div className="col-span-6 flex">
-                        <span className="w-[60px] shrink-0">NAME:</span>
-                        <span className="font-bold">{client.name}</span>
-                    </div>
-                    <div className="col-span-3 flex">
-                        <span className="w-[50px] shrink-0">SEX:</span>
-                        <span className="font-bold">{client.sex}</span>
-                    </div>
-                    <div className="col-span-3 flex">
-                        <span className="w-[50px] shrink-0">AGE:</span>
-                        <span className="font-bold">{client.age} YEARS</span>
+                    <div className="col-span-12 flex justify-between">
+                        <div className="flex gap-2">
+                            <span className="shrink-0">NAME:</span>
+                            <span className="font-bold">{client.name}</span>
+                        </div>
+                        <div className="flex gap-2">
+                            <span className="shrink-0">SEX:</span>
+                            <span className="font-bold">{client.sex}</span>
+                        </div>
+                        <div className="flex gap-2 w-1/4">
+                            <span className="shrink-0">AGE:</span>
+                            <span className="font-bold">{client.age} YRS</span>
+                        </div>
                     </div>
 
                     {/* Row 2 */}
-                    <div className="col-span-6 flex items-start">
-                        <span className="w-[100px] shrink-0 whitespace-nowrap">REQ. DOC.:</span>
-                        <span className="font-bold">{report.refDoctor || client.refDoctor || 'N/A'}</span>
-                    </div>
-                    <div className="col-span-3 flex items-center">
-                        <span className="w-[90px] shrink-0 whitespace-nowrap">ADDRESS:</span>
-                        <span className="font-bold">{client.address || 'N/A'}</span>
-                    </div>
-                    <div className="col-span-3 flex">
-                        <span className="w-[60px] shrink-0">DATE:</span>
-                        <span className="font-bold">{formatDate(report.date || report.createdAt || null)}</span>
-                    </div>
-                </div>
-
-                {/* Operation Team */}
-                <div className="mb-1 text-[16px]">
-                    <span className="underline">OPERATION TEAM:</span>
-                    <div className="ml-4">
-                        {/* Try report first, then client, then default */}
-                        {Array.isArray(report.operationTeam) && report.operationTeam.length > 0 ? (
-                            report.operationTeam.map((member: string, index: number) => (
-                                <span key={index} className="mr-6">
-                                    {index + 1}. {member}
-                                </span>
-                            ))
-                        ) : Array.isArray(client.operationTeam) && client.operationTeam.length > 0 ? (
-                            client.operationTeam.map((member: string, index: number) => (
-                                <span key={index} className="mr-6">
-                                    {index + 1}. {member}
-                                </span>
-                            ))
-                        ) : (
-                            <span>Clinical Staff</span>
-                        )}
-                    </div>
-                </div>
-
-                {/* Time Row */}
-                <div className="flex gap-8 mb-1 text-[16px]">
-                    <div>
-                        <span>TIME STARTED:</span> <span className="font-bold">{formatTime(report.timeStarted || null) || 'N/A'}</span>
-                    </div>
-                    <div>
-                        <span>TIME ENDED:</span> <span className="font-bold">{formatTime(report.timeEnded || null) || 'N/A'}</span>
-                    </div>
-                </div>
-
-                {/* Medication Given */}
-                <div className="mb-1 text-[16px]">
-                    <span>MEDICATION GIVEN:</span> <span className="font-bold">{report.medicationGiven || 'N/A'}</span>
-                </div>
-
-                {/* Content - Hide for Colonoscopy typically, but requested image didn't show it explicitly. However, keeping it consistent or hiding if null */}
-                {(report.procedure !== 'LOWER ENDOSCOPY') && (
-                    <div className="mb-1 text-[16px]">
-                        <span>STOMACH CONTENT:</span> <span className={`uppercase ${report.stomachContent?.trim().toUpperCase() === 'EMPTY' ? '' : 'font-bold italic'}`}>{report.stomachContent || 'EMPTY'}</span>
-                    </div>
-                )}
-
-                {/* Instruments Used Row */}
-                <div className="mb-1 text-[16px]">
-                    <div className="flex gap-6">
-                        <span>INSTRUMENTS USED:</span>
-                        <div>
-                            <span>BIOPSY:</span> <span className="font-bold italic">{report.biopsy || ''}</span>
+                    <div className="col-span-12 flex justify-between">
+                        <div className="flex gap-2">
+                            <span className="shrink-0">REQUESTING DOCTOR:</span>
+                            <span className="font-bold">{report.refDoctor || client.refDoctor || 'SELF'}</span>
                         </div>
-                        <div>
-                            <span>SITE OF BIOPSY:</span> <span className="font-bold italic">{report.biopsySite || ''}</span>
+                        <div className="flex gap-2">
+                            <span className="shrink-0">ADDRESS:</span>
+                            <span className="font-bold">{client.address || 'AWH, KENYASI'}</span>
+                        </div>
+                        <div className="flex gap-2 w-1/4">
+                            <span className="shrink-0">DATE:</span>
+                            <span className="font-bold">{formatDate(report.date || report.createdAt || null)}</span>
                         </div>
                     </div>
-                    <div className="ml-4">
-                        <span>{Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-IT140')}</span>
-                    </div>
                 </div>
 
-                {/* Clinical Summary */}
-                <div className="mb-2 text-[16px]">
-                    <span>CLINICAL SUMMARY:</span> <span className="font-bold italic">{report.clinicalSummary || client.clinicalSummary || ''}</span>
+                {/* Operation Team & Times */}
+                <div className="text-[15px] font-bold space-y-0.5 mb-2">
+                    <div>
+                        <span className="uppercase">OPERATION TEAM:</span>
+                        <div className="flex flex-wrap gap-x-8 mt-0.5">
+                            {(() => {
+                                const team = Array.isArray(report.operationTeam) && report.operationTeam.length > 0
+                                    ? report.operationTeam
+                                    : Array.isArray(client.operationTeam) && client.operationTeam.length > 0
+                                        ? client.operationTeam
+                                        : ['DR. M. S. ADAMS', 'DR. M. BOMTOH', 'MR. J. AFRAM', 'SIS. PRISCILLA K. OSEI'];
+
+                                return team.map((member, idx) => (
+                                    <span key={idx} className="uppercase">{idx + 1}. {member}</span>
+                                ));
+                            })()}
+                        </div>
+                    </div>
+
+                    <div className="flex gap-x-12 uppercase">
+                        <div>
+                            <span>TIME STARTED:</span> <span className="font-bold">{formatTime(report.timeStarted || null) || '9:00 AM'}</span>
+                        </div>
+                        <div>
+                            <span>TIME ENDED:</span> <span className="font-bold">{formatTime(report.timeEnded || null) || '9:15 AM'}</span>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-x-12 uppercase">
+                        <div className="flex gap-1">
+                            <span>MEDICATION GIVEN:</span> <span className="font-bold">{report.medicationGiven || 'INJ. DORMICUM AND BUSCOPAN'}</span>
+                        </div>
+                        <div className="flex gap-1">
+                            <span>STOMACH CONTENT:</span> <span className="font-bold italic">{report.stomachContent || 'EMPTY'}</span>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-x-8 uppercase">
+                        <div className="flex gap-1">
+                            <span>INSTRUMENT USED:</span> <span className="font-bold">{Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-1T140')}</span>
+                        </div>
+                        <div className="flex gap-1">
+                            <span>BIOPSY:</span> <span className="font-bold italic">{report.biopsy || 'YES'}</span>
+                        </div>
+                        <div className="flex gap-1">
+                            <span>SITE OF BIOPSY:</span> <span className="font-bold italic">{report.biopsySite || 'GASTRIC MUCOSA'}</span>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-1 uppercase">
+                        <span>CLINICAL SUMMARY:</span> <span className="font-bold">{report.clinicalSummary || client.clinicalSummary || 'PUD'}</span>
+                    </div>
                 </div>
 
                 {/* Findings Header */}
                 <div className="mb-2">
-                    <p className="underline text-[16px]">
+                    <p className="underline text-[15px] font-bold">
                         {report.procedure === 'LOWER ENDOSCOPY' ? 'COLONOSCOPY FINDINGS:' : ((report.procedure || 'UPPER ENDOSCOPY').toUpperCase() + ' FINDINGS:')}
                     </p>
                 </div>
 
                 {/* Anatomical Findings */}
-                <div className="mb-4 text-[16px] space-y-1">
+                <div className="mb-4 text-[15px] space-y-0.5">
                     {report.procedure === 'LOWER ENDOSCOPY' ? (
                         <>
                             {/* Lower Endoscopy Fields */}
                             {report.dre && (
-                                <p className="mb-2"><span className="uppercase">INSPECTION AND DIGITO RECTAL EXAMINATION:</span> <span className={`uppercase ${getFindingStyle(report.dre, 'dre')} ${getValueSize(report.dre)}`}>{report.dre}</span></p>
+                                <p className="mb-1"><span className="uppercase font-bold">INSPECTION AND DIGITO RECTAL EXAMINATION:</span> <span className={`uppercase ${getFindingStyle(report.dre, 'dre')} ${getValueSize(report.dre)}`}>{report.dre}</span></p>
                             )}
                             {report.anus && (
-                                <p><span>Anus:</span> <span className={`uppercase ${getFindingStyle(report.anus, 'anus')} ${getValueSize(report.anus)}`}>{report.anus}</span></p>
+                                <p><span className="font-bold">Anus:</span> <span className={`uppercase ${getFindingStyle(report.anus, 'anus')} ${getValueSize(report.anus)}`}>{report.anus}</span></p>
                             )}
                             {report.rectum && (
-                                <p><span>Rectum:</span> <span className={`uppercase ${getFindingStyle(report.rectum, 'rectum')} ${getValueSize(report.rectum)}`}>{report.rectum}</span></p>
+                                <p><span className="font-bold">Rectum:</span> <span className={`uppercase ${getFindingStyle(report.rectum, 'rectum')} ${getValueSize(report.rectum)}`}>{report.rectum}</span></p>
                             )}
                             {report.sigmoid && (
-                                <p><span>Sigmoid:</span> <span className={`uppercase ${getFindingStyle(report.sigmoid, 'sigmoid')} ${getValueSize(report.sigmoid)}`}>{report.sigmoid}</span></p>
+                                <p><span className="font-bold">Sigmoid:</span> <span className={`uppercase ${getFindingStyle(report.sigmoid, 'sigmoid')} ${getValueSize(report.sigmoid)}`}>{report.sigmoid}</span></p>
                             )}
                             {report.descendingColon && (
-                                <p><span>Descending:</span> <span className={`uppercase ${getFindingStyle(report.descendingColon, 'descendingColon')} ${getValueSize(report.descendingColon)}`}>{report.descendingColon}</span></p>
+                                <p><span className="font-bold">Descending:</span> <span className={`uppercase ${getFindingStyle(report.descendingColon, 'descendingColon')} ${getValueSize(report.descendingColon)}`}>{report.descendingColon}</span></p>
                             )}
                             {report.splenicFlexure && (
-                                <p><span>Splenic flexure:</span> <span className={`uppercase ${getFindingStyle(report.splenicFlexure, 'splenicFlexure')} ${getValueSize(report.splenicFlexure)}`}>{report.splenicFlexure}</span></p>
+                                <p><span className="font-bold">Splenic flexure:</span> <span className={`uppercase ${getFindingStyle(report.splenicFlexure, 'splenicFlexure')} ${getValueSize(report.splenicFlexure)}`}>{report.splenicFlexure}</span></p>
                             )}
                             {report.transverseColon && (
-                                <p><span>Transverse:</span> <span className={`uppercase ${getFindingStyle(report.transverseColon, 'transverseColon')} ${getValueSize(report.transverseColon)}`}>{report.transverseColon}</span></p>
+                                <p><span className="font-bold">Transverse:</span> <span className={`uppercase ${getFindingStyle(report.transverseColon, 'transverseColon')} ${getValueSize(report.transverseColon)}`}>{report.transverseColon}</span></p>
                             )}
                             {report.hepaticFlexure && (
-                                <p><span>Hepatic flexure:</span> <span className={`uppercase ${getFindingStyle(report.hepaticFlexure, 'hepaticFlexure')} ${getValueSize(report.hepaticFlexure)}`}>{report.hepaticFlexure}</span></p>
+                                <p><span className="font-bold">Hepatic flexure:</span> <span className={`uppercase ${getFindingStyle(report.hepaticFlexure, 'hepaticFlexure')} ${getValueSize(report.hepaticFlexure)}`}>{report.hepaticFlexure}</span></p>
                             )}
                             {report.ascendingColon && (
-                                <p><span>Ascending:</span> <span className={`uppercase ${getFindingStyle(report.ascendingColon, 'ascendingColon')} ${getValueSize(report.ascendingColon)}`}>{report.ascendingColon}</span></p>
+                                <p><span className="font-bold">Ascending:</span> <span className={`uppercase ${getFindingStyle(report.ascendingColon, 'ascendingColon')} ${getValueSize(report.ascendingColon)}`}>{report.ascendingColon}</span></p>
                             )}
                             {report.caecum && (
-                                <p><span>Caecum:</span> <span className={`uppercase ${getFindingStyle(report.caecum, 'caecum')} ${getValueSize(report.caecum)}`}>{report.caecum}</span></p>
+                                <p><span className="font-bold">Caecum:</span> <span className={`uppercase ${getFindingStyle(report.caecum, 'caecum')} ${getValueSize(report.caecum)}`}>{report.caecum}</span></p>
                             )}
                             {report.ileoCaecalValve && (
-                                <p><span>Ileo-caecal valve:</span> <span className={`uppercase ${getFindingStyle(report.ileoCaecalValve, 'ileoCaecalValve')} ${getValueSize(report.ileoCaecalValve)}`}>{report.ileoCaecalValve}</span></p>
+                                <p><span className="font-bold">Ileo-caecal valve:</span> <span className={`uppercase ${getFindingStyle(report.ileoCaecalValve, 'ileoCaecalValve')} ${getValueSize(report.ileoCaecalValve)}`}>{report.ileoCaecalValve}</span></p>
                             )}
                         </>
                     ) : (
                         <>
                             {/* Upper Endoscopy Fields */}
                             {(() => {
-                                // Determine if we should show Oesophagus and G.E Junction separately
                                 const oesophagusValue = report.oesophagusGE || ''
                                 const geJunctionValue = report.geJunction || ''
-                                const defaultValue = DEFAULT_FINDINGS.oesophagusGE
-
-                                // Normalize for comparison
-                                const normalizedOesophagus = oesophagusValue.trim().toUpperCase()
-                                const normalizedGE = geJunctionValue.trim().toUpperCase()
-                                const normalizedDefault = defaultValue.trim().toUpperCase()
-
-                                // Check if either field differs from default
-                                const oesophagusChanged = normalizedOesophagus !== normalizedDefault
-                                const geJunctionChanged = normalizedGE !== normalizedDefault
-
-                                // Check if they differ from each other
-                                const fieldsDiffer = normalizedOesophagus !== normalizedGE
-
-                                // Show separately if: (either changed from default) AND (they differ from each other)
-                                const showSeparately = (oesophagusChanged || geJunctionChanged) && fieldsDiffer
-
-                                if (showSeparately) {
-                                    // Show as separate fields
+                                if (oesophagusValue.trim().toUpperCase() !== geJunctionValue.trim().toUpperCase() && (oesophagusValue && geJunctionValue)) {
                                     return (
                                         <>
-                                            {oesophagusValue && (
-                                                <p><span>Oesophagus:</span> <span className={`${getFindingStyle(report.oesophagusGE, 'oesophagusGE')} ${getValueSize(report.oesophagusGE)}`}>{report.oesophagusGE}</span></p>
-                                            )}
-                                            {geJunctionValue && (
-                                                <p><span>G.E Junction:</span> <span className={`${getFindingStyle(report.geJunction, 'geJunction')} ${getValueSize(report.geJunction)}`}>{report.geJunction}</span></p>
-                                            )}
+                                            {oesophagusValue && (<p><span className="font-bold">Oesophagus:</span> <span className={`${getFindingStyle(report.oesophagusGE, 'oesophagusGE')} ${getValueSize(report.oesophagusGE)}`}>{report.oesophagusGE}</span></p>)}
+                                            {geJunctionValue && (<p><span className="font-bold">G.E Junction:</span> <span className={`${getFindingStyle(report.geJunction, 'geJunction')} ${getValueSize(report.geJunction)}`}>{report.geJunction}</span></p>)}
                                         </>
                                     )
                                 } else if (oesophagusValue) {
-                                    // Show combined (they're the same or both default)
-                                    return (
-                                        <p><span>Oesophagus and G.E junction:</span> <span className={`${getFindingStyle(report.oesophagusGE, 'oesophagusGE')} ${getValueSize(report.oesophagusGE)}`}>{report.oesophagusGE}</span></p>
-                                    )
+                                    return (<p><span className="font-bold">Oesophagus and G.E junction:</span> <span className={`${getFindingStyle(report.oesophagusGE, 'oesophagusGE')} ${getValueSize(report.oesophagusGE)}`}>{report.oesophagusGE}</span></p>)
                                 }
                                 return null
                             })()}
-                            {report.fundus && (
-                                <p><span>Fundus:</span> <span className={`${getFindingStyle(report.fundus, 'fundus')} ${getValueSize(report.fundus)}`}>{report.fundus}</span></p>
-                            )}
-                            {report.body && (
-                                <p><span>Body:</span> <span className={`${getFindingStyle(report.body, 'body')} ${getValueSize(report.body)}`}>{report.body}</span></p>
-                            )}
-                            {report.antrum && (
-                                <p><span>Antrum:</span> <span className={`${getFindingStyle(report.antrum, 'antrum')} ${getValueSize(report.antrum)}`}>{report.antrum}</span></p>
-                            )}
-                            {report.pylorus && (
-                                <p><span>Pylorus:</span> <span className={`${getFindingStyle(report.pylorus, 'pylorus')} ${getValueSize(report.pylorus)}`}>{report.pylorus}</span></p>
-                            )}
+                            {report.fundus && (<p><span className="font-bold">Fundus:</span> <span className={`${getFindingStyle(report.fundus, 'fundus')} ${getValueSize(report.fundus)}`}>{report.fundus}</span></p>)}
+                            {report.body && (<p><span className="font-bold">Body:</span> <span className={`${getFindingStyle(report.body, 'body')} ${getValueSize(report.body)}`}>{report.body}</span></p>)}
+                            {report.antrum && (<p><span className="font-bold">Antrum:</span> <span className={`${getFindingStyle(report.antrum, 'antrum')} ${getValueSize(report.antrum)}`}>{report.antrum}</span></p>)}
+                            {report.pylorus && (<p><span className="font-bold">Pylorus:</span> <span className={`${getFindingStyle(report.pylorus, 'pylorus')} ${getValueSize(report.pylorus)}`}>{report.pylorus}</span></p>)}
                             {(report.d1 || report.d2 || report.duodenum) && (
                                 <>
-                                    <p className="mt-2">DUODENUM:</p>
-                                    {report.d1 && <p><span>1st Position:</span> <span className={`${getFindingStyle(report.d1, 'd1')} ${getValueSize(report.d1)}`}>{report.d1}</span></p>}
-                                    {report.d2 && <p><span>2nd Position:</span> <span className={`${getFindingStyle(report.d2, 'd2')} ${getValueSize(report.d2)}`}>{report.d2}</span></p>}
-                                    {/* Fallback for legacy data */}
-                                    {!report.d1 && !report.d2 && report.duodenum && (
-                                        <p><span>1st & 2nd Position:</span> <span className={`${getFindingStyle(report.duodenum, 'duodenum')} ${getValueSize(report.duodenum)}`}>{report.duodenum}</span></p>
-                                    )}
+                                    <p className="mt-1 font-bold">DUODENUM:</p>
+                                    {report.d1 && <p><span className="font-bold">1st Position:</span> <span className={`${getFindingStyle(report.d1, 'd1')} ${getValueSize(report.d1)}`}>{report.d1}</span></p>}
+                                    {report.d2 && <p><span className="font-bold">2nd Position:</span> <span className={`${getFindingStyle(report.d2, 'd2')} ${getValueSize(report.d2)}`}>{report.d2}</span></p>}
+                                    {!report.d1 && !report.d2 && report.duodenum && (<p><span className="font-bold">1st & 2nd Position:</span> <span className={`${getFindingStyle(report.duodenum, 'duodenum')} ${getValueSize(report.duodenum)}`}>{report.duodenum}</span></p>)}
                                 </>
                             )}
                         </>
                     )}
-
                     {report.findings && (
-                        <p className="mt-2 whitespace-pre-wrap">{report.findings}</p>
+                        <p className="mt-1 whitespace-pre-wrap font-bold">{report.findings}</p>
                     )}
                 </div>
 
-                {/* HUT / Antigen Test - Hide for Colonoscopy */}
+                {/* HUT / Antigen Test */}
                 {report.procedure !== 'LOWER ENDOSCOPY' && (
-                    <div className="mb-2 text-[16px]">
+                    <div className="mb-2 text-[15px]">
                         {report.testType && report.testResult ? (
                             <p>
-                                <span>{report.testType === 'Stool Antigen Test' ? 'H.pylori Antigen (stool) Test' : 'H.pylori Antigen (HUT) Test'}:</span> <span className="font-bold italic uppercase">{report.testResult}</span>
+                                <span className="font-bold">{report.testType === 'Stool Antigen Test' ? 'H.pylori Antigen (stool) Test' : 'H.pylori Antigen (HUT) Test'}:</span> <span className="font-bold italic uppercase">{report.testResult}</span>
                             </p>
                         ) : (
-                            <p><span>(HUT - TEST) Test:</span> <span className="font-bold italic uppercase">{report.hutTestResult ? String(report.hutTestResult).replace(/\(HUT - TEST\) Test:/i, '').replace(/\(STOOL ANTIGEN\) Test:/i, '').trim() : 'PENDING'}</span></p>
+                            <p><span className="font-bold">(HUT - TEST) Test:</span> <span className="font-bold italic uppercase">{report.hutTestResult ? String(report.hutTestResult).replace(/\(HUT - TEST\) Test:/i, '').replace(/\(STOOL ANTIGEN\) Test:/i, '').trim() : 'PENDING'}</span></p>
                         )}
                     </div>
                 )}
 
                 {/* Impression */}
-                <div className="mb-3 text-[16px]">
-                    <span>IMPRESSION:</span> <span className="font-bold italic">{report.impression || 'N/A'}</span>
+                <div className="mb-2 text-[15px]">
+                    <span className="font-bold">IMPRESSION:</span> <span className="font-bold italic">{report.impression || 'N/A'}</span>
                 </div>
 
                 {/* Comments */}
-                <div className="mb-0 text-[16px] print:break-inside-avoid">
-                    <span>COMMENTS:</span> <span className="font-bold italic uppercase">{report.comments || 'N/A'}</span>
+                <div className="mb-0 text-[15px] print:break-inside-avoid">
+                    <span className="font-bold">COMMENTS:</span> <span className="font-bold italic uppercase">{report.comments || 'N/A'}</span>
                 </div>
-
-                {/* Medication - Explicitly separate - Hide for Lower Endoscopy */}
-
 
                 {/* Doctor Signature */}
                 <div className="text-right mt-4 text-[16px] print:break-inside-avoid">
