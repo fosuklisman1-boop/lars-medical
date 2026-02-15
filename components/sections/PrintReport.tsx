@@ -125,11 +125,13 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                         </div>
 
                         {/* Endoscopy Unit Title */}
-                        <div className="mb-4">
-                            <h2 className="text-5xl font-black tracking-widest italic" style={{ color: '#1e40af' }}>
+                        <div className="mb-2">
+                            <h2 className="text-4xl font-extrabold tracking-widest" style={{ color: '#1e40af' }}>
                                 ENDOSCOPY UNIT
                             </h2>
-                            <p className="text-lg font-bold border-b-2 border-black inline-block mt-0.5 uppercase tracking-tighter">
+                        </div>
+                        <div className="text-left">
+                            <p className="text-[15px] font-bold border-b border-black inline-block uppercase tracking-tight">
                                 GASTROINTESTINAL ENDOSCOPY RECORD ({report.procedure?.includes('UPPER') ? 'UPPER GI' : 'LOWER GI'})
                             </p>
                         </div>
