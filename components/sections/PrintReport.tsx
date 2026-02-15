@@ -100,7 +100,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                                 <p className="text-2xl italic font-serif mt-1" style={{ color: '#dc2626', fontFamily: 'Brush Script MT, cursive' }}>
                                     Best Care for a Healthy Life
                                 </p>
-                                <div className="mt-2 text-[13px] font-bold">
+                                <div className="mt-0.5 text-[13px] font-bold">
                                     <div className="flex justify-center flex-wrap gap-x-6">
                                         <span className="text-slate-700">P O BOX KQ 26, KENYASI</span>
                                         <span style={{ color: '#dc2626' }}>Email: adamswastlhealthcity@gmail.com</span>
@@ -129,7 +129,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                             <h2 className="text-5xl font-black tracking-widest italic" style={{ color: '#1e40af' }}>
                                 ENDOSCOPY UNIT
                             </h2>
-                            <p className="text-lg font-bold border-b-2 border-black inline-block mt-2 uppercase tracking-tighter">
+                            <p className="text-lg font-bold border-b-2 border-black inline-block mt-0.5 uppercase tracking-tighter">
                                 GASTROINTESTINAL ENDOSCOPY RECORD ({report.procedure?.includes('UPPER') ? 'UPPER GI' : 'LOWER GI'})
                             </p>
                         </div>
@@ -171,7 +171,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                         </div>
 
                         {/* Lars Title Line */}
-                        <div className="text-center mt-4">
+                        <div className="text-center mt-2">
                             <h2 className="text-xl font-bold border-b-2 border-black inline-block uppercase tracking-widest">
                                 GASTROINTESTINAL ENDOSCOPY RECORD ({report.procedure?.includes('UPPER') ? 'UPPER GI' : 'LOWER GI'})
                             </h2>
@@ -416,7 +416,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 </div>
 
                 {/* Comments */}
-                <div className="mb-4 text-[16px] print:break-inside-avoid">
+                <div className="mb-2 text-[16px] print:break-inside-avoid">
                     <span>COMMENTS:</span> <span className="font-bold italic uppercase">{report.comments || 'N/A'}</span>
                 </div>
 
@@ -424,7 +424,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
 
 
                 {/* Doctor Signature */}
-                <div className="text-right mt-12 text-[16px] print:break-inside-avoid">
+                <div className="text-right mt-4 text-[16px] print:break-inside-avoid">
                     <p className="font-bold">DR. M. S. ADAMS</p>
                 </div>
             </div>
