@@ -89,7 +89,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                             {/* Logo */}
                             <div className="w-40 h-28 shrink-0 flex items-center">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src="/awh_logo.png" alt="AWH Logo" className="w-full h-full object-contain" />
+                                <img src="/awh_logo.jpeg" alt="AWH Logo" className="w-full h-full object-contain" />
                             </div>
 
                             {/* Center Content */}
