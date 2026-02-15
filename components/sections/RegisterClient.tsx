@@ -67,6 +67,7 @@ export function RegisterClient() {
       // Split operationTeam string into array if present
       const submissionData = {
         ...formData,
+        clinicalSummary: formData.clinicalSummary?.trim() || 'NO SUMMARY',
         operationTeam: formData.operationTeam
           ? formData.operationTeam.split(',').map(item => item.trim()).filter(item => item !== '')
           : [],
@@ -215,7 +216,7 @@ export function RegisterClient() {
                   value={formData.clinicalSummary}
                   onChange={handleInputChange}
                   field="clinicalSummary"
-                  placeholder="Brief clinical summary..."
+                  placeholder="NO SUMMARY"
                   rows={3}
                 />
               </div>
