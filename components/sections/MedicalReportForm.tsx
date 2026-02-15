@@ -286,8 +286,8 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 transverseColon: isLower ? (formData.transverseColon?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
                 hepaticFlexure: isLower ? (formData.hepaticFlexure?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
                 ascendingColon: isLower ? (formData.ascendingColon?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
-                caecum: isLower ? (formData.caecum?.trim() || 'NOT EXAMINED') : null,
-                ileoCaecalValve: isLower ? (formData.ileoCaecalValve?.trim() || 'NOT EXAMINED') : null,
+                caecum: isLower ? (formData.caecum?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
+                ileoCaecalValve: isLower ? (formData.ileoCaecalValve?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
 
 
                 // Assessment & Plan
@@ -530,11 +530,11 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Caecum</label>
-                                    <AutocompleteInput name="caecum" value={formData.caecum} onChange={handleInputChange} field="caecum" placeholder="NOT EXAMINED" />
+                                    <AutocompleteInput name="caecum" value={formData.caecum} onChange={handleInputChange} field="caecum" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Ileo-caecal valve</label>
-                                    <AutocompleteInput name="ileoCaecalValve" value={formData.ileoCaecalValve} onChange={handleInputChange} field="ileoCaecalValve" placeholder="NOT EXAMINED" />
+                                    <AutocompleteInput name="ileoCaecalValve" value={formData.ileoCaecalValve} onChange={handleInputChange} field="ileoCaecalValve" placeholder="NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN" />
                                 </div>
                             </>
                         ) : (
