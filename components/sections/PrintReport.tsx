@@ -81,43 +81,80 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     lineHeight: '1.4'
                 }}
             >
-                {/* Header with Logo */}
-                {/* Header matching image layout */}
-                <div className="mb-6 font-sans">
-                    {/* Top Row: Logo Left, Title Center/Right */}
-                    <div className="flex items-center justify-center gap-6 mb-3 relative">
-                        {/* Logo Box - Absolute leftish or just flex */}
-                        <div className="w-20 h-20 border-2 flex items-center justify-center p-0.5 shrink-0" style={{ borderColor: '#155e75' }}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src="/logo.jpg" alt="LMC Logo" className="w-full h-full object-contain" />
+                {/* Letterhead selection */}
+                {report.letterhead === 'ADAMS' ? (
+                    /* AdamsWastl Healthcity Limited Header */
+                    <div className="mb-6 font-sans">
+                        <div className="flex items-start justify-between">
+                            {/* Logo */}
+                            <div className="w-24 h-24 shrink-0">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src="/awh_logo.jpg" alt="AWH Logo" className="w-full h-full object-contain" />
+                            </div>
+
+                            {/* Center Content */}
+                            <div className="flex-1 text-center px-4">
+                                <h1 className="text-2xl font-bold tracking-tight mb-0 border-b-2 border-black inline-block">
+                                    ADAMSWASLT HEALTHCITY LIMITED
+                                </h1>
+                                <p className="text-xl italic font-serif mt-1" style={{ color: '#dc2626', fontFamily: 'cursive' }}>
+                                    Best Care for a Healthy Life
+                                </p>
+                                <div className="mt-2 text-[12px] font-bold">
+                                    <p className="flex justify-center gap-6">
+                                        <span style={{ color: '#1e3a8a' }}>P O BOX KQ 26, KENYASI</span>
+                                        <span style={{ color: '#dc2626' }}>Email: adamswastlhealthcity@gmail.com</span>
+                                    </p>
+                                    <p className="mt-1">
+                                        Tel: 0322190828/0248666208
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Right Side 'H' */}
+                            <div className="w-12 h-12 border-2 border-red-600 rounded-full flex items-center justify-center shrink-0">
+                                <span className="text-2xl font-bold text-red-600">H</span>
+                            </div>
+                        </div>
+                        <div className="h-0.5 bg-blue-900 mt-4"></div>
+                    </div>
+                ) : (
+                    /* Lars Medical Centre Header (Default) */
+                    <div className="mb-6 font-sans">
+                        {/* Top Row: Logo Left, Title Center/Right */}
+                        <div className="flex items-center justify-center gap-6 mb-3 relative">
+                            {/* Logo Box - Absolute leftish or just flex */}
+                            <div className="w-20 h-20 border-2 flex items-center justify-center p-0.5 shrink-0" style={{ borderColor: '#155e75' }}>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src="/logo.jpg" alt="LMC Logo" className="w-full h-full object-contain" />
+                            </div>
+
+                            {/* Title Block */}
+                            <div className="text-center">
+                                <h1 className="text-3xl font-extrabold tracking-wider leading-none mb-1">
+                                    <span style={{ color: '#DC2626' }}>LARS</span> <span style={{ color: '#0891b2' }}>MEDICAL CENTRE</span>
+                                </h1>
+                                <p className="text-sm font-bold tracking-widest" style={{ color: 'black' }}>
+                                    ENDOSCOPY UNIT
+                                </p>
+                            </div>
                         </div>
 
-                        {/* Title Block */}
-                        <div className="text-center">
-                            <h1 className="text-3xl font-extrabold tracking-wider leading-none mb-1">
-                                <span style={{ color: '#DC2626' }}>LARS</span> <span style={{ color: '#0891b2' }}>MEDICAL CENTRE</span>
-                            </h1>
-                            <p className="text-sm font-bold tracking-widest" style={{ color: 'black' }}>
-                                ENDOSCOPY UNIT
+                        {/* Address Lines - Compact & Centered */}
+                        <div className="text-center text-[16px] font-bold text-black leading-tight space-y-1">
+                            <p>
+                                OPPOSITE VICTORY HARDWARE, SUNYANI-ABESIM ROAD, NEAR TYCO CITY HOTEL, SUNYANI
+                            </p>
+                            <p>
+                                P.O.BOX SY 524, SUNYANI, B/R &nbsp;&nbsp; TEL: 0200-638-932 / 0352196970. &nbsp;&nbsp; WORKING HOURS: 24/7
+                            </p>
+                            <p>
+                                <span style={{ color: '#1e3a8a' }}>EMAIL: larsmedicalcentre@yahoo.com</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                                <span style={{ color: '#dc2626' }}>GPS ADDRESS: BS-0174-2635</span>
                             </p>
                         </div>
                     </div>
-
-                    {/* Address Lines - Compact & Centered */}
-                    {/* Address Lines - Compact & Centered */}
-                    <div className="text-center text-[16px] font-bold text-black leading-tight space-y-1">
-                        <p>
-                            OPPOSITE VICTORY HARDWARE, SUNYANI-ABESIM ROAD, NEAR TYCO CITY HOTEL, SUNYANI
-                        </p>
-                        <p>
-                            P.O.BOX SY 524, SUNYANI, B/R &nbsp;&nbsp; TEL: 0200-638-932 / 0352196970. &nbsp;&nbsp; WORKING HOURS: 24/7
-                        </p>
-                        <p>
-                            <span style={{ color: '#1e3a8a' }}>EMAIL: larsmedicalcentre@yahoo.com</span> &nbsp;&nbsp;&nbsp;&nbsp;
-                            <span style={{ color: '#dc2626' }}>GPS ADDRESS: BS-0174-2635</span>
-                        </p>
-                    </div>
-                </div>
+                )}
 
                 {/* Procedure Title */}
                 <div className="text-center mb-4">

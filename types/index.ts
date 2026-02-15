@@ -19,6 +19,7 @@ export interface Client {
     comments?: string;
     medication?: string;
     dateOfRegistration?: string;
+    letterhead?: 'LARS' | 'ADAMS';
     createdAt?: string;
     updatedAt?: string;
 }
@@ -66,6 +67,7 @@ export interface MedicalReport {
     comments?: string;
     medication?: string;
     date?: string;
+    letterhead?: 'LARS' | 'ADAMS';
     createdAt?: string;
     updatedAt?: string;
 }

@@ -60,6 +60,7 @@ export async function PUT(
 
         if (body.testType !== undefined) updateData.testType = body.testType
         if (body.testResult !== undefined) updateData.testResult = body.testResult
+        if (body.letterhead !== undefined) updateData.letterhead = body.letterhead
 
         const { data: updatedReport, error } = await supabase
             .from('MedicalReport')

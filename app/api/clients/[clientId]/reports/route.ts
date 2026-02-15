@@ -91,6 +91,7 @@ export async function POST(
                 medication: body.medication || null,
                 testType: body.testType || null,
                 testResult: body.testResult || null,
+                letterhead: body.letterhead || 'LARS',
                 date: new Date().toISOString()
             })
             .select()

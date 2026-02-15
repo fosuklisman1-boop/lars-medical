@@ -79,6 +79,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         comments: report?.comments || '',
         testType: report?.testType || (report?.hutTestResult?.includes('Stool') ? 'Stool Antigen Test' : 'HUT Test Result'),
         testResult: report?.testResult || (report?.hutTestResult?.split(': ')[1] || report?.hutTestResult || ''),
+        letterhead: report?.letterhead || 'LARS',
     })
 
     // Update form when report prop changes (e.g. after save)
@@ -130,6 +131,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 comments: report.comments || '',
                 testType: report.testType || (report.hutTestResult?.includes('Stool') ? 'Stool Antigen Test' : 'HUT Test Result'),
                 testResult: report.testResult || (report.hutTestResult?.split(': ')[1] || report.hutTestResult || ''),
+                letterhead: report.letterhead || 'LARS',
             });
         }
     }, [report]);
@@ -176,6 +178,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         comments: report?.comments || '',
         testType: report?.testType || (report?.hutTestResult?.includes('Stool') ? 'Stool Antigen Test' : 'HUT Test Result'),
         testResult: report?.testResult || (report?.hutTestResult?.split(': ')[1] || report?.hutTestResult || ''),
+        letterhead: report?.letterhead || 'LARS',
     }), [report])
 
     // Check if form has unsaved changes
@@ -301,6 +304,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 operationTeam: (formData.operationTeam?.trim() ? formData.operationTeam : 'DR M. S. ADAMS, DR KWARTENG W., GLADYS ABEDU, ABIGAIL OPPONG').split(',').map((s: string) => s.trim()).filter(Boolean),
                 timeStarted: formData.timeStarted ? new Date(`${new Date().toDateString()} ${formData.timeStarted}`).toISOString() : null,
                 timeEnded: formData.timeEnded ? new Date(`${new Date().toDateString()} ${formData.timeEnded}`).toISOString() : null,
+                letterhead: formData.letterhead,
             }
 
             const url = isEditing
@@ -372,6 +376,24 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                             <SelectContent>
                                 <SelectItem value="UPPER ENDOSCOPY">UPPER ENDOSCOPY</SelectItem>
                                 <SelectItem value="LOWER ENDOSCOPY">LOWER ENDOSCOPY</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Letterhead Selection</label>
+                        <Select
+                            value={formData.letterhead}
+                            onValueChange={(value: 'LARS' | 'ADAMS') => setFormData(prev => ({ ...prev, letterhead: value }))}
+                        >
+                            <SelectTrigger className="border-blue-200 focus:ring-blue-500">
+                                <SelectValue placeholder="Select Letterhead" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="LARS">LARS MEDICAL CENTRE (Default)</SelectItem>
+                                <SelectItem value="ADAMS">ADAMSWASLT HEALTHCITY LIMITED</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
