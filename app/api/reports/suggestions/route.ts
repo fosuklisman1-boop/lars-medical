@@ -40,7 +40,18 @@ export async function GET(request: Request) {
             'impression',
             'comments',
             'medication',
-            'operationTeam'
+            'operationTeam',
+            'dre',
+            'anus',
+            'rectum',
+            'sigmoid',
+            'descendingColon',
+            'splenicFlexure',
+            'transverseColon',
+            'hepaticFlexure',
+            'ascendingColon',
+            'caecum',
+            'ileoCaecalValve'
         ]
 
         if (!allowedFields.includes(field)) {
@@ -81,7 +92,7 @@ export async function GET(request: Request) {
         const uniqueValues = [...new Set(
             rawValues
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .filter((val: any) => val && typeof val === 'string' && val.trim() !== '')
+                .filter((val: any) => val && typeof val === 'string' && val.trim() !== '' && val.trim().toUpperCase() !== 'NOT EXAMINED')
         )].slice(0, 50) // Limit to 50 suggestions
 
         return NextResponse.json({

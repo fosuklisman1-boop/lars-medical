@@ -70,8 +70,8 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         transverseColon: report?.transverseColon || '',
         hepaticFlexure: report?.hepaticFlexure || '',
         ascendingColon: report?.ascendingColon || '',
-        caecum: report?.caecum || '',
-        ileoCaecalValve: report?.ileoCaecalValve || '',
+        caecum: (report?.caecum === 'NOT EXAMINED' ? '' : (report?.caecum || '')),
+        ileoCaecalValve: (report?.ileoCaecalValve === 'NOT EXAMINED' ? '' : (report?.ileoCaecalValve || '')),
 
         findings: report?.findings || '',
         hutTestResult: report?.hutTestResult || '',
@@ -122,8 +122,8 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 transverseColon: report.transverseColon || '',
                 hepaticFlexure: report.hepaticFlexure || '',
                 ascendingColon: report.ascendingColon || '',
-                caecum: report.caecum || '',
-                ileoCaecalValve: report.ileoCaecalValve || '',
+                caecum: report.caecum === 'NOT EXAMINED' ? '' : (report.caecum || ''),
+                ileoCaecalValve: report.ileoCaecalValve === 'NOT EXAMINED' ? '' : (report.ileoCaecalValve || ''),
 
                 findings: report.findings || '',
                 hutTestResult: report.hutTestResult || '',
@@ -169,8 +169,8 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         transverseColon: report?.transverseColon || '',
         hepaticFlexure: report?.hepaticFlexure || '',
         ascendingColon: report?.ascendingColon || '',
-        caecum: report?.caecum || '',
-        ileoCaecalValve: report?.ileoCaecalValve || '',
+        caecum: (report?.caecum === 'NOT EXAMINED' ? '' : (report?.caecum || '')),
+        ileoCaecalValve: (report?.ileoCaecalValve === 'NOT EXAMINED' ? '' : (report?.ileoCaecalValve || '')),
 
         findings: report?.findings || '',
         hutTestResult: report?.hutTestResult || '',
