@@ -266,7 +266,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                     </div>
 
                     <div className="flex gap-1 uppercase">
-                        <span>CLINICAL SUMMARY:</span> <span className="font-bold">{report.clinicalSummary || client.clinicalSummary || 'PUD'}</span>
+                        <span>CLINICAL SUMMARY:</span> <span className="font-bold">{report.clinicalSummary || client.clinicalSummary || 'NO SUMMARY'}</span>
                     </div>
                 </div>
 

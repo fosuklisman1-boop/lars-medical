@@ -47,7 +47,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         medicationGiven: report?.medicationGiven || '',
         stomachContent: report?.stomachContent || 'EMPTY',
         instrumentsUsed: Array.isArray(report?.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report?.instrumentsUsed || 'OLYMPUS GIF-IT140'),
-        clinicalSummary: report?.clinicalSummary || client.clinicalSummary || '',
+        clinicalSummary: (report?.clinicalSummary === 'PUD' || report?.clinicalSummary === 'NO SUMMARY' ? '' : (report?.clinicalSummary || client.clinicalSummary || '')),
         biopsy: report?.biopsy || 'NO',
         biopsySite: report?.biopsySite || '',
         // Anatomical Findings (Upper)
@@ -97,7 +97,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 medicationGiven: report.medicationGiven || '',
                 stomachContent: report.stomachContent || 'EMPTY',
                 instrumentsUsed: Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-IT140'),
-                clinicalSummary: report.clinicalSummary || client.clinicalSummary || '',
+                clinicalSummary: (report.clinicalSummary === 'PUD' || report.clinicalSummary === 'NO SUMMARY' ? '' : (report.clinicalSummary || client.clinicalSummary || '')),
                 biopsy: report.biopsy || 'NO',
                 biopsySite: report.biopsySite || '',
 
@@ -146,7 +146,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         medicationGiven: report?.medicationGiven || '',
         stomachContent: report?.stomachContent || 'EMPTY',
         instrumentsUsed: Array.isArray(report?.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report?.instrumentsUsed || 'OLYMPUS GIF-IT140'),
-        clinicalSummary: report?.clinicalSummary || '',
+        clinicalSummary: (report?.clinicalSummary === 'PUD' || report?.clinicalSummary === 'NO SUMMARY' ? '' : (report?.clinicalSummary || '')),
         biopsy: report?.biopsy || 'NO',
         biopsySite: report?.biopsySite || '',
         // Anatomical Findings (Upper)
@@ -296,7 +296,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
 
                 // Procedure Info Defaults
                 refDoctor: formData.refDoctor?.trim() || 'DR. M. S. ADAMS',
-                clinicalSummary: formData.clinicalSummary?.trim() || (isLower ? 'DIFFICULTY IN PASSING STOOL FOR ALMOST A YEAR' : 'EPIGASTRIC PAIN THAT RADIATE TO THE BACK'),
+                clinicalSummary: formData.clinicalSummary?.trim() || 'NO SUMMARY',
                 biopsy: formData.biopsy || 'NO',
                 biopsySite: formData.biopsySite?.trim() || '',
                 medicationGiven: formData.medicationGiven?.trim() || 'INJ. DORMICUM, PROPOFOL AND BUSCOPAN', // Often similar for both
@@ -459,7 +459,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Clinical Summary</label>
-                        <AutocompleteInput name="clinicalSummary" value={formData.clinicalSummary} onChange={handleInputChange} field="clinicalSummary" placeholder={isLowerEndoscopy ? "DIFFICULTY IN PASSING STOOL FOR ALMOST A YEAR" : "EPIGASTRIC PAIN THAT RADIATE TO THE BACK"} />
+                        <AutocompleteInput name="clinicalSummary" value={formData.clinicalSummary} onChange={handleInputChange} field="clinicalSummary" placeholder="NO SUMMARY" />
                     </div>
                 </div>
 
