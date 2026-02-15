@@ -89,7 +89,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                             {/* Logo */}
                             <div className="w-40 h-28 shrink-0 flex items-center">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src="/awh_logo.jpg" alt="AWH Logo" className="w-full h-full object-contain" />
+                                <img src="/awh_logo.png" alt="AWH Logo" className="w-full h-full object-contain" />
                             </div>
 
                             {/* Center Content */}
@@ -97,7 +97,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                                 <h1 className="text-3xl font-bold tracking-tight mb-0 border-b-2 border-black inline-block">
                                     ADAMSWASLT HEALTHCITY LIMITED
                                 </h1>
-                                <p className="text-2xl italic font-serif mt-1" style={{ color: '#dc2626', fontFamily: 'Brush Script MT, cursive' }}>
+                                <p className="text-2xl italic mt-1" style={{ color: '#dc2626', fontFamily: "'Brush Script MT', cursive, 'Apple Chancery', 'Segoe Script', 'Comic Sans MS'" }}>
                                     Best Care for a Healthy Life
                                 </p>
                                 <div className="mt-0.5 text-[13px] font-bold">

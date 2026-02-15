@@ -54,8 +54,8 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
             // Temporary set the report to print so it renders in the hidden container
             setReportToPrint(report)
 
-            // Small delay to ensure the component is rendered
-            await new Promise(resolve => setTimeout(resolve, 800))
+            // Small delay to ensure the component is rendered and images are loaded
+            await new Promise(resolve => setTimeout(resolve, 1500))
 
             const printElement = printRef.current
             if (!printElement) {
@@ -63,9 +63,10 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
             }
 
             const imgData = await toPng(printElement, {
-                pixelRatio: 2,
+                pixelRatio: 3,
                 backgroundColor: '#ffffff',
                 cacheBust: true,
+                skipFonts: false,
             })
 
             const pdf = new jsPDF({
