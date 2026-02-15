@@ -84,39 +84,55 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 {/* Letterhead selection */}
                 {report.letterhead === 'ADAMS' ? (
                     /* AdamsWastl Healthcity Limited Header */
-                    <div className="mb-6 font-sans">
-                        <div className="flex items-start justify-between">
+                    <div className="mb-4 font-sans text-center">
+                        <div className="flex items-start justify-between mb-2">
                             {/* Logo */}
-                            <div className="w-24 h-24 shrink-0">
+                            <div className="w-40 h-28 shrink-0 flex items-center">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img src="/awh_logo.jpg" alt="AWH Logo" className="w-full h-full object-contain" />
                             </div>
 
                             {/* Center Content */}
-                            <div className="flex-1 text-center px-4">
-                                <h1 className="text-2xl font-bold tracking-tight mb-0 border-b-2 border-black inline-block">
+                            <div className="flex-1 pt-4">
+                                <h1 className="text-3xl font-bold tracking-tight mb-0 border-b-2 border-black inline-block">
                                     ADAMSWASLT HEALTHCITY LIMITED
                                 </h1>
-                                <p className="text-xl italic font-serif mt-1" style={{ color: '#dc2626', fontFamily: 'cursive' }}>
+                                <p className="text-2xl italic font-serif mt-1" style={{ color: '#dc2626', fontFamily: 'Brush Script MT, cursive' }}>
                                     Best Care for a Healthy Life
                                 </p>
-                                <div className="mt-2 text-[12px] font-bold">
-                                    <p className="flex justify-center gap-6">
-                                        <span style={{ color: '#1e3a8a' }}>P O BOX KQ 26, KENYASI</span>
+                                <div className="mt-2 text-[13px] font-bold">
+                                    <div className="flex justify-center flex-wrap gap-x-6">
+                                        <span className="text-slate-700">P O BOX KQ 26, KENYASI</span>
                                         <span style={{ color: '#dc2626' }}>Email: adamswastlhealthcity@gmail.com</span>
-                                    </p>
-                                    <p className="mt-1">
-                                        Tel: 0322190828/0248666208
+                                    </div>
+                                    <p className="mt-0.5">
+                                        Tel: 0322190828 / 0248666208
                                     </p>
                                 </div>
                             </div>
 
                             {/* Right Side 'H' */}
-                            <div className="w-12 h-12 border-2 border-red-600 rounded-full flex items-center justify-center shrink-0">
-                                <span className="text-2xl font-bold text-red-600">H</span>
+                            <div className="w-16 h-16 border-[3px] border-red-600 rounded-full flex items-center justify-center shrink-0 mt-4">
+                                <span className="text-3xl font-bold text-red-600">H</span>
                             </div>
                         </div>
-                        <div className="h-0.5 bg-blue-900 mt-4"></div>
+
+                        {/* Triple Border */}
+                        <div className="flex w-full h-1.5 mb-2">
+                            <div className="w-1/4 bg-red-600 h-full"></div>
+                            <div className="w-1/2 bg-green-700 h-full"></div>
+                            <div className="w-1/4 bg-blue-700 h-full"></div>
+                        </div>
+
+                        {/* Endoscopy Unit Title */}
+                        <div className="mb-4">
+                            <h2 className="text-5xl font-black tracking-widest italic" style={{ color: '#1e40af' }}>
+                                ENDOSCOPY UNIT
+                            </h2>
+                            <p className="text-lg font-bold border-b-2 border-black inline-block mt-2 uppercase tracking-tighter">
+                                GASTROINTESTINAL ENDOSCOPY RECORD ({report.procedure?.includes('UPPER') ? 'UPPER GI' : 'LOWER GI'})
+                            </p>
+                        </div>
                     </div>
                 ) : (
                     /* Lars Medical Centre Header (Default) */
@@ -134,7 +150,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                                 <h1 className="text-3xl font-extrabold tracking-wider leading-none mb-1">
                                     <span style={{ color: '#DC2626' }}>LARS</span> <span style={{ color: '#0891b2' }}>MEDICAL CENTRE</span>
                                 </h1>
-                                <p className="text-sm font-bold tracking-widest" style={{ color: 'black' }}>
+                                <p className="text-sm font-bold tracking-widest uppercase" style={{ color: 'black' }}>
                                     ENDOSCOPY UNIT
                                 </p>
                             </div>
@@ -153,15 +169,15 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                                 <span style={{ color: '#dc2626' }}>GPS ADDRESS: BS-0174-2635</span>
                             </p>
                         </div>
+
+                        {/* Lars Title Line */}
+                        <div className="text-center mt-4">
+                            <h2 className="text-xl font-bold border-b-2 border-black inline-block uppercase tracking-widest">
+                                GASTROINTESTINAL ENDOSCOPY RECORD ({report.procedure?.includes('UPPER') ? 'UPPER GI' : 'LOWER GI'})
+                            </h2>
+                        </div>
                     </div>
                 )}
-
-                {/* Procedure Title */}
-                <div className="text-center mb-4">
-                    <p className="font-bold underline text-[16px]">
-                        {(report.procedure || 'UPPER ENDOSCOPY').toUpperCase()}
-                    </p>
-                </div>
 
                 {/* Patient Info Grid - Aligned perfectly like the image */}
                 <div className="grid grid-cols-12 gap-y-1 text-[16px] mb-2 uppercase tracking-tight">
