@@ -171,9 +171,9 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                         </div>
 
                         {/* Lars Title Line */}
-                        <div className="text-center mt-2">
+                        <div className="text-center mt-4">
                             <h2 className="text-xl font-bold border-b-2 border-black inline-block uppercase tracking-widest">
-                                GASTROINTESTINAL ENDOSCOPY RECORD ({report.procedure?.includes('UPPER') ? 'UPPER GI' : 'LOWER GI'})
+                                {(report.procedure || 'UPPER ENDOSCOPY').toUpperCase()}
                             </h2>
                         </div>
                     </div>
