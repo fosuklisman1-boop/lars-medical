@@ -112,8 +112,8 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                             </div>
 
                             {/* Right Side 'H' */}
-                            <div className="w-16 h-16 border-[3px] border-red-600 rounded-full flex items-center justify-center shrink-0 mt-4">
-                                <span className="text-3xl font-bold text-red-600">H</span>
+                            <div className="w-16 h-[110px] border-[3px] border-red-600 rounded-[40px] flex items-center justify-center shrink-0 mt-4 -mb-8 relative z-10 bg-white">
+                                <span className="text-4xl font-bold text-red-600">H</span>
                             </div>
                         </div>
 
