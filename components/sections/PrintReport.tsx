@@ -416,7 +416,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                 </div>
 
                 {/* Comments */}
-                <div className="mb-2 text-[16px] print:break-inside-avoid">
+                <div className="mb-0 text-[16px] print:break-inside-avoid">
                     <span>COMMENTS:</span> <span className="font-bold italic uppercase">{report.comments || 'N/A'}</span>
                 </div>
 
@@ -424,7 +424,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
 
 
                 {/* Doctor Signature */}
-                <div className="text-right mt-4 text-[16px] print:break-inside-avoid">
+                <div className="text-right mt-0 text-[16px] print:break-inside-avoid">
                     <p className="font-bold">DR. M. S. ADAMS</p>
                 </div>
             </div>
