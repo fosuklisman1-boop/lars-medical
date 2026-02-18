@@ -248,9 +248,11 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                         <div className="flex gap-1">
                             <span>MEDICATION GIVEN:</span> <span className="font-bold">{report.medicationGiven || 'INJ. DORMICUM AND BUSCOPAN'}</span>
                         </div>
-                        <div className="flex gap-1">
-                            <span>STOMACH CONTENT:</span> <span className="font-bold italic">{report.stomachContent || 'EMPTY'}</span>
-                        </div>
+                        {report.procedure !== 'LOWER ENDOSCOPY' && (
+                            <div className="flex gap-1">
+                                <span>STOMACH CONTENT:</span> <span className="font-bold italic">{report.stomachContent || 'EMPTY'}</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex gap-x-8 uppercase">
@@ -258,15 +260,18 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                             <span>INSTRUMENT USED:</span> <span className="font-bold">{Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-1T140')}</span>
                         </div>
                         <div className="flex gap-1">
-                            <span>BIOPSY:</span> <span className="font-bold italic">{report.biopsy || 'YES'}</span>
+                            <span>BIOPSY:</span> <span className="font-bold italic">{report.biopsy || (report.procedure === 'LOWER ENDOSCOPY' ? 'NO' : 'YES')}</span>
                         </div>
                         <div className="flex gap-1">
-                            <span>SITE OF BIOPSY:</span> <span className="font-bold italic">{report.biopsySite || 'GASTRIC MUCOSA'}</span>
+                            <span>SITE OF BIOPSY:</span> <span className="font-bold italic">{report.biopsySite || (report.procedure === 'LOWER ENDOSCOPY' ? '' : 'GASTRIC MUCOSA')}</span>
                         </div>
                     </div>
 
                     <div className="flex gap-1 uppercase">
-                        <span>CLINICAL SUMMARY:</span> <span className="font-bold">{report.clinicalSummary || client.clinicalSummary || 'NO SUMMARY'}</span>
+                        <span>CLINICAL SUMMARY:</span>
+                        <span className={((report.clinicalSummary || client.clinicalSummary || 'NO SUMMARY').toUpperCase() === 'NO SUMMARY') ? '' : 'font-bold'}>
+                            {report.clinicalSummary || client.clinicalSummary || 'NO SUMMARY'}
+                        </span>
                     </div>
                 </div>
 
