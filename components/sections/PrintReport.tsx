@@ -263,7 +263,7 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
                             <span>BIOPSY:</span> <span className="font-bold italic">{report.biopsy || (report.procedure === 'LOWER ENDOSCOPY' ? 'NO' : 'YES')}</span>
                         </div>
                         <div className="flex gap-1">
-                            <span>SITE OF BIOPSY:</span> <span className="font-bold italic">{report.biopsySite || (report.procedure === 'LOWER ENDOSCOPY' ? '' : 'GASTRIC MUCOSA')}</span>
+                            <span>SITE OF BIOPSY:</span> <span className="font-bold italic">{report.biopsySite || ''}</span>
                         </div>
                     </div>
 
