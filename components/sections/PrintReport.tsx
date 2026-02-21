@@ -83,49 +83,31 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
             >
                 {/* Letterhead selection */}
                 {report.letterhead === 'ADAMS' ? (
-                    /* AdamsWastl Healthcity Limited Header */
+                    /* AdamsWastl Healthcity Header */
                     <div className="mb-4 font-sans text-center">
-                        <div className="flex items-start justify-between mb-2">
-                            {/* Logo */}
-                            <div className="w-40 h-28 shrink-0 flex items-center">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src="/awh_logo.jpeg" alt="AWH Logo" className="w-full h-full object-contain" />
-                            </div>
+                        {/* Title */}
+                        <h1 className="text-4xl font-extrabold italic tracking-tight mb-1" style={{ color: '#dc2626' }}>
+                            ADAMSWASTL HEALTHCITY
+                        </h1>
 
-                            {/* Center Content */}
-                            <div className="flex-1 pt-4">
-                                <h1 className="text-3xl font-bold tracking-tight mb-0 border-b-2 border-black inline-block">
-                                    ADAMSWASLT HEALTHCITY LIMITED
-                                </h1>
-                                <p className="text-2xl italic mt-1" style={{ color: '#dc2626', fontFamily: "'Brush Script MT', cursive, 'Apple Chancery', 'Segoe Script', 'Comic Sans MS'" }}>
-                                    Best Care for a Healthy Life
-                                </p>
-                                <div className="mt-0.5 text-[13px] font-bold">
-                                    <div className="flex justify-center flex-wrap gap-x-6">
-                                        <span className="text-slate-700">P O BOX KQ 26, KENYASI</span>
-                                        <span style={{ color: '#dc2626' }}>Email: adamswastlhealthcity@gmail.com</span>
-                                    </div>
-                                    <p className="mt-0.5">
-                                        Tel: 0322190828 / 0248666208
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Right Side 'H' */}
-                            <div className="w-16 h-[110px] border-[3px] border-red-600 rounded-[40px] flex items-center justify-center shrink-0 mt-4 -mb-8 relative z-10 bg-white">
-                                <span className="text-4xl font-bold text-red-600">H</span>
-                            </div>
-                        </div>
-
-                        {/* Triple Border */}
-                        <div className="flex w-full h-1.5 mb-2">
-                            <div className="w-1/4 bg-red-600 h-full"></div>
-                            <div className="w-1/2 bg-green-700 h-full"></div>
-                            <div className="w-1/4 bg-blue-700 h-full"></div>
+                        {/* Location & Contact Info */}
+                        <div className="text-[14px] font-bold text-black leading-snug space-y-0.5">
+                            <p>
+                                LOCATION – OPPOSITE K 1 RESETTLEMENT AND ADJACENT DIVINE STAR
+                            </p>
+                            <p>
+                                ACADEMY. KENYASI NO 1
+                            </p>
+                            <p>
+                                P.O.BOX KQ 26, KENYASI NO 1 A/R &nbsp;&nbsp;&nbsp; TEL: 0206300589
+                            </p>
+                            <p>
+                                EMAIL: <span style={{ color: '#1e40af' }}>adamswastlhealthcity@gmail.com</span>
+                            </p>
                         </div>
 
                         {/* Endoscopy Unit Title */}
-                        <div className="mb-2">
+                        <div className="mt-3 mb-2">
                             <h2 className="text-4xl font-extrabold tracking-widest" style={{ color: '#1e40af' }}>
                                 ENDOSCOPY UNIT
                             </h2>
