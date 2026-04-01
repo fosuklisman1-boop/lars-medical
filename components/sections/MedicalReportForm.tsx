@@ -42,8 +42,8 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
             ? report.operationTeam.join(', ')
             : (report?.operationTeam ||
                 (Array.isArray(client.operationTeam) ? client.operationTeam.join(', ') : (client.operationTeam || ''))),
-        timeStarted: report?.timeStarted ? new Date(report.timeStarted).toTimeString().substring(0, 5) : '',
-        timeEnded: report?.timeEnded ? new Date(report.timeEnded).toTimeString().substring(0, 5) : '',
+        timeStarted: report?.timeStarted ? new Date(report.timeStarted).toTimeString().substring(0, 5) : '10:00',
+        timeEnded: report?.timeEnded ? new Date(report.timeEnded).toTimeString().substring(0, 5) : '10:15',
         medicationGiven: report?.medicationGiven || '',
         stomachContent: report?.stomachContent || 'EMPTY',
         instrumentsUsed: Array.isArray(report?.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report?.instrumentsUsed || 'OLYMPUS GIF-IT140'),
@@ -80,6 +80,11 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         testType: report?.testType || (report?.hutTestResult?.includes('Stool') ? 'Stool Antigen Test' : 'HUT Test Result'),
         testResult: report?.testResult || (report?.hutTestResult?.split(': ')[1] || report?.hutTestResult || ''),
         letterhead: report?.letterhead || 'LARS',
+        // Registration Details
+        name: client.name || '',
+        sex: client.sex || '',
+        age: client.age?.toString() || '',
+        address: client.address || '',
     })
 
     // Update form when report prop changes (e.g. after save)
@@ -92,8 +97,8 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                     ? report.operationTeam.join(', ')
                     : (report.operationTeam ||
                         (Array.isArray(client.operationTeam) ? client.operationTeam.join(', ') : (client.operationTeam || ''))),
-                timeStarted: report.timeStarted ? new Date(report.timeStarted).toTimeString().substring(0, 5) : '',
-                timeEnded: report.timeEnded ? new Date(report.timeEnded).toTimeString().substring(0, 5) : '',
+                timeStarted: report.timeStarted ? new Date(report.timeStarted).toTimeString().substring(0, 5) : '10:00',
+                timeEnded: report.timeEnded ? new Date(report.timeEnded).toTimeString().substring(0, 5) : '10:15',
                 medicationGiven: report.medicationGiven || '',
                 stomachContent: report.stomachContent || 'EMPTY',
                 instrumentsUsed: Array.isArray(report.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report.instrumentsUsed || 'OLYMPUS GIF-IT140'),
@@ -132,6 +137,11 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 testType: report.testType || (report.hutTestResult?.includes('Stool') ? 'Stool Antigen Test' : 'HUT Test Result'),
                 testResult: report.testResult || (report.hutTestResult?.split(': ')[1] || report.hutTestResult || ''),
                 letterhead: report.letterhead || 'LARS',
+                // Registration Details (Keep synced with current client prop)
+                name: client.name || '',
+                sex: client.sex || '',
+                age: client.age?.toString() || '',
+                address: client.address || '',
             });
         }
     }, [report]);
@@ -141,8 +151,8 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         refDoctor: report?.refDoctor || '',
         procedure: report?.procedure || 'UPPER ENDOSCOPY',
         operationTeam: Array.isArray(report?.operationTeam) ? report.operationTeam.join(', ') : (report?.operationTeam || ''),
-        timeStarted: report?.timeStarted ? new Date(report.timeStarted).toTimeString().substring(0, 5) : '',
-        timeEnded: report?.timeEnded ? new Date(report.timeEnded).toTimeString().substring(0, 5) : '',
+        timeStarted: report?.timeStarted ? new Date(report.timeStarted).toTimeString().substring(0, 5) : '10:00',
+        timeEnded: report?.timeEnded ? new Date(report.timeEnded).toTimeString().substring(0, 5) : '10:15',
         medicationGiven: report?.medicationGiven || '',
         stomachContent: report?.stomachContent || 'EMPTY',
         instrumentsUsed: Array.isArray(report?.instrumentsUsed) ? report.instrumentsUsed.join(', ') : (report?.instrumentsUsed || 'OLYMPUS GIF-IT140'),
@@ -179,7 +189,12 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         testType: report?.testType || (report?.hutTestResult?.includes('Stool') ? 'Stool Antigen Test' : 'HUT Test Result'),
         testResult: report?.testResult || (report?.hutTestResult?.split(': ')[1] || report?.hutTestResult || ''),
         letterhead: report?.letterhead || 'LARS',
-    }), [report])
+        // Registration Details
+        name: client.name || '',
+        sex: client.sex || '',
+        age: client.age?.toString() || '',
+        address: client.address || '',
+    }), [report, client])
 
     // Check if form has unsaved changes
     const hasChanges = useMemo(() => {
@@ -252,21 +267,47 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         setLoading(true)
 
         try {
-            // Process payload with defaults for empty fields
+
+            // 1. Check if registration details have changed and update client profile if needed
+            const registrationChanged =
+                formData.name !== client.name ||
+                formData.sex !== client.sex ||
+                formData.age !== client.age?.toString() ||
+                formData.address !== client.address;
+
+            if (registrationChanged) {
+                const clientUpdateRes = await fetch(`/api/clients/${client.clientId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: formData.name,
+                        sex: formData.sex,
+                        age: formData.age,
+                        address: formData.address,
+                    }),
+                });
+
+                if (!clientUpdateRes.ok) {
+                    const clientResult = await clientUpdateRes.json();
+                    toast.error(clientResult.error || 'Failed to update patient registration details');
+                } else {
+                    toast.success('Patient profile updated');
+                }
+            }
+
+            // 2. Process report payload
             const isLower = formData.procedure === 'LOWER ENDOSCOPY';
 
             const payload = {
                 ...formData,
-                // Use placeholders if empty (trimmed check)
+                // ... (rest of payload processing)
                 stomachContent: formData.stomachContent?.trim() || 'EMPTY',
                 instrumentsUsed: (formData.instrumentsUsed?.trim() ? formData.instrumentsUsed.split(',').map((s: string) => s.trim()).filter(Boolean) : ['OLYMPUS GIF-IT140']),
 
-                // New Fields directly (SQL schema updated)
                 testType: formData.testType || 'HUT Test Result',
                 testResult: formData.testResult || 'PENDING',
-                hutTestResult: `(${formData.testType === 'HUT Test Result' ? 'HUT - TEST' : 'STOOL ANTIGEN'}) Test: ${formData.testResult || 'PENDING'}`, // Keep for backward compatibility/display backup
+                hutTestResult: `(${formData.testType === 'HUT Test Result' ? 'HUT - TEST' : 'STOOL ANTIGEN'}) Test: ${formData.testResult || 'PENDING'}`,
 
-                // Anatomical defaults - Upper
                 oesophagusGE: !isLower ? (formData.oesophagusGE?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
                 geJunction: !isLower ? (formData.geJunction?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
                 fundus: !isLower ? (formData.fundus?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
@@ -276,7 +317,6 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 d1: !isLower ? (formData.d1?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
                 d2: !isLower ? (formData.d2?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
 
-                // Anatomical defaults - Lower
                 dre: isLower ? (formData.dre?.trim() || 'NO DISCHARGES, NO ULCERS, NO PROLAPSED MUCOSA SEEN. PROSTATE PALPABLE WITHIN NORMAL LIMITS') : null,
                 anus: isLower ? (formData.anus?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
                 rectum: isLower ? (formData.rectum?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
@@ -289,17 +329,14 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 caecum: isLower ? (formData.caecum?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
                 ileoCaecalValve: isLower ? (formData.ileoCaecalValve?.trim() || 'NORMAL LOOKING MUCOSA. NO SUSPICIOUS LESIONS SEEN') : null,
 
-
-                // Assessment & Plan
                 impression: formData.impression?.trim() || (isLower ? 'NORMAL COLONOSCOPY' : 'H. PYLORI GASTRITIS'),
                 comments: formData.comments?.trim() || (isLower ? 'NO SIGNS SUGGESTIVE OF POLYPS, TUMOURS, FISSURE, AND IBD ETC WERE SEEN.' : 'MAY BENEFIT FROM PANTOPRAZOLE 20MG BD X 14 + CAPS TETRACYCLINE 500MG BD X 14 + TAB METRONIDAZOLE 400MG BD X 14 + BISMUTH 240MG BD X 14 + REVIEW UPON COMPLETION OF MEDICATION'),
 
-                // Procedure Info Defaults
                 refDoctor: formData.refDoctor?.trim() || 'DR. M. S. ADAMS',
                 clinicalSummary: formData.clinicalSummary?.trim() || 'NO SUMMARY',
                 biopsy: formData.biopsy || 'NO',
                 biopsySite: formData.biopsySite?.trim() || '',
-                medicationGiven: formData.medicationGiven?.trim() || 'INJ. DORMICUM, PROPOFOL AND BUSCOPAN', // Often similar for both
+                medicationGiven: formData.medicationGiven?.trim() || 'INJ. DORMICUM, PROPOFOL AND BUSCOPAN',
 
                 operationTeam: (formData.operationTeam?.trim() ? formData.operationTeam : 'DR M. S. ADAMS, DR KWARTENG W., GLADYS ABEDU, ABIGAIL OPPONG').split(',').map((s: string) => s.trim()).filter(Boolean),
                 timeStarted: formData.timeStarted ? new Date(`${new Date().toDateString()} ${formData.timeStarted}`).toISOString() : null,
@@ -358,6 +395,63 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
             </div>
 
             <form id="report-form" onSubmit={handleSubmit} className="space-y-6">
+                {/* Registration Details Section */}
+                <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100 space-y-4">
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Patient Profile (Registration Details)</h3>
+                        <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold">EDITABLE</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="md:col-span-2">
+                            <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">Full Name</label>
+                            <Input
+                                name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                className="bg-white border-slate-200 focus:border-blue-500"
+                                placeholder="Patient Name"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">Sex</label>
+                            <Select
+                                value={formData.sex}
+                                onValueChange={(value) => setFormData(prev => ({ ...prev, sex: value }))}
+                            >
+                                <SelectTrigger className="bg-white border-slate-200">
+                                    <SelectValue placeholder="Select sex" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="MALE">MALE</SelectItem>
+                                    <SelectItem value="FEMALE">FEMALE</SelectItem>
+                                    <SelectItem value="OTHER">OTHER</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">Age</label>
+                            <Input
+                                type="number"
+                                name="age"
+                                value={formData.age}
+                                onChange={handleInputChange}
+                                className="bg-white border-slate-200 focus:border-blue-500"
+                                placeholder="Age"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">Physical Address</label>
+                        <Input
+                            name="address"
+                            value={formData.address}
+                            onChange={handleInputChange}
+                            className="bg-white border-slate-200 focus:border-blue-500"
+                            placeholder="Patient Address"
+                        />
+                    </div>
+                </div>
+
                 {/* Procedure Info */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
