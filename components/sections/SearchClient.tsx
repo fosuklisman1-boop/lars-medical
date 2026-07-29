@@ -6,7 +6,18 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Loader2, X } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { Loader2, X, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { Client } from '@/types'
 
 /**
@@ -21,6 +32,8 @@ export function SearchClient() {
 
 
   const [searchResults, setSearchResults] = useState<Client[]>([])
+  const [clientPendingDelete, setClientPendingDelete] = useState<Client | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   /**
    * Real-time search function
@@ -67,6 +80,38 @@ export function SearchClient() {
   const handleClearSearch = () => {
     setSearchQuery('')
     setSearchResults([])
+  }
+
+  const handleDeleteClient = async () => {
+    if (!clientPendingDelete) return
+
+    setDeleting(true)
+    try {
+      const response = await fetch(`/api/clients/${clientPendingDelete.clientId}`, {
+        method: 'DELETE',
+      })
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        toast.error(result.error || 'Failed to delete client')
+        return
+      }
+
+      setSearchResults((prev) =>
+        prev.filter((c) => c.clientId !== clientPendingDelete.clientId)
+      )
+      toast.success(
+        result.reportsDeleted
+          ? `Client deleted along with ${result.reportsDeleted} report(s)`
+          : 'Client deleted successfully'
+      )
+    } catch (error) {
+      console.error('Error deleting client:', error)
+      toast.error('An error occurred while deleting the client')
+    } finally {
+      setDeleting(false)
+      setClientPendingDelete(null)
+    }
   }
 
   return (
@@ -116,8 +161,21 @@ export function SearchClient() {
                     <p className="font-bold text-lg text-slate-800 group-hover:text-blue-700">{client.name}</p>
                     <p className="text-sm text-slate-500">ID: <Badge variant="secondary">{client.clientId}</Badge></p>
                   </div>
-                  <div className="text-right text-sm text-slate-500">
-                    <p>Age: {client.age} • {client.sex}</p>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right text-sm text-slate-500">
+                      <p>Age: {client.age} • {client.sex}</p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="text-red-600 border-red-200 hover:bg-red-50"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setClientPendingDelete(client)
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -133,6 +191,30 @@ export function SearchClient() {
           <p className="text-sm text-slate-400 mt-2">Check the ID or try searching by name</p>
         </Card>
       )}
+
+      <AlertDialog open={!!clientPendingDelete} onOpenChange={(open) => !open && setClientPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete {clientPendingDelete?.name}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this client and all of their medical reports. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700"
+              disabled={deleting}
+              onClick={(e) => {
+                e.preventDefault()
+                handleDeleteClient()
+              }}
+            >
+              {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
