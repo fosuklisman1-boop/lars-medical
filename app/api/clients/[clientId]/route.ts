@@ -141,8 +141,8 @@ export async function PUT(
 
 /**
  * DELETE /api/clients/[clientId]
- * Deletes a client record (admin only)
- * 
+ * Deletes a client record and all of their medical reports (admin only)
+ *
  * @param clientId - The unique client ID to delete
  */
 export async function DELETE(
@@ -160,27 +160,31 @@ export async function DELETE(
       )
     }
 
+    // Delete all reports for this client first, so a failure here never
+    // leaves an orphaned client with reports silently removed.
+    const { error: reportsError, count: reportsDeleted } = await supabase
+      .from('MedicalReport')
+      .delete({ count: 'exact' })
+      .eq('clientId', clientId)
+
+    if (reportsError) {
+      throw reportsError
+    }
+
     // Delete the client
     const { error } = await supabase
       .from('Client')
-      .delete({ count: 'exact' }) // Request count to know if something was deleted
+      .delete({ count: 'exact' })
       .eq('clientId', clientId)
 
     if (error) {
       throw error
     }
 
-    // Note: Supabase delete doesn't always return count unless requested.
-    // However, if no error occurred, the operation executed.
-    // Technically, if count is 0, it means "Client not found", but for DELETE, idempotency is often fine.
-    // If we strictly want to return 404:
-    // This requires check before delete or 'returning *' and checking length.
-
-    // For now assuming success if no error.
-
     return NextResponse.json({
       success: true,
       message: 'Client deleted successfully',
+      reportsDeleted: reportsDeleted || 0,
     })
   } catch (error) {
     console.error('Error deleting client:', error)
