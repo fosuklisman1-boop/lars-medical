@@ -6,13 +6,23 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
-import { Printer, Loader2, Home as HomeIcon, Share2 } from 'lucide-react'
+import { Printer, Loader2, Home as HomeIcon, Share2, Trash2 } from 'lucide-react'
 import { useReactToPrint } from 'react-to-print'
 
 import { MedicalReportForm } from '@/components/sections/MedicalReportForm'
 import { PrintableReport } from '@/components/sections/PrintReport'
 
 import { Client, MedicalReport } from '@/types'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 export default function ClientDetailsPage({ params }: { params: Promise<{ clientId: string }> }) {
     const router = useRouter()
@@ -26,6 +36,10 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
     const [isEditingReport, setIsEditingReport] = useState(false)
     const [editingReport, setEditingReport] = useState<MedicalReport | null>(null)
     const [reportToPrint, setReportToPrint] = useState<MedicalReport | null>(null)
+    const [reportPendingDelete, setReportPendingDelete] = useState<MedicalReport | null>(null)
+    const [deletingReport, setDeletingReport] = useState(false)
+    const [clientPendingDelete, setClientPendingDelete] = useState(false)
+    const [deletingClient, setDeletingClient] = useState(false)
 
     // Check auth (simplified, assuming middleware or parent layout checks, but added just in case)
     // Actually, usually headers/layout handle this, but let's be safe.
@@ -105,6 +119,60 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
         } catch (error) {
             console.error('Error sharing report:', error)
             toast.error('Failed to generate sharing file', { id: toastId })
+        }
+    }
+
+    const handleDeleteReport = async () => {
+        if (!reportPendingDelete) return
+
+        setDeletingReport(true)
+        try {
+            const response = await fetch(`/api/reports/${reportPendingDelete.id}`, {
+                method: 'DELETE',
+            })
+            const result = await response.json()
+
+            if (!response.ok || !result.success) {
+                toast.error(result.error || 'Failed to delete report')
+                return
+            }
+
+            setReports((prev) => prev.filter((r) => r.id !== reportPendingDelete.id))
+            toast.success('Report deleted successfully')
+        } catch (error) {
+            console.error('Error deleting report:', error)
+            toast.error('An error occurred while deleting the report')
+        } finally {
+            setDeletingReport(false)
+            setReportPendingDelete(null)
+        }
+    }
+
+    const handleDeleteClient = async () => {
+        setDeletingClient(true)
+        try {
+            const response = await fetch(`/api/clients/${clientId}`, {
+                method: 'DELETE',
+            })
+            const result = await response.json()
+
+            if (!response.ok || !result.success) {
+                toast.error(result.error || 'Failed to delete client')
+                return
+            }
+
+            toast.success(
+                result.reportsDeleted
+                    ? `Client deleted along with ${result.reportsDeleted} report(s)`
+                    : 'Client deleted successfully'
+            )
+            router.push('/')
+        } catch (error) {
+            console.error('Error deleting client:', error)
+            toast.error('An error occurred while deleting the client')
+        } finally {
+            setDeletingClient(false)
+            setClientPendingDelete(false)
         }
     }
 
@@ -203,6 +271,14 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
                                         )}
                                     </div>
                                 </div>
+                                <Button
+                                    variant="outline"
+                                    className="text-red-600 border-red-200 hover:bg-red-50"
+                                    onClick={() => setClientPendingDelete(true)}
+                                >
+                                    <Trash2 className="w-4 h-4 mr-2" />
+                                    Delete Client
+                                </Button>
                             </div>
                         </Card>
 
@@ -300,6 +376,18 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
                                                             <Share2 className="w-3.5 h-3.5 mr-1" />
                                                             Share
                                                         </Button>
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            className="h-8 px-2 text-red-600 border-red-200 hover:bg-red-50"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation()
+                                                                setReportPendingDelete(report)
+                                                            }}
+                                                        >
+                                                            <Trash2 className="w-3.5 h-3.5 mr-1" />
+                                                            Delete
+                                                        </Button>
                                                         <span className="text-blue-600 font-bold text-sm self-center">Open →</span>
                                                     </div>
                                                 </div>
@@ -311,6 +399,56 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
                         </Card>
                     </div>
                 )}
+
+                {/* Delete Report Confirmation */}
+                <AlertDialog open={!!reportPendingDelete} onOpenChange={(open) => !open && setReportPendingDelete(null)}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Delete this report?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This will permanently delete the {reportPendingDelete?.procedure || 'selected'} report. This cannot be undone.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel disabled={deletingReport}>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                                className="bg-red-600 hover:bg-red-700"
+                                disabled={deletingReport}
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    handleDeleteReport()
+                                }}
+                            >
+                                {deletingReport ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Delete'}
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+
+                {/* Delete Client Confirmation */}
+                <AlertDialog open={clientPendingDelete} onOpenChange={setClientPendingDelete}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Delete {client.name} and all {reports.length} of their report(s)?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This will permanently delete this client and every medical report on file for them. This cannot be undone.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel disabled={deletingClient}>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                                className="bg-red-600 hover:bg-red-700"
+                                disabled={deletingClient}
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    handleDeleteClient()
+                                }}
+                            >
+                                {deletingClient ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Delete'}
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
 
                 {/* Print Container */}
                 <div style={{ position: 'fixed', opacity: 0, pointerEvents: 'none', left: '-9999px' }}>
