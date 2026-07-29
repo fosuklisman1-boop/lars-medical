@@ -169,6 +169,8 @@ export function SearchClient() {
                       variant="outline"
                       size="icon"
                       className="text-red-600 border-red-200 hover:bg-red-50"
+                      aria-label={`Delete ${client.name}`}
+                      title={`Delete ${client.name}`}
                       onClick={(e) => {
                         e.stopPropagation()
                         setClientPendingDelete(client)

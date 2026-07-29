@@ -429,7 +429,14 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
                 <AlertDialog open={clientPendingDelete} onOpenChange={setClientPendingDelete}>
                     <AlertDialogContent>
                         <AlertDialogHeader>
-                            <AlertDialogTitle>Delete {client.name} and all {reports.length} of their report(s)?</AlertDialogTitle>
+                            <AlertDialogTitle>
+                                Delete {client.name}
+                                {reports.length === 0
+                                    ? '?'
+                                    : reports.length === 1
+                                        ? ' and their 1 report?'
+                                        : ` and all ${reports.length} of their reports?`}
+                            </AlertDialogTitle>
                             <AlertDialogDescription>
                                 This will permanently delete this client and every medical report on file for them. This cannot be undone.
                             </AlertDialogDescription>

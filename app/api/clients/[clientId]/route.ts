@@ -160,8 +160,9 @@ export async function DELETE(
       )
     }
 
-    // Delete all reports for this client first, so a failure here never
-    // leaves an orphaned client with reports silently removed.
+    // Delete reports before the client: if this fails, the client and its
+    // reports are both left intact rather than orphaning report rows that
+    // point at a client which no longer exists.
     const { error: reportsError, count: reportsDeleted } = await supabase
       .from('MedicalReport')
       .delete({ count: 'exact' })
@@ -172,13 +173,20 @@ export async function DELETE(
     }
 
     // Delete the client
-    const { error } = await supabase
+    const { error, count } = await supabase
       .from('Client')
       .delete({ count: 'exact' })
       .eq('clientId', clientId)
 
     if (error) {
       throw error
+    }
+
+    if (!count) {
+      return NextResponse.json(
+        { success: false, error: 'Client not found' },
+        { status: 404 }
+      )
     }
 
     return NextResponse.json({
