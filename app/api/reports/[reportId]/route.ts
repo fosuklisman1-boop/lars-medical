@@ -1,6 +1,7 @@
 
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
 /**
  * PUT /api/reports/[reportId]
@@ -95,12 +96,22 @@ export async function DELETE(
     try {
         const { reportId } = await params
 
-        const { error } = await supabase
+        // Uses the service-role client: RLS on MedicalReport permits anon
+        // SELECT/INSERT/UPDATE but not DELETE, so the anon client would
+        // silently affect 0 rows here.
+        const { error, count } = await supabaseAdmin
             .from('MedicalReport')
-            .delete()
+            .delete({ count: 'exact' })
             .eq('id', reportId)
 
         if (error) throw error
+
+        if (!count) {
+            return NextResponse.json(
+                { success: false, error: 'Report not found' },
+                { status: 404 }
+            )
+        }
 
         return NextResponse.json({
             success: true,

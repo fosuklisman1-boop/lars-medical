@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { isValidClientId } from '@/lib/client-id'
 
 /**
@@ -160,10 +161,14 @@ export async function DELETE(
       )
     }
 
+    // Deletes use the service-role client: RLS on these tables permits
+    // anon SELECT/INSERT/UPDATE but not DELETE, so the anon client would
+    // silently affect 0 rows here.
+    //
     // Delete reports before the client: if this fails, the client and its
     // reports are both left intact rather than orphaning report rows that
     // point at a client which no longer exists.
-    const { error: reportsError, count: reportsDeleted } = await supabase
+    const { error: reportsError, count: reportsDeleted } = await supabaseAdmin
       .from('MedicalReport')
       .delete({ count: 'exact' })
       .eq('clientId', clientId)
@@ -173,7 +178,7 @@ export async function DELETE(
     }
 
     // Delete the client
-    const { error, count } = await supabase
+    const { error, count } = await supabaseAdmin
       .from('Client')
       .delete({ count: 'exact' })
       .eq('clientId', clientId)
