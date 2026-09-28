@@ -61,6 +61,7 @@ export async function PUT(
         if (body.amount !== undefined) {
             updateData.amount = body.amount === null || body.amount === '' ? null : Number(body.amount)
         }
+        if (body.signatureImage !== undefined) updateData.signatureImage = body.signatureImage || null
 
         if (body.testType !== undefined) updateData.testType = body.testType
         if (body.testResult !== undefined) updateData.testResult = body.testResult

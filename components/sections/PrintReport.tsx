@@ -365,6 +365,10 @@ export const PrintableReport = React.forwardRef<HTMLDivElement, PrintReportProps
 
                 {/* Doctor Signature */}
                 <div className="text-right mt-4 text-[16px] print:break-inside-avoid">
+                    {report.signatureImage && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={report.signatureImage} alt="Doctor signature" className="ml-auto h-16 mb-1" />
+                    )}
                     <p className="font-bold">DR. M. S. ADAMS</p>
                 </div>
             </div>

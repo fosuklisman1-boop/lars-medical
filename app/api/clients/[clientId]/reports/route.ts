@@ -90,6 +90,7 @@ export async function POST(
                 comments: body.comments || null,
                 medication: body.medication || null,
                 amount: body.amount === null || body.amount === undefined || body.amount === '' ? null : Number(body.amount),
+                signatureImage: body.signatureImage || null,
                 testType: body.testType || null,
                 testResult: body.testResult || null,
                 letterhead: body.letterhead || 'LARS',

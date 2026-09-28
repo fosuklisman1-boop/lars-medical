@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
+import SignatureCanvas from 'react-signature-canvas'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
@@ -81,6 +82,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         testResult: report?.testResult || (report?.hutTestResult?.split(': ')[1] || report?.hutTestResult || ''),
         letterhead: report?.letterhead || 'LARS',
         amount: report?.amount != null ? String(report.amount) : '',
+        signatureImage: report?.signatureImage || '',
         // Registration Details
         name: client.name || '',
         sex: client.sex || '',
@@ -139,6 +141,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 testResult: report.testResult || (report.hutTestResult?.split(': ')[1] || report.hutTestResult || ''),
                 letterhead: report.letterhead || 'LARS',
                 amount: report.amount != null ? String(report.amount) : '',
+                signatureImage: report.signatureImage || '',
                 // Registration Details (Keep synced with current client prop)
                 name: client.name || '',
                 sex: client.sex || '',
@@ -192,6 +195,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         testResult: report?.testResult || (report?.hutTestResult?.split(': ')[1] || report?.hutTestResult || ''),
         letterhead: report?.letterhead || 'LARS',
         amount: report?.amount != null ? String(report.amount) : '',
+        signatureImage: report?.signatureImage || '',
         // Registration Details
         name: client.name || '',
         sex: client.sex || '',
@@ -208,6 +212,35 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
         setFormData(prev => ({ ...prev, [name]: value }))
+    }
+
+    // Doctor Signature — draw or upload; leaving it blank preserves the existing physical-signing flow
+    const [signatureMode, setSignatureMode] = useState<'draw' | 'upload'>('draw')
+    const sigCanvasRef = useRef<SignatureCanvas>(null)
+
+    const handleSignatureDrawEnd = () => {
+        if (sigCanvasRef.current && !sigCanvasRef.current.isEmpty()) {
+            setFormData(prev => ({ ...prev, signatureImage: sigCanvasRef.current!.toDataURL('image/png') }))
+        }
+    }
+
+    const handleSignatureUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+        const reader = new FileReader()
+        reader.onload = () => {
+            setFormData(prev => ({ ...prev, signatureImage: reader.result as string }))
+        }
+        reader.readAsDataURL(file)
+    }
+
+    const handleClearCanvas = () => {
+        sigCanvasRef.current?.clear()
+    }
+
+    const handleClearSignature = () => {
+        setFormData(prev => ({ ...prev, signatureImage: '' }))
+        sigCanvasRef.current?.clear()
     }
 
     // Procedure Change Warning Logic
@@ -346,6 +379,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 timeEnded: formData.timeEnded ? new Date(`${new Date().toDateString()} ${formData.timeEnded}`).toISOString() : null,
                 letterhead: formData.letterhead,
                 amount: formData.amount?.trim() ? parseFloat(formData.amount) : null,
+                signatureImage: formData.signatureImage || null,
             }
 
             const url = isEditing
@@ -749,6 +783,62 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                         placeholder="e.g. 350.00"
                         className="max-w-xs"
                     />
+                </div>
+
+                {/* Doctor Signature — optional; leave blank to sign the printed copy by hand */}
+                <div className="rounded-lg border border-slate-200 p-4 space-y-3">
+                    <label className="block text-sm font-medium text-slate-700">
+                        Doctor Signature <span className="text-xs font-normal text-slate-400">— optional; leave blank to sign the printed report by hand</span>
+                    </label>
+
+                    {formData.signatureImage ? (
+                        <div className="flex items-center gap-4">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={formData.signatureImage} alt="Doctor signature" className="h-20 border rounded-md bg-white" />
+                            <Button type="button" variant="outline" size="sm" onClick={handleClearSignature}>
+                                Clear & Re-sign
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="space-y-3">
+                            <div className="flex gap-2">
+                                <Button
+                                    type="button"
+                                    variant={signatureMode === 'draw' ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() => setSignatureMode('draw')}
+                                >
+                                    Draw
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant={signatureMode === 'upload' ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() => setSignatureMode('upload')}
+                                >
+                                    Upload Image
+                                </Button>
+                            </div>
+
+                            {signatureMode === 'draw' ? (
+                                <div className="space-y-2">
+                                    <div className="border rounded-md bg-white w-fit">
+                                        <SignatureCanvas
+                                            ref={sigCanvasRef}
+                                            penColor="black"
+                                            canvasProps={{ width: 350, height: 120, className: 'rounded-md' }}
+                                            onEnd={handleSignatureDrawEnd}
+                                        />
+                                    </div>
+                                    <Button type="button" variant="outline" size="sm" onClick={handleClearCanvas}>
+                                        Clear
+                                    </Button>
+                                </div>
+                            ) : (
+                                <Input type="file" accept="image/*" onChange={handleSignatureUpload} className="max-w-xs" />
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {/* Actions */}
