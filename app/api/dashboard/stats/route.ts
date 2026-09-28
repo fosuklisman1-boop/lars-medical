@@ -110,9 +110,13 @@ export async function GET(request: Request) {
         const visits = tileRows.length
         const revenue = tileRows.reduce((sum, row) => sum + (row.amount || 0), 0)
 
-        const dayBuckets = new Map<string, { visits: number; revenue: number }>()
+        const dayBuckets = new Map<string, { label: string; visits: number; revenue: number }>()
         for (const day of eachDayOfInterval({ start: trend.start, end: trend.end })) {
-            dayBuckets.set(format(day, 'yyyy-MM-dd'), { visits: 0, revenue: 0 })
+            dayBuckets.set(format(day, 'yyyy-MM-dd'), {
+                label: format(day, period === 'month' ? 'd' : 'EEE'),
+                visits: 0,
+                revenue: 0,
+            })
         }
         for (const row of allRows) {
             const key = format(new Date(row.date), 'yyyy-MM-dd')
@@ -123,10 +127,10 @@ export async function GET(request: Request) {
             }
         }
 
-        const trendPoints = Array.from(dayBuckets.entries()).map(([key, value]) => ({
-            label: format(new Date(key), period === 'month' ? 'd' : 'EEE'),
-            visits: value.visits,
-            revenue: value.revenue,
+        const trendPoints = Array.from(dayBuckets.values()).map((bucket) => ({
+            label: bucket.label,
+            visits: bucket.visits,
+            revenue: bucket.revenue,
         }))
 
         return NextResponse.json({
