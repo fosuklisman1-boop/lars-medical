@@ -73,3 +73,10 @@ export interface MedicalReport {
     createdAt?: string;
     updatedAt?: string;
 }
+
+export interface SavedSignature {
+    id: string;
+    label: string;
+    imageData: string;
+    createdAt?: string;
+}

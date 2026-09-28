@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import SignatureCanvas from 'react-signature-canvas'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,8 +20,8 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { toast } from 'sonner'
-import { Loader2, Printer, ArrowLeft, Share2 } from 'lucide-react'
-import { Client, MedicalReport } from '@/types'
+import { Loader2, Printer, ArrowLeft, Share2, X } from 'lucide-react'
+import { Client, MedicalReport, SavedSignature } from '@/types'
 
 interface MedicalReportFormProps {
     client: Client
@@ -220,9 +220,34 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         setFormData(prev => ({ ...prev, [name]: value }))
     }
 
-    // Doctor Signature — draw or upload; leaving it blank preserves the existing physical-signing flow.
-    const [signatureMode, setSignatureMode] = useState<'draw' | 'upload'>('draw')
+    // Doctor Signature — draw, upload, or pick from a saved library; leaving it blank
+    // preserves the existing physical-signing flow.
+    const [signatureMode, setSignatureMode] = useState<'draw' | 'upload' | 'saved'>('draw')
     const sigCanvasRef = useRef<SignatureCanvas>(null)
+
+    const [savedSignatures, setSavedSignatures] = useState<SavedSignature[]>([])
+    const [loadingSavedSignatures, setLoadingSavedSignatures] = useState(false)
+    const [newSignatureLabel, setNewSignatureLabel] = useState('')
+    const [savingSignature, setSavingSignature] = useState(false)
+
+    const fetchSavedSignatures = useCallback(async () => {
+        setLoadingSavedSignatures(true)
+        try {
+            const response = await fetch('/api/signatures')
+            const result = await response.json()
+            if (result.success) {
+                setSavedSignatures(result.data)
+            }
+        } catch (error) {
+            console.error('Error fetching saved signatures:', error)
+        } finally {
+            setLoadingSavedSignatures(false)
+        }
+    }, [])
+
+    useEffect(() => {
+        fetchSavedSignatures()
+    }, [fetchSavedSignatures])
 
     const handleSignatureDrawEnd = () => {
         if (sigCanvasRef.current && !sigCanvasRef.current.isEmpty()) {
@@ -238,6 +263,52 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
             setFormData(prev => ({ ...prev, signatureImage: reader.result as string }))
         }
         reader.readAsDataURL(file)
+    }
+
+    const handleSelectSavedSignature = (signature: SavedSignature) => {
+        setFormData(prev => ({ ...prev, signatureImage: signature.imageData }))
+    }
+
+    const handleDeleteSavedSignature = async (signature: SavedSignature) => {
+        try {
+            const response = await fetch(`/api/signatures/${signature.id}`, { method: 'DELETE' })
+            const result = await response.json()
+            if (!response.ok || !result.success) {
+                toast.error(result.error || 'Failed to delete saved signature')
+                return
+            }
+            setSavedSignatures(prev => prev.filter(s => s.id !== signature.id))
+            toast.success(`Deleted "${signature.label}"`)
+        } catch (error) {
+            console.error('Error deleting saved signature:', error)
+            toast.error('An error occurred while deleting the signature')
+        }
+    }
+
+    const handleSaveSignatureToLibrary = async () => {
+        if (!newSignatureLabel.trim() || !formData.signatureImage) return
+
+        setSavingSignature(true)
+        try {
+            const response = await fetch('/api/signatures', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ label: newSignatureLabel.trim(), imageData: formData.signatureImage }),
+            })
+            const result = await response.json()
+            if (!response.ok || !result.success) {
+                toast.error(result.error || 'Failed to save signature')
+                return
+            }
+            setSavedSignatures(prev => [...prev, result.data].sort((a, b) => a.label.localeCompare(b.label)))
+            setNewSignatureLabel('')
+            toast.success(`Saved "${result.data.label}" to the signature library`)
+        } catch (error) {
+            console.error('Error saving signature:', error)
+            toast.error('An error occurred while saving the signature')
+        } finally {
+            setSavingSignature(false)
+        }
     }
 
     const handleClearCanvas = () => {
@@ -826,9 +897,17 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                                 >
                                     Upload Image
                                 </Button>
+                                <Button
+                                    type="button"
+                                    variant={signatureMode === 'saved' ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() => setSignatureMode('saved')}
+                                >
+                                    Use Saved
+                                </Button>
                             </div>
 
-                            {signatureMode === 'draw' ? (
+                            {signatureMode === 'draw' && (
                                 <div className="space-y-2">
                                     <div className="border rounded-md bg-white w-fit">
                                         <SignatureCanvas
@@ -842,8 +921,66 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                                         Clear
                                     </Button>
                                 </div>
-                            ) : (
+                            )}
+
+                            {signatureMode === 'upload' && (
                                 <Input type="file" accept="image/*" onChange={handleSignatureUpload} className="max-w-xs" />
+                            )}
+
+                            {signatureMode === 'saved' && (
+                                <div className="space-y-2">
+                                    {loadingSavedSignatures ? (
+                                        <Loader2 className="w-4 h-4 animate-spin text-slate-400" />
+                                    ) : savedSignatures.length === 0 ? (
+                                        <p className="text-xs text-slate-400">No saved signatures yet — draw or upload one, then save it to reuse here.</p>
+                                    ) : (
+                                        <div className="flex flex-wrap gap-3">
+                                            {savedSignatures.map((signature) => (
+                                                <div
+                                                    key={signature.id}
+                                                    className={`relative border rounded-md p-2 bg-white cursor-pointer hover:border-blue-400 transition-colors ${formData.signatureImage === signature.imageData ? 'border-blue-500 ring-1 ring-blue-500' : 'border-slate-200'
+                                                        }`}
+                                                    onClick={() => handleSelectSavedSignature(signature)}
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        aria-label={`Delete ${signature.label}`}
+                                                        className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            handleDeleteSavedSignature(signature)
+                                                        }}
+                                                    >
+                                                        <X className="w-3 h-3" />
+                                                    </button>
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                    <img src={signature.imageData} alt={signature.label} className="h-12" />
+                                                    <p className="text-xs text-center text-slate-600 mt-1">{signature.label}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {formData.signatureImage && signatureMode !== 'saved' && (
+                                <div className="flex items-center gap-2 pt-2 border-t">
+                                    <Input
+                                        value={newSignatureLabel}
+                                        onChange={(e) => setNewSignatureLabel(e.target.value)}
+                                        placeholder="Label, e.g. Dr. Adams"
+                                        className="max-w-[200px]"
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        disabled={!newSignatureLabel.trim() || savingSignature}
+                                        onClick={handleSaveSignatureToLibrary}
+                                    >
+                                        {savingSignature ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save to Library'}
+                                    </Button>
+                                </div>
                             )}
                         </div>
                     )}
