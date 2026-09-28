@@ -90,6 +90,11 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         address: client.address || '',
     })
 
+    // Doctor Signature lock state — declared here so the reset effect below can resync it.
+    // True only when this report already had a saved signature before this edit; the
+    // draw/upload editor otherwise stays open through any number of strokes.
+    const [signatureLockedByExisting, setSignatureLockedByExisting] = useState(!!report?.signatureImage)
+
     // Update form when report prop changes (e.g. after save)
     useMemo(() => {
         if (report) {
@@ -148,6 +153,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 age: client.age?.toString() || '',
                 address: client.address || '',
             });
+            setSignatureLockedByExisting(!!report.signatureImage)
         }
     }, [report]);
 
@@ -214,7 +220,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         setFormData(prev => ({ ...prev, [name]: value }))
     }
 
-    // Doctor Signature — draw or upload; leaving it blank preserves the existing physical-signing flow
+    // Doctor Signature — draw or upload; leaving it blank preserves the existing physical-signing flow.
     const [signatureMode, setSignatureMode] = useState<'draw' | 'upload'>('draw')
     const sigCanvasRef = useRef<SignatureCanvas>(null)
 
@@ -236,10 +242,12 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
 
     const handleClearCanvas = () => {
         sigCanvasRef.current?.clear()
+        setFormData(prev => ({ ...prev, signatureImage: '' }))
     }
 
     const handleClearSignature = () => {
         setFormData(prev => ({ ...prev, signatureImage: '' }))
+        setSignatureLockedByExisting(false)
         sigCanvasRef.current?.clear()
     }
 
@@ -791,7 +799,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                         Doctor Signature <span className="text-xs font-normal text-slate-400">— optional; leave blank to sign the printed report by hand</span>
                     </label>
 
-                    {formData.signatureImage ? (
+                    {signatureLockedByExisting && formData.signatureImage ? (
                         <div className="flex items-center gap-4">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={formData.signatureImage} alt="Doctor signature" className="h-20 border rounded-md bg-white" />
