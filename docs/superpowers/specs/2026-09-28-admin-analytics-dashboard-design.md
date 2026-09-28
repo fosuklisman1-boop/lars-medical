@@ -58,7 +58,7 @@ Response shape:
 ```
 
 - `totalClients` — `COUNT(*)` on `Client`, all-time, unaffected by `period`/`offset`.
-- `visits` — `COUNT(*)` on reports where `createdAt` falls within the resolved window.
+- `visits` — `COUNT(*)` on reports where `date` (the existing report-visit timestamp column, set at creation) falls within the resolved window.
 - `revenue` — `SUM(amount)` on the same set of reports (nulls excluded automatically by `SUM`).
 - `trend` — one point per day. Week view: 7 points, one per day of the resolved week. Month view: one point per day of the resolved month. Day view: a single day's total isn't a meaningful chart, so it instead shows the 7 rolling days ending on the resolved day (giving today's number visible context against the recent trend), while the `visits`/`revenue` stat tiles still reflect only the resolved day itself.
 
