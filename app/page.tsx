@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button'
 
 import { RegisterClient } from '@/components/sections/RegisterClient'
 import { SearchClient } from '@/components/sections/SearchClient'
-import { Search, Plus, LogOut, User as UserIcon, Loader2 } from 'lucide-react'
+import { Dashboard } from '@/components/sections/Dashboard'
+import { Search, Plus, LogOut, User as UserIcon, Loader2, LayoutDashboard } from 'lucide-react'
 import { toast } from 'sonner'
 
 /**
@@ -17,7 +18,7 @@ import { toast } from 'sonner'
  * Allows switching between client registration and search functionality
  */
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'register' | 'search'>('register')
+  const [activeTab, setActiveTab] = useState<'register' | 'search' | 'dashboard'>('register')
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
@@ -132,6 +133,18 @@ export default function Home() {
               <Search className="w-4 h-4 inline mr-2" />
               Search Clients
             </button>
+
+            {/* Dashboard Tab */}
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`px-6 py-4 font-bold text-sm uppercase tracking-wide border-b-2 transition-all ${activeTab === 'dashboard'
+                ? 'border-blue-600 text-blue-600 bg-blue-50/50'
+                : 'border-transparent text-slate-500 hover:text-slate-900'
+                }`}
+            >
+              <LayoutDashboard className="w-4 h-4 inline mr-2" />
+              Dashboard
+            </button>
           </div>
         </div>
       </div>
@@ -140,6 +153,7 @@ export default function Home() {
       <main className="max-w-7xl mx-auto py-8">
         {activeTab === 'register' && <RegisterClient />}
         {activeTab === 'search' && <SearchClient />}
+        {activeTab === 'dashboard' && <Dashboard />}
       </main>
 
       {/* Footer */}
