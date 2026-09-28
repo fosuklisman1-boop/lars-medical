@@ -80,6 +80,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         testType: report?.testType || (report?.hutTestResult?.includes('Stool') ? 'Stool Antigen Test' : 'HUT Test Result'),
         testResult: report?.testResult || (report?.hutTestResult?.split(': ')[1] || report?.hutTestResult || ''),
         letterhead: report?.letterhead || 'LARS',
+        amount: report?.amount != null ? String(report.amount) : '',
         // Registration Details
         name: client.name || '',
         sex: client.sex || '',
@@ -137,6 +138,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 testType: report.testType || (report.hutTestResult?.includes('Stool') ? 'Stool Antigen Test' : 'HUT Test Result'),
                 testResult: report.testResult || (report.hutTestResult?.split(': ')[1] || report.hutTestResult || ''),
                 letterhead: report.letterhead || 'LARS',
+                amount: report.amount != null ? String(report.amount) : '',
                 // Registration Details (Keep synced with current client prop)
                 name: client.name || '',
                 sex: client.sex || '',
@@ -189,6 +191,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
         testType: report?.testType || (report?.hutTestResult?.includes('Stool') ? 'Stool Antigen Test' : 'HUT Test Result'),
         testResult: report?.testResult || (report?.hutTestResult?.split(': ')[1] || report?.hutTestResult || ''),
         letterhead: report?.letterhead || 'LARS',
+        amount: report?.amount != null ? String(report.amount) : '',
         // Registration Details
         name: client.name || '',
         sex: client.sex || '',
@@ -342,6 +345,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 timeStarted: formData.timeStarted ? new Date(`${new Date().toDateString()} ${formData.timeStarted}`).toISOString() : null,
                 timeEnded: formData.timeEnded ? new Date(`${new Date().toDateString()} ${formData.timeEnded}`).toISOString() : null,
                 letterhead: formData.letterhead,
+                amount: formData.amount?.trim() ? parseFloat(formData.amount) : null,
             }
 
             const url = isEditing
@@ -729,6 +733,23 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                     </div>
                 </div>
 
+                {/* Amount Charged — admin-only; intentionally never read by PrintReport or the share/PDF path */}
+                <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50/50 p-4">
+                    <label htmlFor="amount" className="block text-sm font-medium mb-1 text-slate-700">
+                        Amount Charged (GH₵) <span className="text-xs font-normal text-slate-400">— internal use only, not shown on the report</span>
+                    </label>
+                    <Input
+                        id="amount"
+                        name="amount"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={formData.amount}
+                        onChange={handleInputChange}
+                        placeholder="e.g. 350.00"
+                        className="max-w-xs"
+                    />
+                </div>
 
                 {/* Actions */}
                 <div className="flex justify-between items-center gap-3 pt-4 border-t">

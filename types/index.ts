@@ -66,6 +66,7 @@ export interface MedicalReport {
     impression?: string;
     comments?: string;
     medication?: string;
+    amount?: number | null;
     date?: string;
     letterhead?: 'LARS' | 'ADAMS';
     createdAt?: string;

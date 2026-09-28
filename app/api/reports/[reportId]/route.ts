@@ -58,6 +58,9 @@ export async function PUT(
         if (body.impression !== undefined) updateData.impression = body.impression
         if (body.comments !== undefined) updateData.comments = body.comments
         if (body.medication !== undefined) updateData.medication = body.medication
+        if (body.amount !== undefined) {
+            updateData.amount = body.amount === null || body.amount === '' ? null : Number(body.amount)
+        }
 
         if (body.testType !== undefined) updateData.testType = body.testType
         if (body.testResult !== undefined) updateData.testResult = body.testResult
