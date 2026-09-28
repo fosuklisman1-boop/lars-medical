@@ -157,7 +157,7 @@ export function Dashboard() {
                         <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
                     ) : (
                         <p className="text-3xl font-black text-slate-800">
-                            GH₵{(stats?.revenue ?? 0).toLocaleString()}
+                            GH₵{(stats?.revenue ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </p>
                     )}
                 </Card>
@@ -170,7 +170,7 @@ export function Dashboard() {
                         <AreaChart data={stats?.trend ?? []}>
                             <CartesianGrid vertical={false} strokeDasharray="3 3" />
                             <XAxis dataKey="label" tickLine={false} axisLine={false} />
-                            <ChartTooltip content={<ChartTooltipContent />} />
+                            <ChartTooltip content={<ChartTooltipContent formatter={(value) => `${value}`} />} />
                             <Area
                                 type="monotone"
                                 dataKey="visits"
@@ -189,7 +189,7 @@ export function Dashboard() {
                         <AreaChart data={stats?.trend ?? []}>
                             <CartesianGrid vertical={false} strokeDasharray="3 3" />
                             <XAxis dataKey="label" tickLine={false} axisLine={false} />
-                            <ChartTooltip content={<ChartTooltipContent />} />
+                            <ChartTooltip content={<ChartTooltipContent formatter={(value) => `${value}`} />} />
                             <Area
                                 type="monotone"
                                 dataKey="revenue"

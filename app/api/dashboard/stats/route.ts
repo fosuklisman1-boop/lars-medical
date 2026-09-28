@@ -72,7 +72,8 @@ export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url)
         const periodParam = searchParams.get('period') || 'week'
-        const offsetParam = parseInt(searchParams.get('offset') || '0')
+        const offsetParam = searchParams.get('offset') || '0'
+        const parsedOffset = Number(offsetParam)
 
         if (!['day', 'week', 'month'].includes(periodParam)) {
             return NextResponse.json(
@@ -81,8 +82,15 @@ export async function GET(request: Request) {
             )
         }
 
+        if (!Number.isFinite(parsedOffset) || parsedOffset < 0 || !Number.isInteger(parsedOffset)) {
+            return NextResponse.json(
+                { success: false, error: 'Invalid offset. Expected a non-negative integer.' },
+                { status: 400 }
+            )
+        }
+
         const period = periodParam as Period
-        const offset = Number.isFinite(offsetParam) && offsetParam >= 0 ? offsetParam : 0
+        const offset = Math.min(parsedOffset, 240)
 
         const { tile, trend, rangeLabel } = resolveWindows(period, offset)
 
@@ -108,7 +116,7 @@ export async function GET(request: Request) {
         })
 
         const visits = tileRows.length
-        const revenue = tileRows.reduce((sum, row) => sum + (row.amount || 0), 0)
+        const revenue = tileRows.reduce((sum, row) => sum + (Number(row.amount) || 0), 0)
 
         const dayBuckets = new Map<string, { label: string; visits: number; revenue: number }>()
         for (const day of eachDayOfInterval({ start: trend.start, end: trend.end })) {
@@ -123,15 +131,11 @@ export async function GET(request: Request) {
             const bucket = dayBuckets.get(key)
             if (bucket) {
                 bucket.visits += 1
-                bucket.revenue += row.amount || 0
+                bucket.revenue += Number(row.amount) || 0
             }
         }
 
-        const trendPoints = Array.from(dayBuckets.values()).map((bucket) => ({
-            label: bucket.label,
-            visits: bucket.visits,
-            revenue: bucket.revenue,
-        }))
+        const trendPoints = Array.from(dayBuckets.values())
 
         return NextResponse.json({
             success: true,
