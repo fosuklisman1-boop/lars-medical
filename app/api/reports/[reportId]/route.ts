@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getAuthenticatedUser } from '@/lib/auth'
 
 /**
  * PUT /api/reports/[reportId]
@@ -12,6 +13,14 @@ export async function PUT(
     { params }: { params: Promise<{ reportId: string }> }
 ) {
     try {
+        const auth = await getAuthenticatedUser(request)
+        if (!auth) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+        }
+        if (auth.role !== 'super_admin') {
+            return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 })
+        }
+
         const { reportId } = await params
         const body = await request.json()
 
@@ -98,6 +107,14 @@ export async function DELETE(
     { params }: { params: Promise<{ reportId: string }> }
 ) {
     try {
+        const auth = await getAuthenticatedUser(request)
+        if (!auth) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+        }
+        if (auth.role !== 'super_admin') {
+            return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 })
+        }
+
         const { reportId } = await params
 
         // Uses the service-role client: RLS on MedicalReport permits anon

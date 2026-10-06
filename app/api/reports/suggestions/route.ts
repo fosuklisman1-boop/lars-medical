@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getAuthenticatedUser } from '@/lib/auth'
 
 /**
  * GET /api/reports/suggestions
@@ -7,6 +8,11 @@ import { supabaseAdmin } from '@/lib/supabase-admin'
  */
 export async function GET(request: Request) {
     try {
+        const auth = await getAuthenticatedUser(request)
+        if (!auth) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+        }
+
         const { searchParams } = new URL(request.url)
         const field = searchParams.get('field')
 

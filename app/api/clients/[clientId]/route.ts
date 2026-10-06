@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { isValidClientId } from '@/lib/client-id'
+import { getAuthenticatedUser } from '@/lib/auth'
 
 /**
  * GET /api/clients/[clientId]
@@ -14,6 +15,11 @@ export async function GET(
   { params }: { params: Promise<{ clientId: string }> }
 ) {
   try {
+    const auth = await getAuthenticatedUser(request)
+    if (!auth) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { clientId } = await params
 
     // Validate client ID format
@@ -66,6 +72,11 @@ export async function PUT(
   { params }: { params: Promise<{ clientId: string }> }
 ) {
   try {
+    const auth = await getAuthenticatedUser(request)
+    if (!auth) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { clientId } = await params
     const body = await request.json()
 
@@ -151,6 +162,11 @@ export async function DELETE(
   { params }: { params: Promise<{ clientId: string }> }
 ) {
   try {
+    const auth = await getAuthenticatedUser(request)
+    if (!auth) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { clientId } = await params
 
     // Validate client ID format

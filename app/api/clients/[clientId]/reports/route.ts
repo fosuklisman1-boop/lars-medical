@@ -1,6 +1,7 @@
 
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { getAuthenticatedUser } from '@/lib/auth'
 
 /**
  * GET /api/clients/[clientId]/reports
@@ -11,6 +12,11 @@ export async function GET(
     { params }: { params: Promise<{ clientId: string }> }
 ) {
     try {
+        const auth = await getAuthenticatedUser(request)
+        if (!auth) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+        }
+
         const { clientId } = await params
 
         const { data: reports, error } = await supabase
@@ -43,6 +49,14 @@ export async function POST(
     { params }: { params: Promise<{ clientId: string }> }
 ) {
     try {
+        const auth = await getAuthenticatedUser(request)
+        if (!auth) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+        }
+        if (auth.role !== 'super_admin') {
+            return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 })
+        }
+
         const { clientId } = await params
         const body = await request.json()
 
