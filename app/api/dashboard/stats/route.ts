@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { getAuthenticatedUser } from '@/lib/auth'
 import {
     startOfDay,
     endOfDay,
@@ -70,6 +71,14 @@ function resolveWindows(period: Period, offset: number): ResolvedWindows {
  */
 export async function GET(request: Request) {
     try {
+        const auth = await getAuthenticatedUser(request)
+        if (!auth) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+        }
+        if (auth.role !== 'super_admin') {
+            return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 })
+        }
+
         const { searchParams } = new URL(request.url)
         const periodParam = searchParams.get('period') || 'week'
         const offsetParam = searchParams.get('offset') || '0'

@@ -1,12 +1,21 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { getAuthenticatedUser } from '@/lib/auth'
 
 /**
  * GET /api/signatures
  * Retrieves all saved signatures in the reusable signature library
  */
-export async function GET() {
+export async function GET(request: Request) {
     try {
+        const auth = await getAuthenticatedUser(request)
+        if (!auth) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+        }
+        if (auth.role !== 'super_admin') {
+            return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 })
+        }
+
         const { data: signatures, error } = await supabase
             .from('SavedSignature')
             .select('*')
@@ -33,6 +42,14 @@ export async function GET() {
  */
 export async function POST(request: Request) {
     try {
+        const auth = await getAuthenticatedUser(request)
+        if (!auth) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+        }
+        if (auth.role !== 'super_admin') {
+            return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 })
+        }
+
         const body = await request.json()
 
         if (!body.label?.trim() || !body.imageData?.trim()) {

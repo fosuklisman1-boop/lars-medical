@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getAuthenticatedUser } from '@/lib/auth'
 
 /**
  * DELETE /api/signatures/[signatureId]
@@ -10,6 +11,14 @@ export async function DELETE(
     { params }: { params: Promise<{ signatureId: string }> }
 ) {
     try {
+        const auth = await getAuthenticatedUser(request)
+        if (!auth) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+        }
+        if (auth.role !== 'super_admin') {
+            return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 })
+        }
+
         const { signatureId } = await params
 
         // Uses the service-role client: RLS on SavedSignature permits public
