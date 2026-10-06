@@ -22,6 +22,7 @@ import {
 import { toast } from 'sonner'
 import { Loader2, Printer, ArrowLeft, Share2, X } from 'lucide-react'
 import { Client, MedicalReport, SavedSignature } from '@/types'
+import { apiFetch } from '@/lib/api-client'
 
 interface MedicalReportFormProps {
     client: Client
@@ -233,7 +234,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
     const fetchSavedSignatures = useCallback(async () => {
         setLoadingSavedSignatures(true)
         try {
-            const response = await fetch('/api/signatures')
+            const response = await apiFetch('/api/signatures')
             const result = await response.json()
             if (result.success) {
                 setSavedSignatures(result.data)
@@ -271,7 +272,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
 
     const handleDeleteSavedSignature = async (signature: SavedSignature) => {
         try {
-            const response = await fetch(`/api/signatures/${signature.id}`, { method: 'DELETE' })
+            const response = await apiFetch(`/api/signatures/${signature.id}`, { method: 'DELETE' })
             const result = await response.json()
             if (!response.ok || !result.success) {
                 toast.error(result.error || 'Failed to delete saved signature')
@@ -290,7 +291,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
 
         setSavingSignature(true)
         try {
-            const response = await fetch('/api/signatures', {
+            const response = await apiFetch('/api/signatures', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ label: newSignatureLabel.trim(), imageData: formData.signatureImage }),
@@ -391,7 +392,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
                 formData.address !== client.address;
 
             if (registrationChanged) {
-                const clientUpdateRes = await fetch(`/api/clients/${client.clientId}`, {
+                const clientUpdateRes = await apiFetch(`/api/clients/${client.clientId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -467,7 +468,7 @@ export function MedicalReportForm({ client, report, onSave, onCancel, onPrint, o
 
             const method = isEditing ? 'PUT' : 'POST'
 
-            const response = await fetch(url, {
+            const response = await apiFetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),

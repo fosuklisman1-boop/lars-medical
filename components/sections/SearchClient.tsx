@@ -19,6 +19,7 @@ import {
 import { Loader2, X, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Client } from '@/types'
+import { apiFetch } from '@/lib/api-client'
 
 /**
  * SearchClient Component
@@ -46,7 +47,7 @@ export function SearchClient() {
 
     setSearching(true)
     try {
-      const response = await fetch(`/api/clients?search=${encodeURIComponent(query)}`)
+      const response = await apiFetch(`/api/clients?search=${encodeURIComponent(query)}`)
       const result = await response.json()
       if (response.ok) {
         setSearchResults(result.data)
@@ -87,7 +88,7 @@ export function SearchClient() {
 
     setDeleting(true)
     try {
-      const response = await fetch(`/api/clients/${clientPendingDelete.clientId}`, {
+      const response = await apiFetch(`/api/clients/${clientPendingDelete.clientId}`, {
         method: 'DELETE',
       })
       const result = await response.json()

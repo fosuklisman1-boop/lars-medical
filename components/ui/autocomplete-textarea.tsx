@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Textarea } from '@/components/ui/textarea'
+import { apiFetch } from '@/lib/api-client'
 
 interface AutocompleteTextareaProps {
     name: string
@@ -42,7 +43,7 @@ export function AutocompleteTextarea({
         const fetchSuggestions = async () => {
             setLoading(true)
             try {
-                const response = await fetch(`/api/reports/suggestions?field=${field}`)
+                const response = await apiFetch(`/api/reports/suggestions?field=${field}`)
                 const result = await response.json()
                 if (result.success) {
                     setSuggestions(result.data)

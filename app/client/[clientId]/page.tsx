@@ -13,6 +13,7 @@ import { MedicalReportForm } from '@/components/sections/MedicalReportForm'
 import { PrintableReport } from '@/components/sections/PrintReport'
 
 import { Client, MedicalReport } from '@/types'
+import { apiFetch } from '@/lib/api-client'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -127,7 +128,7 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
 
         setDeletingReport(true)
         try {
-            const response = await fetch(`/api/reports/${reportPendingDelete.id}`, {
+            const response = await apiFetch(`/api/reports/${reportPendingDelete.id}`, {
                 method: 'DELETE',
             })
             const result = await response.json()
@@ -151,7 +152,7 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
     const handleDeleteClient = async () => {
         setDeletingClient(true)
         try {
-            const response = await fetch(`/api/clients/${clientId}`, {
+            const response = await apiFetch(`/api/clients/${clientId}`, {
                 method: 'DELETE',
             })
             const result = await response.json()
@@ -180,7 +181,7 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
         setLoading(true)
         try {
             // Fetch Client
-            const clientRes = await fetch(`/api/clients/${clientId}`)
+            const clientRes = await apiFetch(`/api/clients/${clientId}`)
             const clientData = await clientRes.json()
 
             if (!clientRes.ok) {
@@ -194,7 +195,7 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
             setClient(clientData.data)
 
             // Fetch Reports
-            const reportsRes = await fetch(`/api/clients/${clientId}/reports`)
+            const reportsRes = await apiFetch(`/api/clients/${clientId}/reports`)
             const reportsData = await reportsRes.json()
             if (reportsRes.ok) {
                 setReports(reportsData.data)

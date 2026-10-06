@@ -9,6 +9,7 @@ import { AutocompleteTextarea } from '@/components/ui/autocomplete-textarea'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
+import { apiFetch } from '@/lib/api-client'
 
 /**
  * RegisterClient Component
@@ -74,7 +75,7 @@ export function RegisterClient() {
       }
 
       // Send POST request to create new client
-      const response = await fetch('/api/clients', {
+      const response = await apiFetch('/api/clients', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

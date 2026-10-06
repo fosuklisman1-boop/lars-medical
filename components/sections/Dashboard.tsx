@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 import { Activity, ChevronLeft, ChevronRight, Loader2, Users, Wallet } from 'lucide-react'
+import { apiFetch } from '@/lib/api-client'
 
 type Period = 'day' | 'week' | 'month'
 
@@ -40,7 +41,7 @@ export function Dashboard() {
         setLoading(true)
         setError(null)
         try {
-            const response = await fetch(`/api/dashboard/stats?period=${period}&offset=${offset}`)
+            const response = await apiFetch(`/api/dashboard/stats?period=${period}&offset=${offset}`)
             const result = await response.json()
 
             if (!response.ok || !result.success) {
