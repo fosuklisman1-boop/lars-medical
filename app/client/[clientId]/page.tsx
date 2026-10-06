@@ -15,6 +15,7 @@ import { PrintableReport } from '@/components/sections/PrintReport'
 
 import { Client, MedicalReport } from '@/types'
 import { apiFetch } from '@/lib/api-client'
+import type { Role } from '@/lib/auth'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -42,7 +43,7 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
     const [deletingReport, setDeletingReport] = useState(false)
     const [clientPendingDelete, setClientPendingDelete] = useState(false)
     const [deletingClient, setDeletingClient] = useState(false)
-    const [role, setRole] = useState<'admin' | 'super_admin'>('admin')
+    const [role, setRole] = useState<Role>('admin')
 
     useEffect(() => {
         const checkSession = async () => {
@@ -54,6 +55,16 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
             setRole(session.user.app_metadata?.role === 'super_admin' ? 'super_admin' : 'admin')
         }
         checkSession()
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            if (!session) {
+                router.push('/login')
+            } else {
+                setRole(session.user.app_metadata?.role === 'super_admin' ? 'super_admin' : 'admin')
+            }
+        })
+
+        return () => subscription.unsubscribe()
     }, [router])
 
     const printRef = useRef<HTMLDivElement>(null)
@@ -243,7 +254,7 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
                     <HomeIcon className="w-4 h-4 mr-2" /> Back to Dashboard
                 </Button>
 
-                {isEditingReport ? (
+                {isEditingReport && role === 'super_admin' ? (
                     <MedicalReportForm
                         client={client}
                         report={editingReport || undefined}

@@ -11,6 +11,7 @@ import { SearchClient } from '@/components/sections/SearchClient'
 import { Dashboard } from '@/components/sections/Dashboard'
 import { Search, Plus, LogOut, User as UserIcon, Loader2, LayoutDashboard } from 'lucide-react'
 import { toast } from 'sonner'
+import type { Role } from '@/lib/auth'
 
 /**
  * Home Page Component
@@ -21,7 +22,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'register' | 'search' | 'dashboard'>('register')
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
-  const [role, setRole] = useState<'admin' | 'super_admin'>('admin')
+  const [role, setRole] = useState<Role>('admin')
   const router = useRouter()
 
   useEffect(() => {

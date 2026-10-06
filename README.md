@@ -112,6 +112,8 @@ A comprehensive web-based clinic management system for registering clients, mana
 4. Click on a result to view full client details
 5. Use **"Copy Client ID"** to copy the ID to clipboard
 
+**Note:** every endpoint below now requires a valid Supabase session — pass it as `-H "Authorization: Bearer $TOKEN"`, where `$TOKEN` is that session's access token. Endpoints noted as admin-only below additionally require a `super_admin`-role account.
+
 ## API Endpoints
 
 ### GET /api/clients
@@ -123,7 +125,8 @@ Retrieve all clients or search by ID/name
 
 **Example**:
 ```bash
-curl "http://localhost:3000/api/clients?search=LMC-ABC123"
+curl "http://localhost:3000/api/clients?search=LMC-ABC123" \
+  -H "Authorization: Bearer $TOKEN"
 ```
 
 ### POST /api/clients
@@ -135,6 +138,7 @@ Register a new client
 ```bash
 curl -X POST http://localhost:3000/api/clients \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
   -d '{
     "name": "John Doe",
     "sex": "MALE",
@@ -150,7 +154,8 @@ Retrieve a specific client by ID
 
 **Example**:
 ```bash
-curl "http://localhost:3000/api/clients/LMC-ABC123"
+curl "http://localhost:3000/api/clients/LMC-ABC123" \
+  -H "Authorization: Bearer $TOKEN"
 ```
 
 ### PUT /api/clients/[clientId]
@@ -162,6 +167,7 @@ Update a client's information
 ```bash
 curl -X PUT http://localhost:3000/api/clients/LMC-ABC123 \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
   -d '{"medication": "Updated medication info"}'
 ```
 
@@ -171,7 +177,8 @@ Delete a client record
 
 **Example**:
 ```bash
-curl -X DELETE "http://localhost:3000/api/clients/LMC-ABC123"
+curl -X DELETE "http://localhost:3000/api/clients/LMC-ABC123" \
+  -H "Authorization: Bearer $TOKEN"
 ```
 
 ## Client ID Format
@@ -299,7 +306,6 @@ The system includes comprehensive error handling:
 ## Future Enhancements
 
 - User authentication and authorization
-- Role-based access control (Admin, Doctor, Staff)
 - Appointment scheduling
 - Medical report generation (PDF export)
 - Patient portal for self-service
