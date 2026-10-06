@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, use } from 'react'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -41,9 +42,19 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
     const [deletingReport, setDeletingReport] = useState(false)
     const [clientPendingDelete, setClientPendingDelete] = useState(false)
     const [deletingClient, setDeletingClient] = useState(false)
+    const [role, setRole] = useState<'admin' | 'super_admin'>('admin')
 
-    // Check auth (simplified, assuming middleware or parent layout checks, but added just in case)
-    // Actually, usually headers/layout handle this, but let's be safe.
+    useEffect(() => {
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session) {
+                router.push('/login')
+                return
+            }
+            setRole(session.user.app_metadata?.role === 'super_admin' ? 'super_admin' : 'admin')
+        }
+        checkSession()
+    }, [router])
 
     const printRef = useRef<HTMLDivElement>(null)
     const handlePrint = useReactToPrint({
@@ -290,35 +301,43 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
                                     <h3 className="text-xl font-bold text-slate-800">Medical Reports Folder</h3>
                                     <p className="text-sm text-slate-500">Manage all endoscopy and procedural reports</p>
                                 </div>
-                                <Button
-                                    onClick={() => {
-                                        setEditingReport(null)
-                                        setIsEditingReport(true)
-                                    }}
-                                    className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200"
-                                >
-                                    + New Report
-                                </Button>
+                                {role === 'super_admin' && (
+                                    <Button
+                                        onClick={() => {
+                                            setEditingReport(null)
+                                            setIsEditingReport(true)
+                                        }}
+                                        className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200"
+                                    >
+                                        + New Report
+                                    </Button>
+                                )}
                             </div>
 
                             {reports.length === 0 ? (
                                 <div className="text-center py-12 border-2 border-dashed rounded-2xl border-slate-100 bg-slate-50/50">
                                     <p className="text-slate-400 italic">No reports found in this folder</p>
-                                    <Button
-                                        variant="link"
-                                        onClick={() => setIsEditingReport(true)}
-                                        className="text-blue-600 font-bold"
-                                    >
-                                        Click here to create the first report
-                                    </Button>
+                                    {role === 'super_admin' && (
+                                        <Button
+                                            variant="link"
+                                            onClick={() => setIsEditingReport(true)}
+                                            className="text-blue-600 font-bold"
+                                        >
+                                            Click here to create the first report
+                                        </Button>
+                                    )}
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {reports.map((report) => (
                                         <div
                                             key={report.id}
-                                            className="group p-6 rounded-2xl border bg-white hover:border-blue-300 hover:shadow-xl hover:shadow-blue-100/50 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                                            className={`group p-6 rounded-2xl border bg-white transition-all duration-300 relative overflow-hidden ${role === 'super_admin'
+                                                ? 'hover:border-blue-300 hover:shadow-xl hover:shadow-blue-100/50 cursor-pointer'
+                                                : ''
+                                                }`}
                                             onClick={() => {
+                                                if (role !== 'super_admin') return
                                                 setEditingReport(report)
                                                 setIsEditingReport(true)
                                             }}
@@ -377,19 +396,23 @@ export default function ClientDetailsPage({ params }: { params: Promise<{ client
                                                             <Share2 className="w-3.5 h-3.5 mr-1" />
                                                             Share
                                                         </Button>
-                                                        <Button
-                                                            variant="outline"
-                                                            size="sm"
-                                                            className="h-8 px-2 text-red-600 border-red-200 hover:bg-red-50"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation()
-                                                                setReportPendingDelete(report)
-                                                            }}
-                                                        >
-                                                            <Trash2 className="w-3.5 h-3.5 mr-1" />
-                                                            Delete
-                                                        </Button>
-                                                        <span className="text-blue-600 font-bold text-sm self-center">Open →</span>
+                                                        {role === 'super_admin' && (
+                                                            <>
+                                                                <Button
+                                                                    variant="outline"
+                                                                    size="sm"
+                                                                    className="h-8 px-2 text-red-600 border-red-200 hover:bg-red-50"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation()
+                                                                        setReportPendingDelete(report)
+                                                                    }}
+                                                                >
+                                                                    <Trash2 className="w-3.5 h-3.5 mr-1" />
+                                                                    Delete
+                                                                </Button>
+                                                                <span className="text-blue-600 font-bold text-sm self-center">Open →</span>
+                                                            </>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>

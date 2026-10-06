@@ -21,6 +21,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'register' | 'search' | 'dashboard'>('register')
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
+  const [role, setRole] = useState<'admin' | 'super_admin'>('admin')
   const router = useRouter()
 
   useEffect(() => {
@@ -30,6 +31,7 @@ export default function Home() {
         router.push('/login')
       } else {
         setUser(session.user)
+        setRole(session.user.app_metadata?.role === 'super_admin' ? 'super_admin' : 'admin')
         setLoading(false)
       }
     }
@@ -40,6 +42,7 @@ export default function Home() {
         router.push('/login')
       } else {
         setUser(session.user)
+        setRole(session.user.app_metadata?.role === 'super_admin' ? 'super_admin' : 'admin')
       }
     })
 
@@ -87,7 +90,9 @@ export default function Home() {
             <div className="flex items-center gap-4">
               <div className="hidden md:flex flex-col items-end mr-2">
                 <p className="text-sm font-bold text-slate-800">{user?.email?.split('@')[0] || 'Admin User'}</p>
-                <p className="text-[10px] text-blue-600 font-black uppercase tracking-tighter bg-blue-50 px-1 rounded">System Administrator</p>
+                <p className="text-[10px] text-blue-600 font-black uppercase tracking-tighter bg-blue-50 px-1 rounded">
+                  {role === 'super_admin' ? 'Super Admin' : 'Admin'}
+                </p>
               </div>
               <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden">
                 <UserIcon className="w-5 h-5 text-slate-400" />
@@ -135,16 +140,18 @@ export default function Home() {
             </button>
 
             {/* Dashboard Tab */}
-            <button
-              onClick={() => setActiveTab('dashboard')}
-              className={`px-6 py-4 font-bold text-sm uppercase tracking-wide border-b-2 transition-all ${activeTab === 'dashboard'
-                ? 'border-blue-600 text-blue-600 bg-blue-50/50'
-                : 'border-transparent text-slate-500 hover:text-slate-900'
-                }`}
-            >
-              <LayoutDashboard className="w-4 h-4 inline mr-2" />
-              Dashboard
-            </button>
+            {role === 'super_admin' && (
+              <button
+                onClick={() => setActiveTab('dashboard')}
+                className={`px-6 py-4 font-bold text-sm uppercase tracking-wide border-b-2 transition-all ${activeTab === 'dashboard'
+                  ? 'border-blue-600 text-blue-600 bg-blue-50/50'
+                  : 'border-transparent text-slate-500 hover:text-slate-900'
+                  }`}
+              >
+                <LayoutDashboard className="w-4 h-4 inline mr-2" />
+                Dashboard
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -153,7 +160,7 @@ export default function Home() {
       <main className="max-w-7xl mx-auto py-8">
         {activeTab === 'register' && <RegisterClient />}
         {activeTab === 'search' && <SearchClient />}
-        {activeTab === 'dashboard' && <Dashboard />}
+        {activeTab === 'dashboard' && role === 'super_admin' && <Dashboard />}
       </main>
 
       {/* Footer */}
