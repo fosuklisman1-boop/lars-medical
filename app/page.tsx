@@ -32,7 +32,11 @@ export default function Home() {
         router.push('/login')
       } else {
         setUser(session.user)
-        setRole(session.user.app_metadata?.role === 'super_admin' ? 'super_admin' : 'admin')
+        const resolvedRole = session.user.app_metadata?.role === 'super_admin' ? 'super_admin' : 'admin'
+        setRole(resolvedRole)
+        if (resolvedRole === 'super_admin') {
+          setActiveTab('dashboard')
+        }
         setLoading(false)
       }
     }
@@ -116,6 +120,20 @@ export default function Home() {
       <div className="bg-white/80 backdrop-blur-md border-b sticky top-[73px] z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex gap-4">
+            {/* Dashboard Tab */}
+            {role === 'super_admin' && (
+              <button
+                onClick={() => setActiveTab('dashboard')}
+                className={`px-6 py-4 font-bold text-sm uppercase tracking-wide border-b-2 transition-all ${activeTab === 'dashboard'
+                  ? 'border-blue-600 text-blue-600 bg-blue-50/50'
+                  : 'border-transparent text-slate-500 hover:text-slate-900'
+                  }`}
+              >
+                <LayoutDashboard className="w-4 h-4 inline mr-2" />
+                Dashboard
+              </button>
+            )}
+
             {/* Register Tab */}
             <button
               onClick={() => setActiveTab('register')}
@@ -139,20 +157,6 @@ export default function Home() {
               <Search className="w-4 h-4 inline mr-2" />
               Search Clients
             </button>
-
-            {/* Dashboard Tab */}
-            {role === 'super_admin' && (
-              <button
-                onClick={() => setActiveTab('dashboard')}
-                className={`px-6 py-4 font-bold text-sm uppercase tracking-wide border-b-2 transition-all ${activeTab === 'dashboard'
-                  ? 'border-blue-600 text-blue-600 bg-blue-50/50'
-                  : 'border-transparent text-slate-500 hover:text-slate-900'
-                  }`}
-              >
-                <LayoutDashboard className="w-4 h-4 inline mr-2" />
-                Dashboard
-              </button>
-            )}
           </div>
         </div>
       </div>
